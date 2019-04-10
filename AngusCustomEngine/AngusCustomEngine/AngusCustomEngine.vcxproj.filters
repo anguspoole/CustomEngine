@@ -13,33 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shading">
+      <UniqueIdentifier>{31fd2858-521d-4516-987d-a123bfed8f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{43f03c0f-d846-46c8-b848-982e67915731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\Shaders">
+      <UniqueIdentifier>{31532163-ad41-4ef3-a151-2195eac167c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Global\gOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shading\cShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Shading</Filter>
     </ClCompile>
     <ClCompile Include="Shading\cShaderManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="Global\gOpenGL.cpp">
+      <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global\gOpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Global\global.h">
-      <Filter>Header Files</Filter>
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Global\gOpenGL.h">
+      <Filter>Global</Filter>
     </ClInclude>
     <ClInclude Include="Shading\cShaderManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Shading</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\fragment01.glsl">
+      <Filter>Shading\Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\vertex01.glsl">
+      <Filter>Shading\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

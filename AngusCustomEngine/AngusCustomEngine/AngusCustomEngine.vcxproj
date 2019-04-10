@@ -163,6 +163,10 @@
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Shading\cShaderManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\fragment01.glsl" />
+    <None Include="assets\shaders\vertex01.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
