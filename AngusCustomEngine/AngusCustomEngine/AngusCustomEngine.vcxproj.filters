@@ -39,6 +39,9 @@
     <ClCompile Include="Global\gOpenGL.cpp">
       <Filter>Global</Filter>
     </ClCompile>
+    <ClCompile Include="Camera\cCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">
@@ -49,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="Shading\cShaderManager.h">
       <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\cCamera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

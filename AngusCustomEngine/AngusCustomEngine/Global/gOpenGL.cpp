@@ -12,12 +12,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-void InitWindow(GLFWwindow* window, int width, int height, const char* title)
+GLFWwindow* InitWindow(int width, int height, const char* title)
 {
 
 	//***************************************************************
 	//	OPENGL WINDOW INITIALIZATION - START
 	//***************************************************************
+
+	GLFWwindow* window;
+
+	windowWidth = width;
+	windowHeight = height;
 
 	glfwSetErrorCallback(error_callback);
 
@@ -44,4 +49,5 @@ void InitWindow(GLFWwindow* window, int width, int height, const char* title)
 	//	OPENGL WINDOW INITIALIZATION - END
 	//***************************************************************
 
+	return window;
 }

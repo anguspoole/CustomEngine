@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera\cCamera.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
     <ClCompile Include="Shading\cShader.cpp" />
     <ClCompile Include="Shading\cShaderManager.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera\cCamera.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Shading\cShaderManager.h" />

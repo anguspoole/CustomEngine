@@ -9,4 +9,8 @@
 #include <string.h>
 #include <iostream>
 
+#include "../Camera/cCamera.h"
+
+extern cCamera* gCamera;
+
 #endif
