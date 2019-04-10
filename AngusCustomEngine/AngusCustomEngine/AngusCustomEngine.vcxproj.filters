@@ -24,12 +24,21 @@
     <ClCompile Include="Source\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shading\cShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shading\cShaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\gOpenGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Global\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shading\cShaderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

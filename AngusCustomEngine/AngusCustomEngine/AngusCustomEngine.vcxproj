@@ -153,12 +153,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Global\gOpenGL.cpp" />
+    <ClCompile Include="Shading\cShader.cpp" />
+    <ClCompile Include="Shading\cShaderManager.cpp" />
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
+    <ClInclude Include="Shading\cShaderManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
