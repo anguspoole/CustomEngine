@@ -10,6 +10,9 @@
 #include <iostream>
 
 #include "../Camera/cCamera.h"
+#include "../Meshes/sModelDrawInfo.h"
+#include "../Meshes/cVAOMeshManager.h"
+
 
 extern cCamera* gCamera;
 

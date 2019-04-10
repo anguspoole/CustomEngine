@@ -22,6 +22,24 @@
     <Filter Include="Shading\Shaders">
       <UniqueIdentifier>{31532163-ad41-4ef3-a151-2195eac167c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{f6488194-2c84-45a5-9668-697c89cb6ae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{7d0bf1bd-7370-4120-8b3b-e4846c315a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes\Vertex">
+      <UniqueIdentifier>{cf27d508-7cba-448f-87f2-44763c379799}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes\Mesh">
+      <UniqueIdentifier>{244ea938-553c-47e7-9763-47e2f8d0c513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes\Mesh Manager">
+      <UniqueIdentifier>{f0f6b87f-cb12-4c35-ab8e-8afde9918bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes\Draw Info">
+      <UniqueIdentifier>{6b020ffc-7bbe-441c-bc3e-d15d37523520}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -40,6 +58,33 @@
       <Filter>Global</Filter>
     </ClCompile>
     <ClCompile Include="Camera\cCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\cMesh.cpp">
+      <Filter>Meshes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\cVAOMeshManager.cpp">
+      <Filter>Meshes\Mesh Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\sModelDrawInfo.cpp">
+      <Filter>Meshes\Draw Info</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CHRTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt_experimental.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt_planarUV.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CStringHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CVector3f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +99,33 @@
       <Filter>Shading</Filter>
     </ClInclude>
     <ClInclude Include="Camera\cCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\sVertex_xyz_rgba_n_uv2_bt_4Bones.h">
+      <Filter>Meshes\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\cMesh.h">
+      <Filter>Meshes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\cVAOMeshManager.h">
+      <Filter>Meshes\Mesh Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\sModelDrawInfo.h">
+      <Filter>Meshes\Draw Info</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CHRTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CPlyFile5nt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CPlyInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CStringHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CVector3f.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

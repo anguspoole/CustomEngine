@@ -154,6 +154,15 @@
   <ItemGroup>
     <ClCompile Include="Camera\cCamera.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
+    <ClCompile Include="Meshes\cMesh.cpp" />
+    <ClCompile Include="Meshes\cVAOMeshManager.cpp" />
+    <ClCompile Include="Meshes\sModelDrawInfo.cpp" />
+    <ClCompile Include="Ply\CHRTimer.cpp" />
+    <ClCompile Include="Ply\CPlyFile5nt.cpp" />
+    <ClCompile Include="Ply\CPlyFile5nt_experimental.cpp" />
+    <ClCompile Include="Ply\CPlyFile5nt_planarUV.cpp" />
+    <ClCompile Include="Ply\CStringHelper.cpp" />
+    <ClCompile Include="Ply\CVector3f.cpp" />
     <ClCompile Include="Shading\cShader.cpp" />
     <ClCompile Include="Shading\cShaderManager.cpp" />
     <ClCompile Include="Source\glad.c" />
@@ -163,6 +172,15 @@
     <ClInclude Include="Camera\cCamera.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
+    <ClInclude Include="Meshes\cMesh.h" />
+    <ClInclude Include="Meshes\cVAOMeshManager.h" />
+    <ClInclude Include="Meshes\sModelDrawInfo.h" />
+    <ClInclude Include="Meshes\sVertex_xyz_rgba_n_uv2_bt_4Bones.h" />
+    <ClInclude Include="Ply\CHRTimer.h" />
+    <ClInclude Include="Ply\CPlyFile5nt.h" />
+    <ClInclude Include="Ply\CPlyInfo.h" />
+    <ClInclude Include="Ply\CStringHelper.h" />
+    <ClInclude Include="Ply\CVector3f.h" />
     <ClInclude Include="Shading\cShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
