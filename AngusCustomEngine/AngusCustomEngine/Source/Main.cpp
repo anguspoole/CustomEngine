@@ -1,7 +1,10 @@
-#include <glad/glad.h>
+#include "../Global/gOpenGL.h"
 #include <iostream>
+
+GLFWwindow* window;
 
 void main()
 {
-	std::cout << "Hello World" << std::endl;
+	InitWindow(window, 1024, 480, "Hello World");
+	system("PAUSE");
 }
