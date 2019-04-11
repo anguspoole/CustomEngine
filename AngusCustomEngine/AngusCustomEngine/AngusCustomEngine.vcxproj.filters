@@ -40,6 +40,12 @@
     <Filter Include="Meshes\Draw Info">
       <UniqueIdentifier>{6b020ffc-7bbe-441c-bc3e-d15d37523520}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Meshes\AssimpFBX">
+      <UniqueIdentifier>{ebd420c3-106a-4d30-af2d-283637f5a56b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ply">
+      <UniqueIdentifier>{d326ff8f-57c4-42df-8647-99a01cf2592d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -69,40 +75,49 @@
     <ClCompile Include="Meshes\sModelDrawInfo.cpp">
       <Filter>Meshes\Draw Info</Filter>
     </ClCompile>
-    <ClCompile Include="Ply\CHRTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ply\CPlyFile5nt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ply\CPlyFile5nt_experimental.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ply\CPlyFile5nt_planarUV.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ply\CStringHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ply\CVector3f.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LoadModels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp">
+      <Filter>Meshes\AssimpFBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp">
+      <Filter>Meshes\AssimpFBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp">
+      <Filter>Meshes\AssimpFBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
     <ClCompile Include="Meshes\cVAOMeshManager_LoadSkinnedMeshModelIntoVAO.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CHRTimer.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt_experimental.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CPlyFile5nt_planarUV.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CStringHelper.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Ply\CVector3f.cpp">
+      <Filter>Ply</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\EntityPhysics\cEntityPhysics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,30 +147,39 @@
       <Filter>Meshes\Draw Info</Filter>
     </ClInclude>
     <ClInclude Include="Ply\CHRTimer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Ply</Filter>
     </ClInclude>
     <ClInclude Include="Ply\CPlyFile5nt.h">
-      <Filter>Header Files</Filter>
+      <Filter>Ply</Filter>
     </ClInclude>
     <ClInclude Include="Ply\CPlyInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ply\CStringHelper.h">
-      <Filter>Header Files</Filter>
+      <Filter>Ply</Filter>
     </ClInclude>
     <ClInclude Include="Ply\CVector3f.h">
-      <Filter>Header Files</Filter>
+      <Filter>Ply</Filter>
+    </ClInclude>
+    <ClInclude Include="Ply\CStringHelper.h">
+      <Filter>Ply</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h">
-      <Filter>Header Files</Filter>
+      <Filter>Meshes\AssimpFBX</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h">
-      <Filter>Header Files</Filter>
+      <Filter>Meshes\AssimpFBX</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Meshes\AssimpFBX</Filter>
     </ClInclude>
     <ClInclude Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\cEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\EntityMesh\cEntityMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

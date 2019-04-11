@@ -153,6 +153,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera\cCamera.cpp" />
+    <ClCompile Include="Entity\EntityPhysics\cEntityPhysics.cpp" />
+    <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp" />
+    <ClCompile Include="Entity\cEntity.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
@@ -176,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\cCamera.h" />
+    <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h" />
+    <ClInclude Include="Entity\EntityMesh\cEntityMesh.h" />
+    <ClInclude Include="Entity\cEntity.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />

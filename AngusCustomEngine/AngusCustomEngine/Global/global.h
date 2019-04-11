@@ -12,8 +12,9 @@
 #include "../Camera/cCamera.h"
 #include "../Meshes/sModelDrawInfo.h"
 #include "../Meshes/cVAOMeshManager.h"
-
 #include "../Meshes/AssimpFBX/cSimpleAssimpSkinnedMeshLoader_OneMesh.h"
+
+#include "../Entity/cEntity.h"
 
 extern cCamera* g_Camera;
 extern cVAOMeshManager* g_VAOMeshManager;
