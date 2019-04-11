@@ -156,6 +156,7 @@
     <ClCompile Include="Entity\EntityPhysics\cEntityPhysics.cpp" />
     <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp" />
     <ClCompile Include="Entity\cEntity.cpp" />
+    <ClCompile Include="FrameBuffers\cFBO.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
@@ -176,12 +177,16 @@
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\LoadModels.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="TextureManager\C24BitBMPpixel.cpp" />
+    <ClCompile Include="TextureManager\cBasicTextureManager.cpp" />
+    <ClCompile Include="TextureManager\CTextureFromBMP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\cCamera.h" />
     <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h" />
     <ClInclude Include="Entity\EntityMesh\cEntityMesh.h" />
     <ClInclude Include="Entity\cEntity.h" />
+    <ClInclude Include="FrameBuffers\cFBO.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />
@@ -198,6 +203,9 @@
     <ClInclude Include="Ply\CStringHelper.h" />
     <ClInclude Include="Ply\CVector3f.h" />
     <ClInclude Include="Shading\cShaderManager.h" />
+    <ClInclude Include="TextureManager\C24BitBMPpixel.h" />
+    <ClInclude Include="TextureManager\cBasicTextureManager.h" />
+    <ClInclude Include="TextureManager\CTextureFromBMP.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fragment01.glsl" />

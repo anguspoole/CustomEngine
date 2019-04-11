@@ -4,8 +4,6 @@
 
 cEntityMesh::cEntityMesh()
 {
-	this->uniformScale = 1.0f;
-
 	this->bIsVisible = true;
 	this->bIsWireFrame = false;
 	this->bIsALightVolume = false;

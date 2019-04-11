@@ -25,10 +25,11 @@ public:
 	glm::vec3 velocity;
 	glm::vec3 accel;
 
-	bool bIsUpdatedByPhysics;	// Phsyics "owns" the position	
-
+	float uniformScale;
 	float mass;
 	float inverseMass;
+
+	bool bIsUpdatedByPhysics;	// Phsyics "owns" the position	
 
 	glm::quat getQOrientation(void) { return this->m_meshQOrientation; };
 	void setQOrientation(glm::quat newOrientation)

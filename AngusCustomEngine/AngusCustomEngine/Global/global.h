@@ -18,10 +18,13 @@
 #include "../Meshes/cVAOMeshManager.h"
 #include "../Meshes/AssimpFBX/cSimpleAssimpSkinnedMeshLoader_OneMesh.h"
 
+#include "../TextureManager/cBasicTextureManager.h"
+
 #include "../Entity/cEntity.h"
 
 extern cCamera* g_Camera;
 extern cVAOMeshManager* g_VAOMeshManager;
+extern cBasicTextureManager* g_TheTextureManager;
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 

@@ -9,6 +9,7 @@ cEntityPhysics::cEntityPhysics()
 	this->velocity = glm::vec3(0.0f);
 	this->accel = glm::vec3(0.0f);
 	this->setMeshOrientationEulerAngles(glm::vec3(0.0f, 0.0f, 0.0f));
+	this->uniformScale = 1.0f;
 }
 
 

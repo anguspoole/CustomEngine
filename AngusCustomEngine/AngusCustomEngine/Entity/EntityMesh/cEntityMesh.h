@@ -19,6 +19,14 @@
 class cSimpleAssimpSkinnedMesh;	// Forward declare
 class cAnimationState;			// Forward declare 
 
+struct sTextureInfo
+{
+	std::string name;
+	int cachedTextureID; 	// Set to -1 by default
+	float strength;		// Set to 0.0f by default
+	// Added: specific FBOs
+};
+
 struct sLODInfo
 {
 	sLODInfo() :
@@ -45,7 +53,6 @@ public:
 	cEntityMesh();
 	~cEntityMesh();
 
-	float uniformScale;
 	bool bIsWireFrame;
 	bool bIsVisible;
 
@@ -63,11 +70,13 @@ public:
 	void setSpecularPower(float specPower);
 
 	bool bUseVertexColour;		// = false (default)
-
 	bool bDontLight;		// If true, just object colour is used
 
 	// If true, then will draw both front and back.
 	bool bIsALightVolume;
+
+	//Textures
+	std::vector<sTextureInfo> vecTextures;
 
 	// Skinned mesh and animations:
 	// If NULL, then object ISN'T a skinned mesh

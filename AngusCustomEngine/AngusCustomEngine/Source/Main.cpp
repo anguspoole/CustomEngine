@@ -19,6 +19,7 @@ int windowHeight = 0;
 cCamera* g_Camera = NULL;
 cShaderManager* pTheShaderManager = NULL;
 cVAOMeshManager* g_VAOMeshManager = NULL;
+cBasicTextureManager* g_TheTextureManager = NULL;
 
 void main()
 {
@@ -68,6 +69,7 @@ void main()
 
 	g_Camera = new cCamera();
 	g_VAOMeshManager = new cVAOMeshManager();
+	g_TheTextureManager = new cBasicTextureManager();
 
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

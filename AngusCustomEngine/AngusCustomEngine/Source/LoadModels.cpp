@@ -217,8 +217,30 @@ void LoadSkinnedMeshModelTypes(cVAOMeshManager* pTheVAOMeshManager, GLuint shade
 	return;
 }
 
+//Function for loading models using threads
 void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
 {
+	// Load the cube map
+	std::string errorString;
+	cBasicTextureManager::sCubeMapTextureLoadParams cubeLoadParams;
+	cubeLoadParams.cubeMapName = "CityCubeMap";
+	cubeLoadParams.posX_fileName = "SpaceBox_right1_posX.bmp";
+	cubeLoadParams.negX_fileName = "SpaceBox_left2_negX.bmp";
+	cubeLoadParams.posY_fileName = "SpaceBox_top3_posY.bmp";
+	cubeLoadParams.negY_fileName = "SpaceBox_bottom4_negY.bmp";
+	cubeLoadParams.posZ_fileName = "SpaceBox_front5_posZ.bmp";
+	cubeLoadParams.negZ_fileName = "SpaceBox_back6_negZ.bmp";
+	cubeLoadParams.basePath = "assets/textures/cubemaps";
+	cubeLoadParams.bIsSeamless = true;
+	if (::g_TheTextureManager->CreateCubeTextureFromBMPFiles(cubeLoadParams, errorString))
+	{
+		//std::cout << "Loaded the space cube map OK" << std::endl;
+	}
+	else
+	{
+		std::cout << "Error: space cube map DIDN't load. On no!" << std::endl;
+	}
+
 	pTheVAOMeshManager->changeLoaderToPly5n();
 
 	pTheVAOMeshManager->SetBasePath("assets/models");
@@ -238,9 +260,33 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(sphereInvertedNormalsInfo, shaderProgramID);
 
 }
-//Function for loading models using threads
+
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
 {
 	//LoadSkinnedMeshModelTypes(pTheVAOMeshManager, shaderProgramID);
 	LoadModelsToVAO_ASYNC(pTheVAOMeshManager, shaderProgramID);
+}
+
+void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
+{
+	{	// This will be our "skybox" object.
+	// (could also be a cube, or whatever)
+		cEntity* pSkyBoxObject = new cEntity();
+		pSkyBoxObject->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
+		pSkyBoxObject->m_EntityMesh->bUseVertexColour = false;
+		pSkyBoxObject->friendlyName = "SkyBoxObject";
+		pSkyBoxObject->m_EntityPhysics->uniformScale = 5000.0f;
+		//		pSkyBoxObject->meshName = "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply";			// "Sphere_320_faces_xyz.ply";
+		pSkyBoxObject->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply"));
+		//		pSkyBoxObject->bIsWireFrame = true;
+		sTextureInfo skyboxTextureInfo;
+		skyboxTextureInfo.name = "CityCubeMap";
+		skyboxTextureInfo.strength = 1.0f;
+		pSkyBoxObject->m_EntityMesh->vecTextures.push_back(skyboxTextureInfo);
+
+		// Invisible until I need to draw it
+		pSkyBoxObject->m_EntityMesh->bIsVisible = false;
+
+		vec_pObjectsToDraw.push_back(pSkyBoxObject);
+	}
 }

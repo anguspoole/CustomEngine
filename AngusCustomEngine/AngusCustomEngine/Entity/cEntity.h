@@ -10,8 +10,6 @@ public:
 	cEntity();
 	~cEntity();
 
-	cEntity(cEntityMesh* entityMesh);
-
 	//The entity's mesh info - made public because it will be accessed frequently
 	cEntityMesh* m_EntityMesh;
 	
