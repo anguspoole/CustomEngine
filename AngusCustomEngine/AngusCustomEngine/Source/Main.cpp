@@ -11,12 +11,14 @@
 #include "../Global/gOpenGL.h"
 #include "../Shading/cShaderManager.h"
 
+// "HEAP" Variables
 GLFWwindow* window = NULL;
 int windowWidth = 0;
 int windowHeight = 0;
 
-cShaderManager* pTheShaderManager = NULL;		// "Heap" variable
-cCamera* gCamera = NULL;
+cCamera* g_Camera = NULL;
+cShaderManager* pTheShaderManager = NULL;
+cVAOMeshManager* g_VAOMeshManager = NULL;
 
 void main()
 {
@@ -62,9 +64,10 @@ void main()
 	pSP->LoadUniformLocation("texBlendWeights[0]");
 	pSP->LoadUniformLocation("texBlendWeights[1]");
 
-	gCamera = new cCamera();
-
 	GLuint program = pTheShaderManager->getIDFromFriendlyName("BasicUberShader");
+
+	g_Camera = new cCamera();
+	g_VAOMeshManager = new cVAOMeshManager();
 
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -104,9 +107,9 @@ void main()
 		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 2nd pass
 
 		//Assign camera to new point
-		gCamera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
+		g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		glm::mat4 matView = glm::lookAt(gCamera->eye, gCamera->getAtInWorldSpace(), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		glm::mat4 matProjection = glm::perspective(0.6f,			// FOV
@@ -114,7 +117,7 @@ void main()
 			0.1f,			// Near clipping plane
 			10000.0f);	// Far clipping plane
 
-		glUniform3f(eyeLocation_location, gCamera->eye.x, gCamera->eye.y, gCamera->eye.z);
+		glUniform3f(eyeLocation_location, g_Camera->eye.x, g_Camera->eye.y, g_Camera->eye.z);
 
 		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
 		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));

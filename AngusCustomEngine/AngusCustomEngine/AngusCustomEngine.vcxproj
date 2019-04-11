@@ -154,8 +154,13 @@
   <ItemGroup>
     <ClCompile Include="Camera\cCamera.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
+    <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp" />
+    <ClCompile Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.cpp" />
     <ClCompile Include="Meshes\cMesh.cpp" />
     <ClCompile Include="Meshes\cVAOMeshManager.cpp" />
+    <ClCompile Include="Meshes\cVAOMeshManager_LoadSkinnedMeshModelIntoVAO.cpp" />
     <ClCompile Include="Meshes\sModelDrawInfo.cpp" />
     <ClCompile Include="Ply\CHRTimer.cpp" />
     <ClCompile Include="Ply\CPlyFile5nt.cpp" />
@@ -166,12 +171,17 @@
     <ClCompile Include="Shading\cShader.cpp" />
     <ClCompile Include="Shading\cShaderManager.cpp" />
     <ClCompile Include="Source\glad.c" />
+    <ClCompile Include="Source\LoadModels.cpp" />
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\cCamera.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
+    <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />
+    <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h" />
+    <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h" />
+    <ClInclude Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.h" />
     <ClInclude Include="Meshes\cMesh.h" />
     <ClInclude Include="Meshes\cVAOMeshManager.h" />
     <ClInclude Include="Meshes\sModelDrawInfo.h" />

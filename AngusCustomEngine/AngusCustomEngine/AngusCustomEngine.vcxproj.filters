@@ -87,6 +87,24 @@
     <ClCompile Include="Ply\CVector3f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadModels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\cVAOMeshManager_LoadSkinnedMeshModelIntoVAO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">
@@ -126,6 +144,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ply\CVector3f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\AssimpFBX\cSimpleAssimpSkinnedMeshLoader_OneMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

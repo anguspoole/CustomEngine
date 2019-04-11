@@ -13,7 +13,9 @@
 #include "../Meshes/sModelDrawInfo.h"
 #include "../Meshes/cVAOMeshManager.h"
 
+#include "../Meshes/AssimpFBX/cSimpleAssimpSkinnedMeshLoader_OneMesh.h"
 
-extern cCamera* gCamera;
+extern cCamera* g_Camera;
+extern cVAOMeshManager* g_VAOMeshManager;
 
 #endif
