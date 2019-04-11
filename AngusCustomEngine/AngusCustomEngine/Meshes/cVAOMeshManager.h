@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include "sModelDrawInfo.h"
 
 // This class is in charge of:
@@ -35,6 +36,8 @@ public:
 	// Note: the shader program ID is needed to tie the buffer to the vertex layout of the shader
 	bool LoadModelIntoVAO(sModelDrawInfo &drawInfo,
 		unsigned int shaderProgramID);
+	bool LoadModelIntoVAO_ASYNC(sModelDrawInfo &drawInfo,
+		unsigned int shaderProgramID);
 
 	// Takes an existing FBX Skinned mesh and loads the mesh part into a VAO
 	bool LoadSkinnedMeshModelIntoVAO(cSimpleAssimpSkinnedMesh* pLoadedAssimpSkinnedMesh,
@@ -58,33 +61,48 @@ public:
 
 	void SetBasePath(std::string basepath);
 
-private:
 	// Rounds up to multiples of 64
 	unsigned int m_roundUp(unsigned int numToRound, unsigned int multiple);
 
-	// LoadPlyFileData()
-	bool m_LoadModelFromFile(sModelDrawInfo &drawInfo);
-	//	bool m_LoadModelFromFile_OriginalLoader( sModelDrawInfo &drawInfo );	// Was always crappy... :)
-	bool m_LoadModelFromFile_Ply5nLoader(sModelDrawInfo &drawInfo);
-	bool m_LoadModelFromFile_AssimpLoader(sModelDrawInfo &drawInfo);
+	void m_AppendTextToLastError(std::string text, bool addNewLineBefore = true);
+
+	std::string m_basePath;
+
+	eLoadWith m_fileLoader;
+
+	//sModelDrawInfo * currentActiveDrawInfo;
+
+	void m_LockModelNameMap(void);
+	void m_UnlockModelNameMap(void);
 
 	//LoadMeshIntoGPUBuffer
 	// This takes the information from the cMesh, inside the sModelDrawInfo, and loads it into the VAO
 	bool m_LoadMeshInfo_Into_VAO(sModelDrawInfo &drawInfo,
 		unsigned int shaderProgramID);
 
-	std::map< std::string /*friendly name*/, cSimpleAssimpSkinnedMesh* > m_mapNameToSMModels;
-
+	//unsigned int shaderProgramID;
 
 	// This holds the model information
 	std::map< std::string /*model name*/, sModelDrawInfo > m_mapModel_to_VAOID;
 
+	std::vector<std::pair<sModelDrawInfo, unsigned int>> modelIntPairs;
+
+	int currentPair = 0;
+
+	bool m_LoadModelFromFile_ASYNC();
+
+private:
+
+	// LoadPlyFileData()
+	bool m_LoadModelFromFile(sModelDrawInfo &drawInfo);
+	//bool m_LoadModelFromFile_ASYNC( sModelDrawInfo &drawInfo );
+	bool m_LoadModelFromFile_Ply5nLoader(sModelDrawInfo &drawInfo);
+	//DWORD WINAPI m_LoadModelFromFile_Ply5nLoader_ASYNC( PVOID pParam );
+	bool m_LoadModelFromFile_AssimpLoader(sModelDrawInfo &drawInfo);
+
+	std::map< std::string /*friendly name*/, cSimpleAssimpSkinnedMesh* > m_mapNameToSMModels;
+
 	std::string m_lastErrorString;
-	void m_AppendTextToLastError(std::string text, bool addNewLineBefore = true);
-
-	std::string m_basePath;
-
-	eLoadWith m_fileLoader;
 };
 
 #endif		// _cVAOMeshManager_HG_

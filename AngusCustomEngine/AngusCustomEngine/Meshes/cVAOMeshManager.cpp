@@ -10,8 +10,11 @@
 #include <iostream> 
 #include <sstream>
 
+CRITICAL_SECTION CS_modelNameMap;
+
 cVAOMeshManager::cVAOMeshManager()		// constructor
 {
+	InitializeCriticalSection(&CS_modelNameMap);
 	this->m_fileLoader = cVAOMeshManager::PLY5N;
 	return;
 }
@@ -64,6 +67,16 @@ void cVAOMeshManager::changeLoaderToAssimp(void)
 	return;
 }
 
+void cVAOMeshManager::m_LockModelNameMap(void)
+{
+	EnterCriticalSection(&CS_modelNameMap);
+	return;
+}
+void cVAOMeshManager::m_UnlockModelNameMap(void)
+{
+	LeaveCriticalSection(&CS_modelNameMap);
+	return;
+}
 
 
 // Note: the shader program ID is needed to tie 
@@ -89,8 +102,8 @@ bool cVAOMeshManager::LoadModelIntoVAO(
 	{
 		// No, so we need to load it...
 		// Load the model from the file
-		std::cout << "About to load " << drawInfo.meshFileName << "..." << std::endl;
-		std::cout.flush();
+		//std::cout << "About to load " << drawInfo.meshFileName << "..." << std::endl;
+		//std::cout.flush();
 		if (!this->m_LoadModelFromFile(drawInfo))
 		{
 			// Add some error code
@@ -111,6 +124,70 @@ bool cVAOMeshManager::LoadModelIntoVAO(
 
 	// Store this mesh into the map
 	this->m_mapModel_to_VAOID[drawInfo.meshFileName] = drawInfo;
+
+	return true;
+}
+
+bool cVAOMeshManager::LoadModelIntoVAO_ASYNC(sModelDrawInfo & drawInfo, unsigned int shaderProgramID)
+{
+	// See if this model has already been loaded
+	//this->m_LockModelNameMap();
+	std::map< std::string /*model name*/, sModelDrawInfo >::iterator itModel = this->m_mapModel_to_VAOID.find(drawInfo.meshFileName);
+	//this->m_UnlockModelNameMap();
+
+	//return true;
+
+	if (itModel != this->m_mapModel_to_VAOID.end())
+	{
+		this->m_AppendTextToLastError("Model ", false);
+		this->m_AppendTextToLastError(drawInfo.meshFileName, false);
+		this->m_AppendTextToLastError(" was already loaded.");
+		return false;
+	}
+
+	modelIntPairs.push_back(std::pair<sModelDrawInfo, unsigned int>(drawInfo, shaderProgramID));
+	return true;
+
+	/*this->currentActiveDrawInfo = &drawInfo;
+	this->shaderProgramID = shaderProgramID;*/
+
+	// Does the drawInfo object already have data in it? 
+	// (like from assimp or whatever)
+	if (drawInfo.numberOfVertices == 0)
+	{
+		// No, so we need to load it...
+		// Load the model from the file
+		//std::cout << "About to load " << drawInfo.meshFileName << "..." << std::endl;
+		//std::cout.flush();
+
+		//this->m_LockModelNameMap();
+		//this->m_LoadModelFromFile_ASYNC(drawInfo);
+		//drawInfo = *this->currentActiveDrawInfo;
+		//this->m_UnlockModelNameMap();
+		/*if (!this->m_LoadModelFromFile_ASYNC(drawInfo))
+		{
+			// Add some error code
+			std::cout << "Didn't load " << drawInfo.meshFileName << " file." << std::endl;
+			std::cout.flush();
+			return false;
+		}*/
+	}//if ( drawInfo.numberOfVertices == 0 )
+
+
+	// Load the model data into the GPU
+	//LoadMeshIntoGPUBuffer
+	//this->m_LockModelNameMap();
+	//if (!this->m_LoadMeshInfo_Into_VAO(drawInfo, shaderProgramID))
+	//{
+	//	// Add some error text
+	//	return false;
+	//}
+	//this->m_UnlockModelNameMap();
+
+	// Store this mesh into the map
+	//this->m_LockModelNameMap();
+	//this->m_mapModel_to_VAOID[drawInfo.meshFileName] = drawInfo;
+	//this->m_UnlockModelNameMap();
 
 	return true;
 }
@@ -138,6 +215,12 @@ bool cVAOMeshManager::m_LoadModelFromFile_AssimpLoader(sModelDrawInfo &drawInfo)
 	return false;
 }
 
+DWORD WINAPI m_LoadModelFromFile_AssimpLoader_ASYNC(PVOID pvParam)
+{
+	assert(true);
+	return false;
+}
+
 
 bool cVAOMeshManager::m_LoadModelFromFile(sModelDrawInfo &drawInfo)
 {
@@ -157,6 +240,292 @@ bool cVAOMeshManager::m_LoadModelFromFile(sModelDrawInfo &drawInfo)
 	return false;
 }
 
+DWORD WINAPI m_LoadModelFromFile_Ply5nLoader_ASYNC(PVOID pvParam)
+{
+	cVAOMeshManager* vaoMeshManager = (cVAOMeshManager*)pvParam;
+	sModelDrawInfo drawInfo;// = vaoMeshManager->currentActiveDrawInfo;
+
+	vaoMeshManager->m_LockModelNameMap();
+
+	drawInfo = vaoMeshManager->modelIntPairs.at(vaoMeshManager->currentPair).first;
+	unsigned int shaderID = vaoMeshManager->modelIntPairs.at(vaoMeshManager->currentPair).second;
+	int curPair = vaoMeshManager->currentPair;
+	vaoMeshManager->currentPair++;
+
+	vaoMeshManager->m_UnlockModelNameMap();
+
+	std::string fileToLoadFullPath = drawInfo.meshFileName;
+	if (vaoMeshManager->m_basePath != "")
+	{
+		fileToLoadFullPath = vaoMeshManager->m_basePath + "/" + drawInfo.meshFileName;
+	}
+
+	CPlyFile5nt plyLoader;
+	std::wstring error;
+	if (!plyLoader.OpenPLYFile2(CStringHelper::ASCIIToUnicodeQnD(fileToLoadFullPath), error))
+	{
+		vaoMeshManager->m_AppendTextToLastError("Didn't load the ", false);
+		vaoMeshManager->m_AppendTextToLastError(fileToLoadFullPath, false);
+		vaoMeshManager->m_AppendTextToLastError(" file.");
+		vaoMeshManager->m_AppendTextToLastError(CStringHelper::UnicodeToASCII_QnD(error));
+		//vaoMeshManager->m_UnlockModelNameMap();
+		return 1;
+	}
+
+	// Create an internal mesh object
+	drawInfo.pMeshData = new cMesh();
+
+
+	drawInfo.numberOfVertices = plyLoader.GetNumberOfVerticies();
+	drawInfo.pMeshData->numberOfVertices = plyLoader.GetNumberOfVerticies();
+	//	std::cout << "vertices: " << drawInfo.numberOfVertices << std::endl;
+
+	drawInfo.numberOfTriangles = plyLoader.GetNumberOfElements();
+	drawInfo.pMeshData->numberOfTriangles = plyLoader.GetNumberOfElements();
+
+	drawInfo.numberOfIndices = drawInfo.numberOfTriangles * 3;
+	drawInfo.pMeshData->numberOfIndices = drawInfo.numberOfIndices;
+
+	//	std::cout << "triangles: " << drawInfo.numberOfTriangles << std::endl;
+
+
+		// Allocate the arrays, and padd it with a little but (round up to 64)
+	drawInfo.pMeshData->pVertices = new sVertex_xyz_rgba_n_uv2_bt_4Bones[vaoMeshManager->m_roundUp(drawInfo.numberOfVertices, 64)];
+	drawInfo.pMeshData->pTriangles = new cTriangle[vaoMeshManager->m_roundUp(drawInfo.numberOfTriangles, 64)];
+	drawInfo.pMeshData->pIndices = new unsigned int[vaoMeshManager->m_roundUp(drawInfo.numberOfIndices, 64)];
+
+
+	//memset( drawInfo.pVerticesFromFile, 0, sizeof( sPlyVertex ) * drawInfo.numberOfVertices );
+
+	// Read the vertex data into the array
+	PlyVertex curVert;
+	for (unsigned int index = 0; index != drawInfo.numberOfVertices; index++)
+	{
+		curVert = plyLoader.getVertex_at(index);
+
+		drawInfo.pMeshData->pVertices[index].x = curVert.xyz.x;
+		drawInfo.pMeshData->pVertices[index].y = curVert.xyz.y;
+		drawInfo.pMeshData->pVertices[index].z = curVert.xyz.z;
+
+		drawInfo.pMeshData->pVertices[index].nx = curVert.nx;
+		drawInfo.pMeshData->pVertices[index].ny = curVert.ny;
+		drawInfo.pMeshData->pVertices[index].nz = curVert.nz;
+
+		//  Also load the UV values
+		drawInfo.pMeshData->pVertices[index].u0 = curVert.tex0u;
+		drawInfo.pMeshData->pVertices[index].v0 = curVert.tex0v;
+		drawInfo.pMeshData->pVertices[index].u1 = 0.0f;
+		drawInfo.pMeshData->pVertices[index].v1 = 0.0f;
+
+		drawInfo.pMeshData->pVertices[index].r = curVert.red;
+		drawInfo.pMeshData->pVertices[index].g = curVert.green;
+		drawInfo.pMeshData->pVertices[index].b = curVert.blue;
+		drawInfo.pMeshData->pVertices[index].a = curVert.alpha;
+
+		drawInfo.pMeshData->pVertices[index].bx = 0.0f;
+		drawInfo.pMeshData->pVertices[index].by = 0.0f;
+		drawInfo.pMeshData->pVertices[index].bz = 0.0f;
+
+		drawInfo.pMeshData->pVertices[index].tx = 0.0f;
+		drawInfo.pMeshData->pVertices[index].ty = 0.0f;
+		drawInfo.pMeshData->pVertices[index].tz = 0.0f;
+
+		for (unsigned int boneIndex = 0; boneIndex != NUMBEROFBONES; boneIndex++)
+		{
+			drawInfo.pMeshData->pVertices[index].boneID[boneIndex] = 0;
+			drawInfo.pMeshData->pVertices[index].boneWeights[boneIndex] = 0.0f;
+		}
+
+		//		theFile >> g_pArrayVert[index].;
+	}//for ( unsigned int index...
+
+	// Same with triangles
+
+//	memset( drawInfo.pTriangles, 0, sizeof( sPlyTriangle ) * drawInfo.numberOfTriangles );
+
+	PlyElement curElement;
+	unsigned int index = 0;
+	unsigned int triIndex = 0;
+	for (; triIndex != drawInfo.numberOfTriangles;
+		index += 3, triIndex++)
+	{
+		curElement = plyLoader.getElement_at(triIndex);
+
+		drawInfo.pMeshData->pTriangles[triIndex].vertex_ID_0 = curElement.vertex_index_1;
+		drawInfo.pMeshData->pTriangles[triIndex].vertex_ID_1 = curElement.vertex_index_2;
+		drawInfo.pMeshData->pTriangles[triIndex].vertex_ID_2 = curElement.vertex_index_3;
+
+		// Unpack the index information, too
+		drawInfo.pMeshData->pIndices[index + 0] = curElement.vertex_index_1;
+		drawInfo.pMeshData->pIndices[index + 1] = curElement.vertex_index_2;
+		drawInfo.pMeshData->pIndices[index + 2] = curElement.vertex_index_3;
+
+	}//for ( unsigned int index...
+
+	plyLoader.calcualteExtents();
+
+	// Calculating extents...
+
+	// Assume the 1st one is the largest and smallest:
+	drawInfo.minX = plyLoader.getMinX();		drawInfo.pMeshData->minXYZ.x = plyLoader.getMinX();
+	drawInfo.minY = plyLoader.getMinY();		drawInfo.pMeshData->minXYZ.y = plyLoader.getMinY();
+	drawInfo.minZ = plyLoader.getMinZ();		drawInfo.pMeshData->minXYZ.z = plyLoader.getMinZ();
+
+	drawInfo.maxX = plyLoader.getMaxX();		drawInfo.pMeshData->maxXYZ.x = plyLoader.getMaxX();
+	drawInfo.maxY = plyLoader.getMaxY();		drawInfo.pMeshData->maxXYZ.y = plyLoader.getMaxY();
+	drawInfo.maxZ = plyLoader.getMaxZ();		drawInfo.pMeshData->maxXYZ.z = plyLoader.getMaxZ();
+
+	drawInfo.extentX = drawInfo.maxX - drawInfo.minX;		drawInfo.pMeshData->maxExtentXYZ.x = drawInfo.extentX;
+	drawInfo.extentY = drawInfo.maxY - drawInfo.minY;		drawInfo.pMeshData->maxExtentXYZ.y = drawInfo.extentY;
+	drawInfo.extentZ = drawInfo.maxZ - drawInfo.minZ;		drawInfo.pMeshData->maxExtentXYZ.z = drawInfo.extentZ;
+
+	drawInfo.maxExtent = plyLoader.getMaxExtent();		drawInfo.pMeshData->maxExtent = drawInfo.maxExtent;
+
+	//vaoMeshManager->currentActiveDrawInfo = drawInfo;
+
+	vaoMeshManager->modelIntPairs.at(curPair).first = drawInfo;
+
+	//vaoMeshManager->m_LoadMeshInfo_Into_VAO(*drawInfo, vaoMeshManager->shaderProgramID);
+
+	//vaoMeshManager->m_UnlockModelNameMap();
+
+	//vaoMeshManager->currentActiveDrawInfo = drawInfo;
+
+	return 0;
+}
+
+//bool cVAOMeshManager::m_LoadModelFromFile_ASYNC(sModelDrawInfo &drawInfo)
+bool cVAOMeshManager::m_LoadModelFromFile_ASYNC()
+{
+	std::vector<LPDWORD> phThreads;
+	std::vector<DWORD> hThreads;
+	std::vector<HANDLE> hThreadHandles;
+
+	void* pTheThisPointer = (void*)this;		// a pointer to one of these CTextureFromBMP
+
+	int curNumThreads = 0;
+	int maxNumThreads = 50;
+
+	for (int i = 0; i < modelIntPairs.size(); i++)
+	{
+		//std::cout << "got here i: " << i << std::endl;
+		curNumThreads++;
+
+		LPDWORD phThread = 0;
+		DWORD hThread = 0;
+		HANDLE hThreadHandle = 0;
+
+		phThreads.push_back(phThread);
+		hThreads.push_back(hThread);
+		hThreadHandles.push_back(hThreadHandle);
+
+		if (i == (modelIntPairs.size() - 1) || curNumThreads == maxNumThreads)
+		{
+			for (int j = 0; j < curNumThreads; j++)
+			{
+				switch (this->m_fileLoader)
+				{
+					//case cVAOMeshManager::ORIGINAL:
+					//	return this->m_LoadModelFromFile_OriginalLoader( drawInfo );
+					//	break;
+				case cVAOMeshManager::PLY5N:
+					// Pass the this pointer to the thread function
+					hThreadHandles[j] = CreateThread(NULL,	// Default security
+						0,		// Stack size - default - win32 = 1 Mbyte
+						&m_LoadModelFromFile_Ply5nLoader_ASYNC, // Pointer to the thread's function
+						pTheThisPointer,		// The value (parameter) we pass to the thread
+							   // This is a pointer to void... more on this evil thing later...
+						0,  // CREATE_SUSPENDED or 0 for threads...
+						(DWORD*)&phThreads[j]);		// pointer or ref to variable that will get loaded with threadID
+					break;
+				case cVAOMeshManager::ASSIMP:
+					// Pass the this pointer to the thread function
+					hThreadHandles[j] = CreateThread(NULL,	// Default security
+						0,		// Stack size - default - win32 = 1 Mbyte
+						&m_LoadModelFromFile_AssimpLoader_ASYNC, // Pointer to the thread's function
+						pTheThisPointer,		// The value (parameter) we pass to the thread
+							   // This is a pointer to void... more on this evil thing later...
+						0,  // CREATE_SUSPENDED or 0 for threads...
+						(DWORD*)&phThreads[j]);		// pointer or ref to variable that will get loaded with threadID
+					break;
+				}
+			}
+			//Done making threads, so close them when finished
+			for (int j = 0; j < curNumThreads; j++)
+			{
+				//Wait for thread
+				if (WaitForSingleObject((hThreadHandles[j]), INFINITE))
+				{
+					CloseHandle(hThreadHandles[j]);
+				}
+			}
+			//Reset counter and thread vectors
+			curNumThreads = 0;
+			phThreads.clear();
+			hThreads.clear();
+			hThreadHandles.clear();
+		}
+	}
+
+	for (int i = 0; i < this->modelIntPairs.size(); i++)
+	{
+		this->m_LoadMeshInfo_Into_VAO(this->modelIntPairs[i].first, this->modelIntPairs[i].second);
+
+		this->m_mapModel_to_VAOID[this->modelIntPairs[i].first.meshFileName] = this->modelIntPairs[i].first;
+	}
+
+	//// Create thread
+	//LPDWORD phThread = 0;
+	//DWORD hThread = 0;
+	//HANDLE hThreadHandle = 0;
+
+	//this->currentActiveDrawInfo = &drawInfo;
+
+	return true;
+
+	//bool exitResult = false;
+
+	//switch (this->m_fileLoader)
+	//{
+	//	//case cVAOMeshManager::ORIGINAL:
+	//	//	return this->m_LoadModelFromFile_OriginalLoader( drawInfo );
+	//	//	break;
+	//case cVAOMeshManager::PLY5N:
+	//	// Pass the this pointer to the thread function
+	//	hThreadHandle = CreateThread(NULL,	// Default security
+	//		0,		// Stack size - default - win32 = 1 Mbyte
+	//		&m_LoadModelFromFile_Ply5nLoader_ASYNC, // Pointer to the thread's function
+	//		pTheThisPointer,		// The value (parameter) we pass to the thread
+	//			   // This is a pointer to void... more on this evil thing later...
+	//		0,  // CREATE_SUSPENDED or 0 for threads...
+	//		(DWORD*)&phThread);		// pointer or ref to variable that will get loaded with threadID
+	//	//return this->m_LoadModelFromFile_Ply5nLoader(drawInfo);
+	//	//DWORD exitThread;
+	//	//exitResult = GetExitCodeThread(hThreadHandle, &exitThread);
+	//	//if (exitThread == STILL_ACTIVE)
+	//	//{
+	//		return true;
+	//	//}
+	//	//return exitResult;
+	//	break;
+	//case cVAOMeshManager::ASSIMP:
+	//	// Pass the this pointer to the thread function
+	//	hThreadHandle = CreateThread(NULL,	// Default security
+	//		0,		// Stack size - default - win32 = 1 Mbyte
+	//		&m_LoadModelFromFile_AssimpLoader_ASYNC, // Pointer to the thread's function
+	//		pTheThisPointer,		// The value (parameter) we pass to the thread
+	//			   // This is a pointer to void... more on this evil thing later...
+	//		0,  // CREATE_SUSPENDED or 0 for threads...
+	//		(DWORD*)&phThread);		// pointer or ref to variable that will get loaded with threadID
+	//	//return this->m_LoadModelFromFile_Ply5nLoader(drawInfo);
+	//	exitResult = GetExitCodeThread(hThreadHandle, phThread);
+	//	return !exitResult;
+	//	//return exitResult;
+	//	break;
+	//}
+
+	//return false;
+}
 
 bool cVAOMeshManager::m_LoadModelFromFile_Ply5nLoader(sModelDrawInfo &drawInfo)
 {

@@ -217,8 +217,30 @@ void LoadSkinnedMeshModelTypes(cVAOMeshManager* pTheVAOMeshManager, GLuint shade
 	return;
 }
 
+void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
+{
+	pTheVAOMeshManager->changeLoaderToPly5n();
+
+	pTheVAOMeshManager->SetBasePath("assets/models");
+
+	sModelDrawInfo cityInfo;
+	cityInfo.meshFileName = "ScifiCityRuins.ply";	// "MeshLab_Fractal_Terrain_xyz.ply";
+	// Will alow me to update the vertex data in the mesh
+	cityInfo.bVertexBufferIsDynamic = true;
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cityInfo, shaderProgramID);
+
+	sModelDrawInfo sphereInfo;
+	sphereInfo.meshFileName = "Sphere_320_faces_xyz_n_GARBAGE_uv.ply";			// "Sphere_320_faces_xyz.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(sphereInfo, shaderProgramID);
+
+	sModelDrawInfo sphereInvertedNormalsInfo;
+	sphereInvertedNormalsInfo.meshFileName = "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply";			// "Sphere_320_faces_xyz.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(sphereInvertedNormalsInfo, shaderProgramID);
+
+}
 //Function for loading models using threads
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
 {
-	LoadSkinnedMeshModelTypes(pTheVAOMeshManager, shaderProgramID);
+	//LoadSkinnedMeshModelTypes(pTheVAOMeshManager, shaderProgramID);
+	LoadModelsToVAO_ASYNC(pTheVAOMeshManager, shaderProgramID);
 }

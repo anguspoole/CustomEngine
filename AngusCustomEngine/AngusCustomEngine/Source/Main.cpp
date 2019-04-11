@@ -79,6 +79,8 @@ void main()
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
+	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
+
 	int renderPassNumber = 1;
 	GLint renderPassNumber_UniLoc = glGetUniformLocation(program, "renderPassNumber");
 

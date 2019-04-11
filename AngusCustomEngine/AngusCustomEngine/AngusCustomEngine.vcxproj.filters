@@ -46,6 +46,9 @@
     <Filter Include="Ply">
       <UniqueIdentifier>{d326ff8f-57c4-42df-8647-99a01cf2592d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{8fece1ff-77d2-4155-b496-0c683950acdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -112,13 +115,13 @@
       <Filter>Ply</Filter>
     </ClCompile>
     <ClCompile Include="Entity\cEntity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\EntityPhysics\cEntityPhysics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -174,13 +177,13 @@
       <Filter>Meshes</Filter>
     </ClInclude>
     <ClInclude Include="Entity\cEntity.h">
-      <Filter>Header Files</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\EntityMesh\cEntityMesh.h">
-      <Filter>Header Files</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h">
-      <Filter>Header Files</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

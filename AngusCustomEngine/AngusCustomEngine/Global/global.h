@@ -9,6 +9,10 @@
 #include <string.h>
 #include <iostream>
 
+#include <glm/glm.hpp>
+
+#include "gOpenGL.h"
+
 #include "../Camera/cCamera.h"
 #include "../Meshes/sModelDrawInfo.h"
 #include "../Meshes/cVAOMeshManager.h"
@@ -18,5 +22,7 @@
 
 extern cCamera* g_Camera;
 extern cVAOMeshManager* g_VAOMeshManager;
+
+void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 
 #endif
