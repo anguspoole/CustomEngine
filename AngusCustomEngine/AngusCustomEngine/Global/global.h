@@ -11,6 +11,10 @@
 
 #include <glm/glm.hpp>
 
+#include <iPhysicsFactory.h>
+#include <physics_interfaces.h>
+#include <../load/sConfig.h>
+
 #include "gOpenGL.h"
 
 #include "../Camera/cCamera.h"
@@ -34,5 +38,29 @@ void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProg
 void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
 void DrawScene_Simple(std::vector<cEntity*> vec_pEntities, GLuint shaderProgramID, unsigned int passNumber, cFBO* fbo);
+
+extern nPhysics::iPhysicsFactory* gPhysicsFactory; //global physics factory
+extern nPhysics::iPhysicsWorld* gPhysicsWorld;
+bool InitPhysicsStuff(const nLoad::sConfig& config);
+bool buildPhysicsWorld();
+void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw);
+void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, float d);
+void makeSoftBody(cEntity * obj, nPhysics::sSoftBodyDef bodyDef0);
+void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+
+void makePointPointConstraint(cEntity* objA, glm::vec3 pivot);
+void makePointPointConstraint(cEntity* objA, cEntity* objB, glm::vec3 pivotA, glm::vec3 pivotB);
+void makeHingeConstraint(cEntity * obj, glm::vec3 pivot, glm::vec3 axis);
+void makeHingeConstraint(cEntity * objA, cEntity* objB, glm::vec3 pivotA, glm::vec3 pivotB, glm::vec3 axisA, glm::vec3 axisB);
+void makeConeTwistConstraint(cEntity * objA);
+void makeConeTwistConstraint(cEntity * objA, cEntity* objB);
+void makeSliderConstraint(cEntity * objA);
+void makeSliderConstraint(cEntity * objA, cEntity* objB);
+
+extern double dT;
+extern nLoad::sConfig config;
 
 #endif

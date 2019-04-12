@@ -13,7 +13,14 @@ Position, Velocity, Acceleration, Orientation, Mass
 #define GLM_ENABLE_EXPERIMENTAL		// To get glm quaternion stuff to compile
 #include <glm/gtx/quaternion.hpp>	// Note strange folder
 
+// Physics Includes
+#include <iEntity.h>
 
+struct sTriangle
+{
+	glm::vec3 v[3];
+	glm::vec3 n;
+};
 
 class cEntityPhysics
 {
@@ -30,6 +37,19 @@ public:
 	float inverseMass;
 
 	bool bIsUpdatedByPhysics;	// Phsyics "owns" the position	
+
+	enum ePhysicsObjType
+	{
+		NONE = 0,
+		RIGID_BODY = 1,
+		SOFT_BODY = 2,
+		SOFT_BODY_NODE = 3
+	};
+
+	ePhysicsObjType physObjType = ePhysicsObjType::NONE;
+
+	nPhysics::iRigidBody* rigidBody;
+	nPhysics::iSoftBody* softBody;
 
 	glm::quat getQOrientation(void) { return this->m_meshQOrientation; };
 	void setQOrientation(glm::quat newOrientation)

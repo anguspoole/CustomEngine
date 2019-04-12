@@ -162,6 +162,9 @@
     <ClCompile Include="load\nLoad.cpp">
       <Filter>Json</Filter>
     </ClCompile>
+    <ClCompile Include="Source\AbstractPhysics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">
