@@ -28,6 +28,8 @@ extern cVAOMeshManager* g_VAOMeshManager;
 extern cBasicTextureManager* g_TheTextureManager;
 extern cLightManager* g_LightManager;
 
+cEntity* findObjectByFriendlyName(std::string theNameToFind);
+
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);

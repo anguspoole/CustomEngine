@@ -23,6 +23,8 @@ cVAOMeshManager* g_VAOMeshManager = NULL;
 cBasicTextureManager* g_TheTextureManager = NULL;
 cLightManager* g_LightManager = NULL;
 
+std::vector< cEntity* > vec_pObjectsToDraw;
+
 void main()
 {
 	//Make window
@@ -86,8 +88,6 @@ void main()
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
-
-	std::vector<cEntity*> vec_pObjectsToDraw;
 	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
 	LoadModelsIntoScene(vec_pObjectsToDraw);
 
@@ -182,6 +182,58 @@ void main()
 					g_LightManager->vecLights[0]->param1.z,		// outer angle
 					g_LightManager->vecLights[0]->param1.w);	// TBD
 
+		{
+			// ***************************************
+			 // Draw the skybox first 
+			cEntity* pSkyBox = findObjectByFriendlyName("SkyBoxObject");
+			//			cMeshObject* pSkyBox = findObjectByFriendlyName("SkyPirate");
+						// Place skybox object at camera location
+			pSkyBox->m_EntityPhysics->position = g_Camera->eye;
+			pSkyBox->m_EntityMesh->bIsVisible = true;
+			pSkyBox->m_EntityMesh->bIsWireFrame = false;
+
+			//			glm::vec3 oldPosition = pSkyBox->position;
+			//			glm::vec3 oldScale = pSkyBox->nonUniformScale;
+			//			pSkyBox->setUniformScale(100.0f);
+
+			//			glDisable( GL_CULL_FACE );		// Force drawing the sphere
+				//		                                // Could also invert the normals
+						// Draw the BACK facing (because the normals of the sphere face OUT and we 
+						//  are inside the centre of the sphere..
+			//			glCullFace( GL_FRONT );
+
+						// Bind the cube map texture to the cube map in the shader
+			GLuint cityTextureUNIT_ID = 30;			// Texture unit go from 0 to 79
+			glActiveTexture(cityTextureUNIT_ID + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+
+			int cubeMapTextureID = ::g_TheTextureManager->getTextureIDFromName("CityCubeMap");
+
+			// Cube map is now bound to texture unit 30
+			//glBindTexture( GL_TEXTURE_2D, cubeMapTextureID );
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTextureID);
+
+			//uniform samplerCube textureSkyBox;
+			GLint skyBoxCubeMap_UniLoc = glGetUniformLocation(program, "textureSkyBox");
+			glUniform1i(skyBoxCubeMap_UniLoc, cityTextureUNIT_ID);
+
+			//uniform bool useSkyBoxTexture;
+			GLint useSkyBoxTexture_UniLoc = glGetUniformLocation(program, "useSkyBoxTexture");
+			glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_TRUE);
+
+			glm::mat4 matIdentity = glm::mat4(1.0f);
+			DrawObject(pSkyBox, matIdentity, program, 0, NULL);
+
+			//glEnable( GL_CULL_FACE );
+			//glCullFace( GL_BACK );
+
+			pSkyBox->m_EntityMesh->bIsVisible = false;
+			glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_FALSE);
+
+			//			pSkyBox->position = oldPosition;
+			//			pSkyBox->nonUniformScale = oldScale;
+						// ***************************************
+		}
+
 		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);
 
 		glfwSwapBuffers(window);		// Shows what we drew
@@ -192,4 +244,21 @@ void main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
+}
+
+cEntity* findObjectByFriendlyName(std::string theNameToFind)
+{
+	for (unsigned int index = 0; index != vec_pObjectsToDraw.size(); index++)
+	{
+		// Is this it? 500K - 1M
+		// CPU limited Memory delay = 0
+		// CPU over powered (x100 x1000) Memory is REAAAAALLY SLOW
+		if (vec_pObjectsToDraw[index]->friendlyName == theNameToFind)
+		{
+			return vec_pObjectsToDraw[index];
+		}
+	}
+
+	// Didn't find it.
+	return NULL;	// 0 or nullptr
 }

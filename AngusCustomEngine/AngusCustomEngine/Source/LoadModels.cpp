@@ -243,7 +243,8 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 
 	pTheVAOMeshManager->changeLoaderToPly5n();
 
-	pTheVAOMeshManager->SetBasePath("../assets/models");
+	//pTheVAOMeshManager->SetBasePath("../assets/models");
+	pTheVAOMeshManager->SetBasePath("assets/models");
 
 	sModelDrawInfo cityInfo;
 	cityInfo.meshFileName = "ScifiCityRuins.ply";	// "MeshLab_Fractal_Terrain_xyz.ply";
