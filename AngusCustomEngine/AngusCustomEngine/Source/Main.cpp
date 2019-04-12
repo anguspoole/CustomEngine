@@ -72,6 +72,7 @@ void main()
 	g_Camera = new cCamera();
 	g_VAOMeshManager = new cVAOMeshManager();
 	g_TheTextureManager = new cBasicTextureManager();
+	g_LightManager = new cLightManager();
 
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -106,6 +107,8 @@ void main()
 	mainLight->diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);		// White light
 
 	mainLight->SetLightType(sLight::POINT_LIGHT);
+
+	g_LightManager->vecLights.push_back(mainLight);
 
 	cLightHelper* pLightHelper = new cLightHelper();
 
@@ -148,6 +151,26 @@ void main()
 
 		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
 		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
+
+		// Do all this ONCE per frame
+		glUniform4f(g_LightManager->vecLights[0]->position_UniLoc, g_LightManager->vecLights[0]->position.x, 
+					g_LightManager->vecLights[0]->position.y, g_LightManager->vecLights[0]->position.z, 1.0f);
+		glUniform4f(g_LightManager->vecLights[0]->diffuse_UniLoc, g_LightManager->vecLights[0]->diffuse.x, 
+					g_LightManager->vecLights[0]->diffuse.y, g_LightManager->vecLights[0]->diffuse.z, 1.0f);
+		glUniform4f(g_LightManager->vecLights[0]->param2_UniLoc, 1.0f, 0.0f, 0.0f, 0.0f);	// Turns it "on")
+		glUniform4f(g_LightManager->vecLights[0]->atten_UniLoc, g_LightManager->vecLights[0]->atten.x, 
+					g_LightManager->vecLights[0]->atten.y, g_LightManager->vecLights[0]->atten.z, 
+					g_LightManager->vecLights[0]->atten.w);
+
+		// Now pass the things we need for spots and directional, too:
+		glUniform4f(g_LightManager->vecLights[0]->direction_UniLoc, g_LightManager->vecLights[0]->direction.x,
+					g_LightManager->vecLights[0]->direction.y, g_LightManager->vecLights[0]->direction.z,
+					g_LightManager->vecLights[0]->direction.w);
+		glUniform4f(g_LightManager->vecLights[0]->param1_UniLoc,
+					g_LightManager->vecLights[0]->param1.x,		// lightType
+					g_LightManager->vecLights[0]->param1.y,		// inner angle
+					g_LightManager->vecLights[0]->param1.z,		// outer angle
+					g_LightManager->vecLights[0]->param1.w);	// TBD
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

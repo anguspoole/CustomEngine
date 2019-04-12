@@ -56,7 +56,7 @@ public:
 	void TurnOnLight(int index);
 	void ChangeLightType( std::string lightType, int index );
 
-	std::vector<sLight> vecLights;
+	std::vector<sLight*> vecLights;
 
 	// Do all the glGetUniformLocation() calls and store them...
 	void LoadUniformLocations( int shaderID );
