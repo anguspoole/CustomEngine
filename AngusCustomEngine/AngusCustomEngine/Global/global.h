@@ -29,5 +29,8 @@ extern cBasicTextureManager* g_TheTextureManager;
 extern cLightManager* g_LightManager;
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
+void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
+void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
+void DrawScene_Simple(std::vector<cEntity*> vec_pEntities, GLuint shaderProgramID, unsigned int passNumber, cFBO* fbo);
 
 #endif

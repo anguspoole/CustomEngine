@@ -243,7 +243,7 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 
 	pTheVAOMeshManager->changeLoaderToPly5n();
 
-	pTheVAOMeshManager->SetBasePath("assets/models");
+	pTheVAOMeshManager->SetBasePath("../assets/models");
 
 	sModelDrawInfo cityInfo;
 	cityInfo.meshFileName = "ScifiCityRuins.ply";	// "MeshLab_Fractal_Terrain_xyz.ply";
@@ -259,10 +259,27 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	sphereInvertedNormalsInfo.meshFileName = "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply";			// "Sphere_320_faces_xyz.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(sphereInvertedNormalsInfo, shaderProgramID);
 
+	pTheVAOMeshManager->m_LoadModelFromFile_ASYNC();
+}
+
+void LoadTextures_ASYNC()
+{
+	// Async load
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Justin.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("grass.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("water-1514818_960_720.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("brick-wall.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("220px-Emma_Watson_2013.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Flowers.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Smoke_1.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Plasma_Ring.bmp", "../assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("rock_cave_stylized_height.bmp", "../assets/textures"), true);
 }
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
 {
+	LoadTextures_ASYNC();
+
 	//LoadSkinnedMeshModelTypes(pTheVAOMeshManager, shaderProgramID);
 	LoadModelsToVAO_ASYNC(pTheVAOMeshManager, shaderProgramID);
 }
@@ -286,7 +303,31 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		// Invisible until I need to draw it
 		pSkyBoxObject->m_EntityMesh->bIsVisible = false;
+		//pSkyBoxObject->m_EntityMesh->bIsVisible = true;
 
 		vec_pObjectsToDraw.push_back(pSkyBoxObject);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* pDebugSphere = new cEntity();
+		pDebugSphere->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 10.0f);
+		//		pDebugSphere->objColour = glm::vec3( 0.0f, 1.0f, 0.0f );
+		pDebugSphere->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 1.0f, 0.0f));
+		pDebugSphere->m_EntityMesh->setSpecularPower(100.0f);
+		pDebugSphere->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+
+		pDebugSphere->friendlyName = "DebugSphere";
+		pDebugSphere->m_EntityPhysics->uniformScale = 3.0f;
+		//		pDebugSphere->meshName = "Sphere_320_faces_xyz_n_GARBAGE_uv.ply";		// "Sphere_320_faces_xyz.ply";
+		pDebugSphere->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
+		pDebugSphere->m_EntityMesh->bIsWireFrame = true;
+		pDebugSphere->m_EntityMesh->bDontLight = true;
+		pDebugSphere->m_EntityMesh->bIsVisible = true;
+		pDebugSphere->m_EntityMesh->bUseVertexColour = false;
+
+
+		//pTerrain->nonUniformScale = glm::vec3(0.1f,0.1f,0.1f);
+		vec_pObjectsToDraw.push_back(pDebugSphere);
 	}
 }

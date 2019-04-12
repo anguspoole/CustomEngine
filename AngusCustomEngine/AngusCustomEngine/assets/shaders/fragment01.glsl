@@ -92,7 +92,6 @@ uniform sampler2D texture07;
 // For the 2 pass rendering
 uniform float renderPassNumber;	// 1 = 1st pass, 2nd for offscreen to quad
 uniform sampler2D texPass1OutputTexture;
-uniform sampler2D texPass1ReticleTexture;
 
 
 // Cube map texture (NOT a sampler3D)
@@ -126,22 +125,7 @@ void main()
 //		vec3 ObjectNormal = texture( texObjectColour, vertUV_x2.st ).rgb;
 	
 		// 2nd pass (very simple)
-		
-		// Note "greyscale", that humans see, isn't even over the colours. 
-		// (google "RGB to greyscale" to get this equation:)
-		//float pixelBlackAndWhite = (0.3f * texPass1ReticleTexture.r) + (0.59f * texPass1ReticleTexture.g) + (0.11f * texPass1ReticleTexture.b);
-		
-		// We had a threshold of 0.25, but how it's passed in
-		//if ( pixelBlackAndWhite < 0.25f )
-		//{
-			// Don't draw it
-			// Literally Doesn't Draw the pixel
-			finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st ).rgb;
-		//}
-		//else
-		//{
-			//finalOutputColour.rgb = texture( texPass1ReticleTexture, vertUV_x2.st ).rgb;
-		//}
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st ).rgb;
 		
 //		float bw =   0.2126f * finalOutputColour.r
 //                   + 0.7152f * finalOutputColour.g 

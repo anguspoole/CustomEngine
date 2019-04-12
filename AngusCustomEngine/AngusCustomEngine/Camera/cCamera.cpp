@@ -21,3 +21,5 @@ glm::vec3 cCamera::getAtInWorldSpace()
 	// The "At" is relative to the where the camera is...
 	return this->eye + this->targetPos;
 }
+
+

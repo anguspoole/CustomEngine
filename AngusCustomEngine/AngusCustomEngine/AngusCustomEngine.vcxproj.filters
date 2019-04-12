@@ -150,6 +150,9 @@
     <ClCompile Include="Lighting\cLightManager.cpp">
       <Filter>Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DrawScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">

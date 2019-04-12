@@ -139,9 +139,9 @@ bool cVAOMeshManager::LoadModelIntoVAO_ASYNC(sModelDrawInfo & drawInfo, unsigned
 
 	if (itModel != this->m_mapModel_to_VAOID.end())
 	{
-		this->m_AppendTextToLastError("Model ", false);
-		this->m_AppendTextToLastError(drawInfo.meshFileName, false);
-		this->m_AppendTextToLastError(" was already loaded.");
+		//this->m_AppendTextToLastError("Model ", false);
+		//this->m_AppendTextToLastError(drawInfo.meshFileName, false);
+		//this->m_AppendTextToLastError(" was already loaded.");
 		return false;
 	}
 

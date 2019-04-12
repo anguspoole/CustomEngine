@@ -74,6 +74,8 @@ void main()
 	g_TheTextureManager = new cBasicTextureManager();
 	g_LightManager = new cLightManager();
 
+	g_Camera->eye = glm::vec3(0.0f, 0.0f, -10.0f);
+
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -84,7 +86,14 @@ void main()
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
+
+	std::vector<cEntity*> vec_pObjectsToDraw;
 	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
+	LoadModelsIntoScene(vec_pObjectsToDraw);
+
+	g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
+
+	std::cout << "finished loading models" << std::endl;
 
 	int renderPassNumber = 1;
 	GLint renderPassNumber_UniLoc = glGetUniformLocation(program, "renderPassNumber");
@@ -100,7 +109,8 @@ void main()
 	mainLight->param1_UniLoc = glGetUniformLocation(program, "theLights[0].param1");
 	mainLight->param2_UniLoc = glGetUniformLocation(program, "theLights[0].param2");
 
-	mainLight->position = glm::vec4(0.0f, 100.0f, -50.0f, 1.0f);
+	//mainLight->position = glm::vec4(0.0f, 100.0f, -50.0f, 1.0f);
+	mainLight->position = glm::vec4(0.0f, 0.0f, 5.0f, 1.0f);
 	mainLight->atten.x = 0.0f;				// 	float constAtten = 0.0f;
 	mainLight->atten.y = 0.00385720730f;		//	float linearAtten = 0.01f;
 	mainLight->atten.z = 0.00001f;		//	float quadAtten = 0.001f;
@@ -139,7 +149,7 @@ void main()
 		//Assign camera to new point
 		g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), g_Camera->up);
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		glm::mat4 matProjection = glm::perspective(0.6f,			// FOV
@@ -171,6 +181,8 @@ void main()
 					g_LightManager->vecLights[0]->param1.y,		// inner angle
 					g_LightManager->vecLights[0]->param1.z,		// outer angle
 					g_LightManager->vecLights[0]->param1.w);	// TBD
+
+		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);
 
 		glfwSwapBuffers(window);		// Shows what we drew
 
