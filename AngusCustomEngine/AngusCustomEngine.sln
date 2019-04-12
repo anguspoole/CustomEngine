@@ -16,6 +16,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsInterfaces", "Physic
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameMath", "GameMath\GameMath.vcxproj", "{4F701992-52E7-4D54-A509-482457C46318}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletPhysics", "BulletPhysics\BulletPhysics.vcxproj", "{1ED069BF-B804-4CA2-8244-979E55513531}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E625EB76-A6C2-42B5-9E65-D418E5D2F4A8} = {E625EB76-A6C2-42B5-9E65-D418E5D2F4A8}
+		{4F701992-52E7-4D54-A509-482457C46318} = {4F701992-52E7-4D54-A509-482457C46318}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +54,14 @@ Global
 		{4F701992-52E7-4D54-A509-482457C46318}.Release|x64.Build.0 = Release|x64
 		{4F701992-52E7-4D54-A509-482457C46318}.Release|x86.ActiveCfg = Release|Win32
 		{4F701992-52E7-4D54-A509-482457C46318}.Release|x86.Build.0 = Release|Win32
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Debug|x64.ActiveCfg = Debug|x64
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Debug|x64.Build.0 = Debug|x64
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Debug|x86.ActiveCfg = Debug|Win32
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Debug|x86.Build.0 = Debug|Win32
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Release|x64.ActiveCfg = Release|x64
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Release|x64.Build.0 = Release|x64
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Release|x86.ActiveCfg = Release|Win32
+		{1ED069BF-B804-4CA2-8244-979E55513531}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

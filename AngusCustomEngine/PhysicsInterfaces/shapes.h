@@ -1,7 +1,7 @@
 #pragma once
 
 #include "iShape.h"
-#include <../glm/glm.hpp>
+#include <glm/glm.hpp>
 
 namespace nPhysics
 {
