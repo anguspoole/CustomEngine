@@ -58,6 +58,9 @@
     <Filter Include="Lighting">
       <UniqueIdentifier>{159077a3-f2f1-4efa-9e43-b532b035cb5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{bd01942f-8782-486d-a675-d7bc61b30c93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -153,6 +156,12 @@
     <ClCompile Include="Source\DrawScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="load\jsoncpp.cpp">
+      <Filter>Json</Filter>
+    </ClCompile>
+    <ClCompile Include="load\nLoad.cpp">
+      <Filter>Json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">
@@ -232,6 +241,18 @@
     </ClInclude>
     <ClInclude Include="Lighting\cLightManager.h">
       <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="load\json\json.h">
+      <Filter>Json</Filter>
+    </ClInclude>
+    <ClInclude Include="load\json\json-forwards.h">
+      <Filter>Json</Filter>
+    </ClInclude>
+    <ClInclude Include="load\nLoad.h">
+      <Filter>Json</Filter>
+    </ClInclude>
+    <ClInclude Include="load\sConfig.h">
+      <Filter>Json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

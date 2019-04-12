@@ -72,21 +72,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)GameMath;$(SolutionDir)PhysicsInterfaces;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SourcePath)lib/x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)GameMath;$(SolutionDir)PhysicsInterfaces;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SourcePath)lib/x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)GameMath;$(SolutionDir)PhysicsInterfaces;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)GameMath;$(SolutionDir)PhysicsInterfaces;$(SourcePath)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SourcePath)lib/x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -100,6 +100,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>glfw3.lib;assimp-vc140-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,6 +161,8 @@
     <ClCompile Include="Global\gOpenGL.cpp" />
     <ClCompile Include="Lighting\cLightHelper.cpp" />
     <ClCompile Include="Lighting\cLightManager.cpp" />
+    <ClCompile Include="load\jsoncpp.cpp" />
+    <ClCompile Include="load\nLoad.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp" />
@@ -194,6 +197,10 @@
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Lighting\cLightHelper.h" />
     <ClInclude Include="Lighting\cLightManager.h" />
+    <ClInclude Include="load\json\json-forwards.h" />
+    <ClInclude Include="load\json\json.h" />
+    <ClInclude Include="load\nLoad.h" />
+    <ClInclude Include="load\sConfig.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h" />

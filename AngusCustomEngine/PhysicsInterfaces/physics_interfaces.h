@@ -1,0 +1,15 @@
+#pragma once
+
+#include "eShapeType.h"
+#include "iPhysicsFactory.h"
+#include "iPhysicsWorld.h"
+#include "iRigidBody.h"
+#include "iShape.h"
+#include "shapes.h"
+#include "sRigidBodyDef.h"
+#include "iEntity.h"
+#include "iSoftBody.h"
+#include "sSoftBodyDef.h"
+#include "eBodyType.h"
+#include "eConstraintType.h"
+#include "iConstraint.h"

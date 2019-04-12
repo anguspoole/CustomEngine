@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{5b390dba-9a17-434f-b0f3-6c2a78528d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics\interfaces">
+      <UniqueIdentifier>{374d7275-92f9-4a52-9196-b25c9b272edc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="iRigidBody.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iShape.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iPhysicsWorld.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iPhysicsFactory.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="eShapeType.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sRigidBodyDef.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_interfaces.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iDebugRenderer.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iEntity.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iSoftBody.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sSoftBodyDef.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iCollisionBody.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="eBodyType.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iWreckingBallPhysics.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iVehicle.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="iConstraint.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="eConstraintType.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
