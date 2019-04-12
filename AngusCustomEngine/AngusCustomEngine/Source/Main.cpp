@@ -109,8 +109,8 @@ void main()
 	mainLight->param1_UniLoc = glGetUniformLocation(program, "theLights[0].param1");
 	mainLight->param2_UniLoc = glGetUniformLocation(program, "theLights[0].param2");
 
-	//mainLight->position = glm::vec4(0.0f, 100.0f, -50.0f, 1.0f);
-	mainLight->position = glm::vec4(0.0f, 0.0f, 5.0f, 1.0f);
+	mainLight->position = glm::vec4(0.0f, 100.0f, -50.0f, 1.0f);
+	//mainLight->position = glm::vec4(0.0f, 0.0f, 5.0f, 1.0f);
 	mainLight->atten.x = 0.0f;				// 	float constAtten = 0.0f;
 	mainLight->atten.y = 0.00385720730f;		//	float linearAtten = 0.01f;
 	mainLight->atten.z = 0.00001f;		//	float quadAtten = 0.001f;
