@@ -52,6 +52,12 @@
     <Filter Include="TextureManager">
       <UniqueIdentifier>{0291f7af-e766-47f1-b0d9-b84f5a5a2f2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FBOs">
+      <UniqueIdentifier>{001304a7-43ac-459d-be95-80fd68390457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting">
+      <UniqueIdentifier>{159077a3-f2f1-4efa-9e43-b532b035cb5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp">
@@ -136,7 +142,13 @@
       <Filter>TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="FrameBuffers\cFBO.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FBOs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting\cLightHelper.cpp">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting\cLightManager.cpp">
+      <Filter>Lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +222,13 @@
       <Filter>TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="FrameBuffers\cFBO.h">
-      <Filter>Header Files</Filter>
+      <Filter>FBOs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting\cLightHelper.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting\cLightManager.h">
+      <Filter>Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

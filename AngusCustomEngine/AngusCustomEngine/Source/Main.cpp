@@ -10,6 +10,7 @@
 #include "../Global/global.h"
 #include "../Global/gOpenGL.h"
 #include "../Shading/cShaderManager.h"
+#include "../Lighting/cLightHelper.h"
 
 // "HEAP" Variables
 GLFWwindow* window = NULL;
@@ -20,6 +21,7 @@ cCamera* g_Camera = NULL;
 cShaderManager* pTheShaderManager = NULL;
 cVAOMeshManager* g_VAOMeshManager = NULL;
 cBasicTextureManager* g_TheTextureManager = NULL;
+cLightManager* g_LightManager = NULL;
 
 void main()
 {
@@ -85,6 +87,27 @@ void main()
 
 	int renderPassNumber = 1;
 	GLint renderPassNumber_UniLoc = glGetUniformLocation(program, "renderPassNumber");
+
+	//May replace this with a function to create lights and assign these parameters
+	sLight* mainLight = new sLight();
+	// Do this once...
+	mainLight->position_UniLoc = glGetUniformLocation(program, "theLights[0].position");
+	mainLight->diffuse_UniLoc = glGetUniformLocation(program, "theLights[0].diffuse");
+	mainLight->specular_UniLoc = glGetUniformLocation(program, "theLights[0].specular");
+	mainLight->atten_UniLoc = glGetUniformLocation(program, "theLights[0].atten");
+	mainLight->direction_UniLoc = glGetUniformLocation(program, "theLights[0].direction");
+	mainLight->param1_UniLoc = glGetUniformLocation(program, "theLights[0].param1");
+	mainLight->param2_UniLoc = glGetUniformLocation(program, "theLights[0].param2");
+
+	mainLight->position = glm::vec4(0.0f, 100.0f, -50.0f, 1.0f);
+	mainLight->atten.x = 0.0f;				// 	float constAtten = 0.0f;
+	mainLight->atten.y = 0.00385720730f;		//	float linearAtten = 0.01f;
+	mainLight->atten.z = 0.00001f;		//	float quadAtten = 0.001f;
+	mainLight->diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);		// White light
+
+	mainLight->SetLightType(sLight::POINT_LIGHT);
+
+	cLightHelper* pLightHelper = new cLightHelper();
 
 	while (!glfwWindowShouldClose(window))
 	{

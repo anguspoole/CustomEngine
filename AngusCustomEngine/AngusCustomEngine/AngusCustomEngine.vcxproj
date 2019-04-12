@@ -158,6 +158,8 @@
     <ClCompile Include="Entity\cEntity.cpp" />
     <ClCompile Include="FrameBuffers\cFBO.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
+    <ClCompile Include="Lighting\cLightHelper.cpp" />
+    <ClCompile Include="Lighting\cLightManager.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp" />
@@ -189,6 +191,8 @@
     <ClInclude Include="FrameBuffers\cFBO.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
+    <ClInclude Include="Lighting\cLightHelper.h" />
+    <ClInclude Include="Lighting\cLightManager.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h" />
