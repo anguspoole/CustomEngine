@@ -30,16 +30,38 @@ public:
 
 	glm::vec3 eye;
 	glm::vec3 targetPos;
-	glm::vec3 up;
-	glm::vec3 forward;
-	glm::vec3 right;
+	glm::vec3 m_up;
+	glm::vec3 m_forward;
+	glm::vec3 m_right;
+
+	bool bKeepCameraFacingUp;
+
+	void MoveForward_Z(float amount);
+	void MoveLeftRight_X(float amount);
+	void MoveUpDown_Y(float amount);
 
 	glm::vec3 getAtInWorldSpace(void);
+	glm::vec3 getCameraDirection(void);
+	glm::vec3 getUpVector(void);
+
+	void Pitch_UpDown(float angleDegrees);	// around X
+	void Yaw_LeftRight(float angleDegrees);	// around y
+	void Roll_CW_CCW(float angleDegrees);	// around z
+
+	glm::quat getQOrientation(void) { return this->qOrientation; };
+	void setMeshOrientationEulerAngles(glm::vec3 newAnglesEuler, bool bIsDegrees = false);
+	void setMeshOrientationEulerAngles(float x, float y, float z, bool bIsDegrees = false);
+	void adjMeshOrientationEulerAngles(glm::vec3 adjAngleEuler, bool bIsDegrees = false);
+	void adjMeshOrientationEulerAngles(float x, float y, float z, bool bIsDegrees = false);
+	void adjMeshOrientationQ(glm::quat adjOrientQ);
+	void m_UpdateAtFromOrientation(void);
+	void m_UpdateUpFromOrientation(void);
 
 private:
 	glm::quat qOrientation;
 	float mYaw;
 	float mPitch;
+
 };
 
 #endif

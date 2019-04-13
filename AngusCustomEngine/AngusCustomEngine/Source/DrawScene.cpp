@@ -284,10 +284,40 @@ void DrawObject(cEntity* pCurrentEntity,
 	//	matModel = glm::mat4x4(1.0f);		// mat4x4_identity(m);
 
 
-		//m = m * rotateZ;
+	glm::mat4 matTranslation;
 
-	glm::mat4 matTranslation = glm::translate(glm::mat4(1.0f),
-		pCurrentEntity->m_EntityPhysics->position);
+	//pCurrentMesh->rigidBody->GetTransform(matTranslation);
+
+	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
+	{
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(matTranslation);
+	}
+	else if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::SOFT_BODY)
+	{
+		for (int i = 0; i < pCurrentEntity->m_EntityPhysics->softBody->NumNodes(); i++)
+		{
+			//Render a cloth node at each appropriate position
+			cEntity * clothNode = findObjectByFriendlyName("ClothNode");
+			float scale;
+			pCurrentEntity->m_EntityPhysics->softBody->GetNodeRadius(i, scale);
+			clothNode->m_EntityPhysics->uniformScale = scale;
+			pCurrentEntity->m_EntityPhysics->softBody->GetNodePosition(i, clothNode->m_EntityPhysics->position); //update position
+			pCurrentEntity->m_EntityMesh->bIsVisible = true; //set visible to true
+			glm::mat4x4 clothMatModel = glm::mat4x4(1.0f);		// mat4x4_identity(m);
+			DrawObject(clothNode, clothMatModel, shaderProgramID, RenderPassNumber, fbo);
+			//pCurrentMesh->bIsVisible = false; //reset visible to false
+		}
+		return;
+	}
+	else if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::SOFT_BODY_NODE)
+	{
+		matTranslation = glm::translate(glm::mat4(1.0f), pCurrentEntity->m_EntityPhysics->position);
+	}
+	else
+	{
+		matTranslation = glm::translate(glm::mat4(1.0f), pCurrentEntity->m_EntityPhysics->position);
+	}
+
 	matModel = matModel * matTranslation;		// matMove
 
 	glm::quat qRotation = pCurrentEntity->m_EntityPhysics->getQOrientation();

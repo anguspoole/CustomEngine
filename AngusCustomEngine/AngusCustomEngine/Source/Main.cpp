@@ -7,6 +7,9 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
+#include <iPhysicsFactory.h>
+#include <../load/nLoad.h>
+
 #include "../Global/global.h"
 #include "../Global/gOpenGL.h"
 #include "../Shading/cShaderManager.h"
@@ -24,6 +27,8 @@ cBasicTextureManager* g_TheTextureManager = NULL;
 cLightManager* g_LightManager = NULL;
 
 std::vector< cEntity* > vec_pObjectsToDraw;
+
+nLoad::sConfig config;
 
 void main()
 {
@@ -76,8 +81,6 @@ void main()
 	g_TheTextureManager = new cBasicTextureManager();
 	g_LightManager = new cLightManager();
 
-	g_Camera->eye = glm::vec3(0.0f, 0.0f, -10.0f);
-
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -88,10 +91,33 @@ void main()
 	GLint matProj_location = glGetUniformLocation(program, "matProj");
 	GLint eyeLocation_location = glGetUniformLocation(program, "eyeLocation");
 
+
+	if (!nLoad::LoadConfig("../Config/config.json", config))
+	{
+		std::cout << "Error loading json" << std::endl;
+		system("pause");
+		return;
+	}
+
+	std::cout << "loaded json" << std::endl;
+
 	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
 	LoadModelsIntoScene(vec_pObjectsToDraw);
 
-	g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
+	//********************************************************
+	// TERM 2 PHYSICS FACTORY STUFF
+	//********************************************************
+	InitPhysicsStuff(config);
+	buildPhysicsWorld();
+	buildPhysicsObjects(config, ::vec_pObjectsToDraw);
+	//***********************************************************
+	//***********************************************************
+
+	g_Camera->eye = glm::vec3(0.0f, 20.0f, -10.0f);
+	//g_Camera->eye = glm::vec3(0.0f, 10.0f, -30.0f);
+	g_Camera->targetPos = glm::vec3(0.0f, -1.0f, 1.0f);
+	//g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
+	//g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
 
 	std::cout << "finished loading models" << std::endl;
 
@@ -122,8 +148,24 @@ void main()
 
 	cLightHelper* pLightHelper = new cLightHelper();
 
+	double lastTime = glfwGetTime();
+
 	while (!glfwWindowShouldClose(window))
 	{
+		//g_Camera->targetPos = vec_pObjectsToDraw[3]->m_EntityPhysics->position;
+		//g_Camera->targetPos = glm::vec3(0.0f);
+
+		// High res timer (likely in ms or ns)
+		double currentTime = glfwGetTime();
+		double deltaTime = currentTime - lastTime;
+		double dT = deltaTime;
+
+		double MAX_DELTA_TIME = 0.1;	// 100 ms
+		if (deltaTime > MAX_DELTA_TIME)
+		{
+			deltaTime = MAX_DELTA_TIME;
+		}
+
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
 
@@ -147,9 +189,9 @@ void main()
 		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 2nd pass
 
 		//Assign camera to new point
-		g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
+		//g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), g_Camera->up);
+		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), g_Camera->getUpVector());
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		glm::mat4 matProjection = glm::perspective(0.6f,			// FOV
@@ -233,6 +275,13 @@ void main()
 			//			pSkyBox->nonUniformScale = oldScale;
 						// ***************************************
 		}
+
+		// update the "last time"
+		lastTime = currentTime;
+
+		// The physics update loop
+		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
+		gPhysicsWorld->Update(deltaTime);
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);
 

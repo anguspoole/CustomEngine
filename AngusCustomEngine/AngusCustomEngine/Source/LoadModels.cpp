@@ -260,6 +260,38 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	sphereInvertedNormalsInfo.meshFileName = "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply";			// "Sphere_320_faces_xyz.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(sphereInvertedNormalsInfo, shaderProgramID);
 
+	sModelDrawInfo planeInfo;
+	planeInfo.meshFileName = "simpleplane0.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(planeInfo, shaderProgramID);
+
+	sModelDrawInfo plane1Info;
+	plane1Info.meshFileName = "simpleplane1.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(plane1Info, shaderProgramID);
+
+	sModelDrawInfo plane2Info;
+	plane2Info.meshFileName = "simpleplane2.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(plane2Info, shaderProgramID);
+
+	sModelDrawInfo plane3Info;
+	plane3Info.meshFileName = "simpleplane3.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(plane3Info, shaderProgramID);
+
+	sModelDrawInfo plane4Info;
+	plane4Info.meshFileName = "simpleplane4.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(plane4Info, shaderProgramID);
+
+	sModelDrawInfo cube1x1x1;
+	cube1x1x1.meshFileName = "cube_flat_shaded_xyz_n_uv.ply";			// "cube_flat_shaded_xyz.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cube1x1x1, shaderProgramID);
+
+	sModelDrawInfo cylinder;
+	cylinder.meshFileName = "cylinderUV.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cylinder, shaderProgramID);
+
+	sModelDrawInfo cone;
+	cone.meshFileName = "coneUV.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cone, shaderProgramID);
+
 	pTheVAOMeshManager->m_LoadModelFromFile_ASYNC();
 }
 
@@ -301,6 +333,8 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		skyboxTextureInfo.name = "CityCubeMap";
 		skyboxTextureInfo.strength = 1.0f;
 		pSkyBoxObject->m_EntityMesh->vecTextures.push_back(skyboxTextureInfo);
+
+		pSkyBoxObject->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::NONE;
 
 		// Invisible until I need to draw it
 		pSkyBoxObject->m_EntityMesh->bIsVisible = false;

@@ -39,6 +39,7 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
 void DrawScene_Simple(std::vector<cEntity*> vec_pEntities, GLuint shaderProgramID, unsigned int passNumber, cFBO* fbo);
 
+//Term 2 Physics Stuff
 extern nPhysics::iPhysicsFactory* gPhysicsFactory; //global physics factory
 extern nPhysics::iPhysicsWorld* gPhysicsWorld;
 bool InitPhysicsStuff(const nLoad::sConfig& config);
@@ -60,7 +61,7 @@ void makeConeTwistConstraint(cEntity * objA, cEntity* objB);
 void makeSliderConstraint(cEntity * objA);
 void makeSliderConstraint(cEntity * objA, cEntity* objB);
 
-extern double dT;
+//extern double dT;
 extern nLoad::sConfig config;
 
 #endif

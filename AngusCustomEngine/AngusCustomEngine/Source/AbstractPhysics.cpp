@@ -221,7 +221,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			{
 				cEntity * testObj1 = new cEntity();
 				testObj1->m_EntityPhysics->uniformScale = (2.0f);
-				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
+				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane1.ply"));
 				testObj1->friendlyName = "plane" + std::to_string(planeCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 				//testObj1->setMeshOrientationEulerAngles(orientation, true);
@@ -230,6 +230,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				testObj1->m_EntityMesh->setSpecularPower(100.0f);
 				testObj1->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 				testObj1->m_EntityMesh->bIsWireFrame = false;
+				testObj1->m_EntityMesh->bIsVisible = false;
 				testObj1->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
 				//sBox* pBox = new sBox();
@@ -276,7 +277,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			{
 			cEntity * testObj1 = new cEntity();
 			testObj1->m_EntityPhysics->uniformScale = (2.0f);
-			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
+			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane2.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 			//testObj1->setMeshOrientationEulerAngles(orientation, true);
@@ -285,6 +286,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			testObj1->m_EntityMesh->setSpecularPower(100.0f);
 			testObj1->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 			testObj1->m_EntityMesh->bIsWireFrame = false;
+			testObj1->m_EntityMesh->bIsVisible = false;
 			testObj1->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
 			//sBox* pBox = new sBox();
@@ -331,7 +333,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			{
 			cEntity * testObj1 = new cEntity();
 			testObj1->m_EntityPhysics->uniformScale = (2.0f);
-			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
+			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane3.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 			//testObj1->setMeshOrientationEulerAngles(orientation, true);
@@ -340,6 +342,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			testObj1->m_EntityMesh->setSpecularPower(100.0f);
 			testObj1->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 			testObj1->m_EntityMesh->bIsWireFrame = false;
+			testObj1->m_EntityMesh->bIsVisible = false;
 			testObj1->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
 			//sBox* pBox = new sBox();
@@ -386,7 +389,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			{
 			cEntity * testObj1 = new cEntity();
 			testObj1->m_EntityPhysics->uniformScale = (2.0f);
-			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
+			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane4.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 			//testObj1->setMeshOrientationEulerAngles(orientation, true);
@@ -395,6 +398,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			testObj1->m_EntityMesh->setSpecularPower(100.0f);
 			testObj1->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 			testObj1->m_EntityMesh->bIsWireFrame = false;
+			testObj1->m_EntityMesh->bIsVisible = false;
 			testObj1->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
 			//sBox* pBox = new sBox();
