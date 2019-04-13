@@ -90,70 +90,37 @@ void ProcessAsyncKeys(GLFWwindow* window)
 
 		cEntity* userSphere = findObjectByFriendlyName("sphere0");
 
-		glm::vec3 velocity;
-		glm::mat4 transform;
-		userSphere->m_EntityPhysics->rigidBody->GetVelocity(velocity);
-		userSphere->m_EntityPhysics->rigidBody->GetTransform(transform);
-		glm::vec3 pos = glm::vec3(transform[3].x, transform[3].y, transform[3].z);
-		glm::vec3 newVel = g_Camera->getQOrientation() * velocity;
-
-		glm::vec3 newAt = ::g_Camera->getAtInWorldSpace();
-		newAt.y = ::g_Camera->eye.y;
-
-		glm::vec3 dir = glm::normalize(newAt - g_Camera->eye);
-		glm::vec3 veln = glm::normalize(velocity);
-		glm::vec3 dir2 = glm::normalize(veln);
-
-		glm::quat newRotation;
-		glm::vec3 crossProduct = glm::cross(dir2, dir);
-		newRotation.x = crossProduct.x;
-		newRotation.y = crossProduct.y;
-		newRotation.z = crossProduct.z;
-		newRotation.w = glm::sqrt((dir2.length() * dir2.length())
-			* (dir.length() * dir.length())) + glm::dot(dir2, dir);
-		newRotation = glm::normalize(newRotation);
+		glm::mat4 matVelRotation = glm::mat4(::g_Camera->getQOrientation());
 
 		if (glfwGetKey(window, GLFW_KEY_W))
 		{
-			velocity.z += speed;
-			//velocity = newRotation * velocity;
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(0.0f, 0.0f, 10.0f));
-			//userSphere->rigidBody->SetVelocity(velocity);
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 10.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S))
 		{
-			velocity.z -= speed;
-			//velocity = newRotation * velocity;
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(0.0f, 0.0f, -10.0f));
-			//userSphere->rigidBody->SetVelocity(velocity);
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -10.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_A))
 		{
-			velocity.x += speed;
-			//velocity = newRotation * velocity;
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(10.0f, 0.0f, 0.0f));
-			//userSphere->rigidBody->SetVelocity(velocity);
+			glm::vec3 force = matVelRotation * glm::vec4(10.0f, 0.0f, 0.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D))
 		{
-			velocity.x -= speed;
-			//velocity = newRotation * velocity;
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(-10.0f, 0.0f, 0.0f));
-			//userSphere->rigidBody->SetVelocity(velocity);
+			glm::vec3 force = matVelRotation * glm::vec4(-10.0f, 0.0f, 0.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_Q))
 		{
-			velocity.y -= speed;
-			//velocity = newRotation * velocity;
-			//userSphere->rigidBody->SetVelocity(velocity);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(0.0f, -2.0f, 0.0f));
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, -2.0f, 0.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_E))
 		{
-			velocity.y += speed;
-			//velocity = newRotation * velocity;
-			//userSphere->rigidBody->SetVelocity(velocity);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(glm::vec3(0.0f, 2.0f, 0.0f));
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 2.0f, 0.0f, 1.0f);
+			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
 		}
 
 		//if (glfwGetKey(window, GLFW_KEY_I)) { pTheShip->adjMeshOrientationEulerAngles(glm::vec3(95.0f, 0.0f, 0.0f), true); }

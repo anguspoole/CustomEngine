@@ -289,8 +289,11 @@ void main()
 		glm::mat4 targetTransform;
 		cEntity * userSphere = findObjectByFriendlyName("sphere0");
 		userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
-
-		g_Camera->targetPos = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - g_Camera->eye);
+		glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
+		glm::vec3 targetDir = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - g_Camera->eye);
+		glm::quat q = glm::inverse(glm::lookAt(targetPos - g_Camera->eye, targetDir, g_Camera->getUpVector()));
+		g_Camera->setMeshOrientationQ(q);
+		g_Camera->m_UpdateAtFromOrientation();
 
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);

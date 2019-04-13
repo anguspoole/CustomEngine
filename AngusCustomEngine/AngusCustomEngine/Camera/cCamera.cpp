@@ -125,6 +125,11 @@ void cCamera::setMeshOrientationEulerAngles(float x, float y, float z, bool bIsD
 	return this->setMeshOrientationEulerAngles(glm::vec3(x, y, z), bIsDegrees);
 }
 
+void cCamera::setMeshOrientationQ(glm::quat newOrientQ)
+{
+	this->qOrientation = newOrientQ;
+}
+
 void cCamera::adjMeshOrientationEulerAngles(glm::vec3 adjAngleEuler, bool bIsDegrees /*=false*/)
 {
 	if (bIsDegrees)

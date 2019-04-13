@@ -441,7 +441,11 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			makePlane(testObj1, n, config.RigidBodyDefs[c], d);
 			planeCount++;
 			}
-			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Box") == 0)
+			else
+			{
+			continue;
+			}
+			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Box") == 0)
 			{
 				cEntity * testObj = new cEntity();
 				testObj->m_EntityPhysics->uniformScale = config.RigidBodyDefs[c].Mass;
