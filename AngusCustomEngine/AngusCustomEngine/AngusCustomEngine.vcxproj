@@ -184,6 +184,7 @@
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\LoadModels.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\UserIO.cpp" />
     <ClCompile Include="TextureManager\C24BitBMPpixel.cpp" />
     <ClCompile Include="TextureManager\cBasicTextureManager.cpp" />
     <ClCompile Include="TextureManager\CTextureFromBMP.cpp" />

@@ -6,12 +6,6 @@ void error_callback(int error, const char* description)
 	fprintf(stderr, "Error: %s\n", description);
 }
 
-//Function for getting key callback
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-
-}
-
 GLFWwindow* InitWindow(int width, int height, const char* title)
 {
 
@@ -41,6 +35,13 @@ GLFWwindow* InitWindow(int width, int height, const char* title)
 	}
 
 	glfwSetKeyCallback(window, key_callback);
+
+	// Mouse callbacks
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetCursorEnterCallback(window, cursor_enter_callback);
+
+
 	glfwMakeContextCurrent(window);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	glfwSwapInterval(1);

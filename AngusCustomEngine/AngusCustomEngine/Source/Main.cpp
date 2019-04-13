@@ -283,11 +283,25 @@ void main()
 		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
 		gPhysicsWorld->Update(deltaTime);
 
+		//************************************
+		// Refocus Camera
+		//************************************
+		glm::mat4 targetTransform;
+		cEntity * userSphere = findObjectByFriendlyName("sphere0");
+		userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
+
+		g_Camera->targetPos = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - g_Camera->eye);
+
+
 		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);
 
 		glfwSwapBuffers(window);		// Shows what we drew
 
 		glfwPollEvents();
+
+		ProcessAsyncKeys(window);
+
+		//ProcessAsyncMouse(window);
 	}
 
 	glfwDestroyWindow(window);
