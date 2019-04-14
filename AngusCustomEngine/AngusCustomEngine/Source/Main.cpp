@@ -306,10 +306,12 @@ void main()
 		// Refocus Camera
 		//************************************
 		glm::mat4 targetTransform;
-		cEntity * userSphere = findObjectByFriendlyName("sphere0");
-		userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
-		glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
-		glm::vec3 targetDir = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - player_Camera->eye);
+		//cEntity * userSphere = findObjectByFriendlyName("sphere0");
+		cEntity * userSphere = findObjectByFriendlyName("Player");
+		//userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
+		//glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
+		glm::vec3 targetPos = userSphere->m_EntityPhysics->position;
+		glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
 		glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
 		player_Camera->setMeshOrientationQ(q);
 		player_Camera->m_UpdateAtFromOrientation();

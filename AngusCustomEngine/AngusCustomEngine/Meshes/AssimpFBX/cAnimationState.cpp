@@ -9,7 +9,7 @@ bool cAnimationState::sStateDetails::IncrementTime(bool bResetToZero /*=true*/)
 	this->currentTime += this->frameStepTime;
 	if ( this->currentTime >= this->totalTime )
 	{
-		this->currentTime = 0.0f;
+		this->currentTime = fmod(this->currentTime - this->totalTime, this->totalTime);
 		bDidWeReset = true;
 	}
 

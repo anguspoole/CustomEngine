@@ -40,6 +40,17 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 //Function for getting key callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	cEntity* pSM = findObjectByFriendlyName("Player");
+
+	if (animationComplete)
+	{
+		//If not moving, default to Idle animation
+		if ((pSM->m_EntityPhysics->velocity.x + pSM->m_EntityPhysics->velocity.y + pSM->m_EntityPhysics->velocity.z) < 0.01f && pSM->m_EntityMesh->currentAnimation != "Unarmed-Walk")
+		{
+			pSM->m_EntityMesh->currentAnimation = "Idle";
+		}
+	}
+
 	//Close window if Escape is pressed
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{

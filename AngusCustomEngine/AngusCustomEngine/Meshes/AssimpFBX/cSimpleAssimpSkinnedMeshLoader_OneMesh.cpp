@@ -225,7 +225,16 @@ void cSimpleAssimpSkinnedMesh::BoneTransform( float TimeInSeconds,
 	                                           this->pScene->mAnimations[0]->mTicksPerSecond : 25.0 );
 
 	float TimeInTicks = TimeInSeconds * TicksPerSecond;
-	float AnimationTime = fmod(TimeInTicks, (float)this->pScene->mAnimations[0]->mDuration);
+	float AnimationTime = 0.0f; // fmod(TimeInTicks, (float)this->pScene->mAnimations[0]->mDuration);
+
+	if (!std::strcmp(animationName.c_str(), ""))
+	{
+		AnimationTime = fmod(TimeInTicks, (float)this->pScene->mAnimations[0]->mDuration);
+	}
+	else
+	{
+		AnimationTime = fmod(TimeInTicks, FindAnimationTotalTime(animationName));
+	}
 	
 	// use the "animation" file to look up these nodes
 	// (need the matOffset information from the animation file)
@@ -571,7 +580,7 @@ void cSimpleAssimpSkinnedMesh::CalcGLMInterpolatedScaling(float AnimationTime, c
 
 float cSimpleAssimpSkinnedMesh::GetDuration(void)
 {
-	float duration = (float)(this->pScene->mAnimations[0]->mDuration / this->pScene->mAnimations[0]->mTicksPerSecond);
+	float duration = (float)(this->pScene->mAnimations[0]->mDuration / this->pScene->mAnimations[0]->mTicksPerSecond) * 120.0f;
 
 	return duration; 
 }

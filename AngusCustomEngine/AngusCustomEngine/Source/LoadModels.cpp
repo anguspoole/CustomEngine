@@ -255,9 +255,9 @@ void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
 			cEntity* pTestSM = new cEntity();
 			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
-			pTestSM->friendlyName = "SM_Object";
-			pTestSM->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 2.0f);
-			float scale = (0.008f);
+			pTestSM->friendlyName = "Player";
+			pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
+			float scale = (0.020f);
 			pTestSM->m_EntityPhysics->nonUniformScale = glm::vec3(scale);
 			pTestSM->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("RPG-Character.ply"));
 			pTestSM->m_EntityMesh->bIsVisible = true;
@@ -288,6 +288,8 @@ void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
 			pTestSM->m_EntityPhysics->setUniformScale(0.008f);
 			vec_pObjectsToDraw.push_back(pTestSM);
+
+			
 		}
 	}//if ( ! AssimpSM_to_VAO_Converter(
 
