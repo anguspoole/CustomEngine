@@ -27,6 +27,8 @@ cVAOMeshManager* g_VAOMeshManager = NULL;
 cBasicTextureManager* g_TheTextureManager = NULL;
 cLightManager* g_LightManager = NULL;
 
+cEntity* player = NULL;
+
 std::vector< cEntity* > vec_pObjectsToDraw;
 
 nLoad::sConfig config;
@@ -112,6 +114,7 @@ void main()
 
 	std::cout << "loaded json" << std::endl;
 
+	LoadSkinnedMeshModel(vec_pObjectsToDraw, program);
 	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
 	LoadModelsIntoScene(vec_pObjectsToDraw);
 

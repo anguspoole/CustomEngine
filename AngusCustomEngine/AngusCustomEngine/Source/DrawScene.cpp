@@ -37,6 +37,9 @@ GLint texPass1ReticleTexture_UniLoc = -1;
 
 cCamera* currentCamera = NULL;
 
+bool animationComplete = true;
+std::string attackAnimation = "";
+
 // This is to change the full screen FBO objects when the window changes size
 // See: http://www.glfw.org/docs/latest/window_guide.html#window_size
 void window_size_callback(GLFWwindow* window, int width, int height, cFBO* fbo)
@@ -506,11 +509,8 @@ void DrawObject(cEntity* pCurrentEntity,
 		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
 
 		// Also pass up the bone information...
-		std::vector< glm::mat4x4 > vecFinalTransformation[2];	// Replaced by	theMesh.vecFinalTransformation
-		std::vector< glm::mat4x4 > vecOffsets[2];
-
-		std::vector< glm::mat4x4 > vecObjectBoneTransformation[2];
-
+		std::vector< glm::mat4x4 > vecFinalTransformation;	// Replaced by	theMesh.vecFinalTransformation
+		std::vector< glm::mat4x4 > vecOffsets;
 
 		//		cAnimationState* pAniState = pCurrentMesh->pAniState->;
 				// Are there any animations in the queue?
@@ -519,40 +519,31 @@ void DrawObject(cEntity* pCurrentEntity,
 		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
 			//0.0f,	// curFrameTime,
 			g_HACK_CurrentTime,	// curFrameTime,
-			"Unarmed-Attack-R3",//		pCurrentMesh->currentAnimation,
-			vecFinalTransformation[0],		// Final bone transforms for mesh
-			//										pCurrentMesh->vecObjectBoneTransformation,  // final location of bones
-			vecObjectBoneTransformation[0],  // final location of bones
-			vecOffsets[0]);                 // local offset for each bone
+//										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
+//										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
+//										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
+			pCurrentEntity->m_EntityMesh->currentAnimation,
+			vecFinalTransformation,		// Final bone transforms for mesh
+			pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
+			vecOffsets);                 // local offset for each bone
 
-		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
-			//0.0f,	// curFrameTime,
-			g_HACK_CurrentTime,	// curFrameTime,
-			"Unarmed-Walk",		// animationToPlay,		//**NEW**
-			vecFinalTransformation[1],		// Final bone transforms for mesh
-			vecObjectBoneTransformation[1],  // final location of bones
-			vecOffsets[1]);                 // local offset for each bone
 
 		::g_HACK_CurrentTime += 0.01f;		// Frame time, but we are going at 60HZ
-		if (::g_HACK_CurrentTime >= pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration())
+		if (g_HACK_CurrentTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration())
 		{
-			::g_HACK_CurrentTime = 0.0f;
+			g_HACK_CurrentTime = 0.0f;
+		}
+		if (attackAnimation == pCurrentEntity->m_EntityMesh->currentAnimation && g_HACK_CurrentTime < 0.01f)
+		{
+			pCurrentEntity->m_EntityMesh->currentAnimation = "Idle";
+			attackAnimation = "";
+			animationComplete = true;
 		}
 
-
-		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation[0].size());
+		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
 
 		GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
 		glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
-
-		g_HACK_blend_ratio += 0.001f;
-		if (g_HACK_blend_ratio > 1.0f)
-		{
-			g_HACK_blend_ratio = 0.0f;
-		}
-
-		GLint boneBlend_UniLoc = glGetUniformLocation(shaderProgramID, "boneBlend");
-		glUniform1f(boneBlend_UniLoc, g_HACK_blend_ratio);
 
 		//		const unsigned int TOTALNUMBEROFBONESTOPASSINTOTHESHADERASIDENTIYMATRIXVALUES = 99;
 		//		for ( unsigned int index = 0; index != numberOfBonesUsed; index++ )
@@ -560,165 +551,56 @@ void DrawObject(cEntity* pCurrentEntity,
 		//			vecFinalTransformation.push_back( glm::mat4(1.0f) );
 		//		}
 
-				// UniformLoc_bonesArray is the getUniformLoc of "bones[0]" from
-				//	uniform mat4 bones[MAXNUMBEROFBONES] 
-				// in the shader
-		glm::mat4x4* pBoneMatrixArray_1 = &(vecFinalTransformation[0][0]);
-		glm::mat4x4* pBoneMatrixArray_2 = &(vecFinalTransformation[1][0]);
+		glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
 
-		GLint bonesPose1_UniLoc = glGetUniformLocation(shaderProgramID, "bonesPose1");
-		GLint bonesPose2_UniLoc = glGetUniformLocation(shaderProgramID, "bonesPose2");
+		// UniformLoc_bonesArray is the getUniformLoc of "bones[0]" from
+		//	uniform mat4 bones[MAXNUMBEROFBONES] 
+		// in the shader
+		GLint bones_UniLoc = glGetUniformLocation(shaderProgramID, "bones");
+		//		std::cout << "bones_UniLoc: " << bones_UniLoc << std::endl;	std::cout.flush();
+		glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
+			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
 
-		glUniformMatrix4fv(bonesPose1_UniLoc, numberOfBonesUsed, GL_FALSE,
-			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray_1));
-		glUniformMatrix4fv(bonesPose2_UniLoc, numberOfBonesUsed, GL_FALSE,
-			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray_2));
-		//
-		//		const unsigned int MAXNUMBEROFBONES = 100;
-		//		float boneBlends[MAXNUMBEROFBONES] = {0};
-		//		for ( int count = 0; count != MAXNUMBEROFBONES; count++ )
-		//		{
-		//			boneBlends[count] = g_HACK_blend_ratio;
-		//		}
+		// Update the extents of the skinned mesh from the bones...
+		//	sMeshDrawInfo.minXYZ_from_SM_Bones(glm::vec3(0.0f)), 
+		//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
+		for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
+		{
+			glm::mat4 boneLocal = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
+			float scale = pCurrentEntity->m_EntityPhysics->nonUniformScale.x;
+			glm::mat4 boneScale = boneLocal * scale;
+			glm::mat4 boneRotation = glm::mat4(pCurrentEntity->m_EntityPhysics->getQOrientation());
 
-				// 0 is Unarmed-Attack-R3
-				// 1 is "Unarmed-Walk"
+			boneRotation = boneRotation * boneScale;
 
-		const float ATTACK = 0.0f;
-		const float WALK = 1.0f;
-		const float BOTH = 0.5f;
+			glm::vec4 boneBallLocation = boneRotation * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-		//boneBlends[0] = WALK;	// B_Head
-		//boneBlends[1] = ATTACK;	// B_L_Calf
-		//boneBlends[2] = WALK;	// B_L_Clavicle
-		//boneBlends[3] = ATTACK;	// B_L_Finger0
-		//boneBlends[4] = ATTACK;	// B_L_Finger01
-		//boneBlends[5] = ATTACK;	// B_L_Finger02
-		//boneBlends[6] = ATTACK;	// B_L_Finger1
-		//boneBlends[7] = ATTACK;	// B_L_Finger11
-		//boneBlends[8] = ATTACK;	// B_L_Finger12
-		//boneBlends[9] = ATTACK;	// B_L_Finger2
-		//boneBlends[10] = ATTACK;	// B_L_Finger21
-		//boneBlends[11] = ATTACK;	// B_L_Finger22
-		//boneBlends[12] = ATTACK;	// B_L_Finger3
-		//boneBlends[13] = ATTACK;	// B_L_Finger31
-		//boneBlends[14] = ATTACK;	// B_L_Finger32
-		//boneBlends[15] = ATTACK;	// B_L_Finger4
-		//boneBlends[16] = ATTACK;	// B_L_Finger41
-		//boneBlends[17] = ATTACK;	// B_L_Finger42
-		//boneBlends[18] = ATTACK;	// B_L_Foot
-		//boneBlends[19] = ATTACK;	// B_L_Forearm
-		//boneBlends[20] = ATTACK;	// B_L_Hand
-		//boneBlends[21] = WALK;	// B_L_Thigh
-		//boneBlends[22] = WALK;	// B_L_Toe0
-		//boneBlends[23] = ATTACK;	//B_L_UpperArm
-		//boneBlends[24] = ATTACK;	// B_Neck
-		//boneBlends[25] = WALK;	// B_Pelvis
-		//boneBlends[26] = WALK;	// B_R_Calf
-		//boneBlends[27] = WALK;	// B_R_Clavicle
-		//boneBlends[28] = ATTACK;	// B_R_Finger0
-		//boneBlends[29] = ATTACK;	// B_R_Finger01
-		//boneBlends[30] = ATTACK;	// B_R_Finger02
-		//boneBlends[31] = ATTACK;	// B_R_Finger1
-		//boneBlends[32] = ATTACK;	// B_R_Finger11
-		//boneBlends[33] = ATTACK;	// B_R_Finger12
-		//boneBlends[34] = ATTACK;	// B_R_Finger2
-		//boneBlends[35] = ATTACK;	// B_R_Finger21
-		//boneBlends[36] = ATTACK;	// B_R_Finger22
-		//boneBlends[37] = ATTACK;	// B_R_Finger3
-		//boneBlends[38] = ATTACK;	// B_R_Finger31
-		//boneBlends[39] = ATTACK;	// B_R_Finger32
-		//boneBlends[40] = ATTACK;	// B_R_Finger4
-		//boneBlends[41] = ATTACK;	// B_R_Finger41
-		//boneBlends[42] = ATTACK;	// B_R_Finger42
-		//boneBlends[43] = WALK;		// B_R_Foot
-		//boneBlends[44] = ATTACK;	// B_R_Forearm
-		//boneBlends[45] = ATTACK;	// B_R_Hand
-		//boneBlends[46] = WALK;		// B_R_Thigh
-		//boneBlends[47] = WALK;		// B_R_Toe0
-		//boneBlends[48] = ATTACK;	// B_R_UpperArm
-		//boneBlends[49] = ATTACK;	// B_Spine
-		//boneBlends[50] = BOTH;		// B_Spine1
-		//boneBlends[51] = ATTACK;		// B_Spine2
+			// Update the extents of the mesh
+			if (boneIndex == 0)
+			{
+				// For the 0th bone, just assume this is the extent
+				pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+				pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+			}
+			else
+			{	// It's NOT the 0th bone, so compare with current max and min
+				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
+				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
+				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
 
-//		GLint boneBlends_UniLoc = glGetUniformLocation( shaderProgramID, "boneBlends" );
-//		glUniform1fv( boneBlends_UniLoc, numberOfBonesUsed, 
-//				      (const GLfloat*) boneBlends );
+				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
+				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
+				{
+					pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
+				}
+				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
+				{
+					pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
+				}
+			}//if ( boneIndex == 0 )
 
 
-	//	// Update the extents of the skinned mesh from the bones...
-	//	//	sMeshDrawInfo.minXYZ_from_SM_Bones(glm::vec3(0.0f)), 
-	//	//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
-	//	for ( unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++ )
-	//	{
-	//		glm::mat4 boneLocal = pCurrentMesh->vecObjectBoneTransformation[boneIndex];
-//
-//
-	////***************
-	//		// Translation
-	//		glm::mat4 matModelSM = glm::translate( boneLocal, pCurrentMesh->position );
-//
-	//		// Rotation
-	//		glm::quat qRotation = pCurrentMesh->getQOrientation();
-	//		glm::mat4 matQrotation = glm::mat4( qRotation );
-//
-	//		matModelSM = matModelSM * matQrotation;
-//
-	//		// And now scale
-	//		glm::mat4 matScale = glm::scale( boneLocal, glm::vec3( pCurrentMesh->uniformScale, 
-	//		                                                       pCurrentMesh->uniformScale,
-	//		                                                       pCurrentMesh->uniformScale) );
-//
-	//		matModelSM = matModelSM * matScale;
-	////***************
-	//		matModelSM = matModelSM * boneLocal;
-//
-	//		glm::vec4 boneBallLocation = boneLocal * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f );
-//
-//
-	//		// Bone index [13] = "B_L_Finger31"
-	//		if ( boneIndex == 25 )
-	//		{
-	//			//DrawDebugBall( glm::vec3(boneBallLocation), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 0.5f );
-	////			std::cout << "Bone 13, B_L_Finger31: " 
-	////				<< boneBallLocation.x << ", "
-	////				<< boneBallLocation.y << ", " 
-	////				<< boneBallLocation.z << std::endl;
-//
-	//			cMeshSceneObject* pPlayerBody = findObjectByFriendlyName("PlayerBody");
-	//			pPlayerBody->uniformScale = 10.0f;
-	//			pPlayerBody->position = boneBallLocation;
-	//		}
-//
-//
-//
-//
-	//		// Update the extents of the mesh
-	//		if ( boneIndex == 0 )
-	//		{	
-	//			// For the 0th bone, just assume this is the extent
-	//	 		pCurrentMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-	//			pCurrentMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-	//		}
-	//		else
-	//		{	// It's NOT the 0th bone, so compare with current max and min
-	//			if ( pCurrentMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x ) { pCurrentMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
-	//			if ( pCurrentMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y ) { pCurrentMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
-	//			if ( pCurrentMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z ) { pCurrentMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
-//
-	//			if ( pCurrentMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x ) { pCurrentMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
-	//			if ( pCurrentMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y ) 
-	//			{ 
-	//				pCurrentMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
-	//			}
-	//			if ( pCurrentMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z ) 
-	//			{ 
-	//				pCurrentMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
-	//			}
-	//		}//if ( boneIndex == 0 )
-//
-//
-	//	}
+		}
 
 
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )

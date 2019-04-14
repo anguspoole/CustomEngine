@@ -1,6 +1,10 @@
 #include "../Global/gOpenGL.h"
 #include "../Global/global.h"
 
+#include "../Meshes/AssimpFBX/cAnimationState.h"
+
+extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh = NULL;
+
 // Here's the 'Assimp to VAO Converer" thing....
 bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 	unsigned int shaderProgramID)
@@ -172,47 +176,121 @@ bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 	return true;
 }
 
-void LoadSkinnedMeshModelTypes(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
+void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
+	GLuint shaderProgramID)
 {
-	// RPG character
+	player = new cEntity();
+	::g_pRPGSkinnedMesh = new cSimpleAssimpSkinnedMesh();
 
-	cSimpleAssimpSkinnedMesh* pRPG = new cSimpleAssimpSkinnedMesh();
+	//if ( ! ::g_pRPGSkinnedMesh->LoadMeshFromFile( "assets/modelsMD5monsters/hellknight/attack2.md5anim" ) ) 
+	//{
+	//	std::cout << "Didn't load the army pilot" << std::endl;
+	//}
 
-	if (!pRPG->LoadMeshFromFile("RPG-Character", "assets/modelsFBX/RPG-Character(FBX2013).FBX"))
+	//if ( ! ::g_pRPGSkinnedMesh->LoadMeshFromFile( "assets/modelsFBX/ArmyPilot(FBX2013).fbx" ) ) 
+	//{
+	//	std::cout << "Didn't load the army pilot" << std::endl;
+	//}
+	//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsFBX/RPG-Character(FBX2013).FBX" ) ) 
+//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX" ) ) 
+//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX" ) ) 
+//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx" ) ) 
+//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsMD5/hellknight/attack2.md5anim" ) ) 
+//	if ( ! ::g_pSkinnedMesh01->LoadMeshFromFile( "assets/modelsFBX/RPG-Character_Unarmed-Fall(FBX2013).fbx" ) ) 
+//	if ( ! ::g_pRPGSkinnedMesh->LoadMeshFromFile( "RPG-Character", "assets/modelsFBX/RPG-Character(FBX2013).FBX" ) )
+	//if ( ! ::g_pRPGSkinnedMesh->LoadMeshFromFile( "RPG-Character", "assets/modelsFBX/rockgolem(FBX2013).fbx" ) )
+	if (!::g_pRPGSkinnedMesh->LoadMeshFromFile("RPG-Character", "assets/modelsFBX/kachujin(2013).fbx"))
 	{
 		std::cout << "Error: problem loading the skinned mesh" << std::endl;
 	}
+	std::vector<std::string> vecBoneNames;
+	::g_pRPGSkinnedMesh->GetListOfBoneIDandNames(vecBoneNames);
 
 	// Now load another animation file... 
-	pRPG->LoadMeshAnimation("Idle", "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx");
-	pRPG->LoadMeshAnimation("Unarmed-Attack-Kick-L1", "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Unarmed-Walk", "assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Unarmed-Fall", "assets/modelsFBX/RPG-Character_Unarmed-Fall(FBX2013).fbx");
-	pRPG->LoadMeshAnimation("Roll-Backward", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx");
-	pRPG->LoadMeshAnimation("Roll-Forwards", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Forward(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Roll-Left", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Left(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Roll-Right", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Right(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Unarmed-Jump", "assets/modelsFBX/RPG-Character_Unarmed-Jump(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Unarmed-Attack-L3", "assets/modelsFBX/RPG-Character_Unarmed-Attack-L3(FBX2013).FBX");
-	pRPG->LoadMeshAnimation("Unarmed-Attack-R3", "assets/modelsFBX/RPG-Character_Unarmed-Attack-R3(FBX2013).FBX");
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Idle", "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx" );
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Idle", "assets/modelsFBX/kachujin_Idle(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Attack-Kick-L1", "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Jump", "assets/modelsFBX/kachujin_JumpNew(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Walk", "assets/modelsFBX/kachujin_Walking(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Run", "assets/modelsFBX/kachujin_Running(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-L3", "assets/modelsFBX/kachujin_Punching(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-R3", "assets/modelsFBX/RPG-Character_Unarmed-Attack-R3(FBX2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-R", "assets/modelsFBX/kachujin_Left_Strafe(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-L", "assets/modelsFBX/kachujin_Right_Strafe(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Roll", "assets/modelsFBX/kachujin_Roll(2013).FBX");
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Unarmed-Fall", "assets/modelsFBX/RPG-Character_Unarmed-Fall(FBX2013).fbx" );
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Roll-Backward", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx" );
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Roll-Forwards", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Forward(FBX2013).FBX" );
+	//4::g_pRPGSkinnedMesh->LoadMeshAnimation( "Roll-Left", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Left(FBX2013).FBX" );
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Roll-Right", "assets/modelsFBX/RPG-Character_Unarmed-Roll-Right(FBX2013).FBX" );
+	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Unarmed-Jump", "assets/modelsFBX/RPG-Character_Unarmed-Jump(FBX2013).FBX" );
 
-	pRPG->friendlyName = "RPG-Character";
+	::g_pRPGSkinnedMesh->friendlyName = "RPG-Character";
 
-	if (!pTheVAOMeshManager->LoadSkinnedMeshModelIntoVAO(pRPG, shaderProgramID))
+	cMesh* pTheMesh = ::g_pRPGSkinnedMesh->CreateMeshObjectFromCurrentModel();
+
+	if (pTheMesh)
 	{
-		std::cout << "ERROR: Failed to load RPG Skinned Mesh character" << std::endl;
+		std::cout << "Mesh got loaded" << std::endl;
 	}
 	else
 	{
-		std::cout << "RPG SM character + animations are loaded OK" << std::endl;
+		std::cout << "Didn't load the skinned mesh model" << std::endl;
 	}
 
-	std::vector<std::string> vecBoneList;
-	pRPG->GetListOfBoneIDandNames(vecBoneList);
-	for (int index = 0; index != vecBoneList.size(); index++)
+	// Copy the mesh information from assimp into our cMesh object, 
+	// then into the sModelDrawInfo thing, and pass to the VAOManager
+
+	if (!AssimpSM_to_VAO_Converter(::g_pRPGSkinnedMesh, shaderProgramID))
 	{
-		//std::cout << index << " : " << vecBoneList[index] << std::endl;
+		std::cout << "Error: Didn't copy the skinned mesh into the VAO format." << std::endl;
 	}
+	else
+	{
+		std::cout << "Copied the skinned mesh into the VAO format" << std::endl;
+
+		// Add this mesh model into the "models to draw" vector
+
+		{	// Bind pose Skinned Mesh object
+			cEntity* pTestSM = new cEntity();
+			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));	// Yellow
+			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
+			pTestSM->friendlyName = "SM_Object";
+			pTestSM->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 2.0f);
+			float scale = (0.008f);
+			pTestSM->m_EntityPhysics->nonUniformScale = glm::vec3(scale);
+			pTestSM->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("RPG-Character.ply"));
+			pTestSM->m_EntityMesh->bIsVisible = true;
+			pTestSM->m_EntityPhysics->bIsUpdatedByPhysics = true;
+
+			// Wireframe, to make it easier to see (for now)
+//			pTestSM->bIsWireFrame = true;
+//			pTestSM->bDontLight = true;
+
+			// Set this mesh to the skinned mesh object
+			pTestSM->m_EntityMesh->pSimpleSkinnedMesh = ::g_pRPGSkinnedMesh;
+			// HACK
+			//pTestSM->currentAnimation = "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx";
+//			pTestSM->currentAnimation = "Idle";
+
+			cAnimationState* pAniState;
+			pTestSM->m_EntityMesh->pAniState = new cAnimationState();
+
+			pTestSM->m_EntityMesh->pAniState->defaultAnimation.name = "Idle";
+			pTestSM->m_EntityMesh->currentAnimation = pTestSM->m_EntityMesh->pAniState->defaultAnimation.name;
+
+
+
+			sTextureInfo testObjectTexture;
+			testObjectTexture.name = "grass.bmp";
+			testObjectTexture.strength = 1.0f;
+
+			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
+			pTestSM->m_EntityPhysics->setUniformScale(0.008f);
+			vec_pObjectsToDraw.push_back(pTestSM);
+		}
+	}//if ( ! AssimpSM_to_VAO_Converter(
+
 
 	return;
 }
