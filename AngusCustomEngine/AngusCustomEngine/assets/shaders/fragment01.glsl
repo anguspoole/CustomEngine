@@ -92,6 +92,7 @@ uniform sampler2D texture07;
 // For the 2 pass rendering
 uniform float renderPassNumber;	// 1 = 1st pass, 2nd for offscreen to quad
 uniform sampler2D texPass1OutputTexture;
+uniform sampler2D texPass1ReticleTexture;
 
 
 // Cube map texture (NOT a sampler3D)
@@ -108,6 +109,7 @@ uniform vec4 texBlendWeights[2];	// x is 0, y is 1, z is 2
 
 uniform float wholeObjectAlphaTransparency;
 
+uniform float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 
 
 void main()
@@ -119,22 +121,110 @@ void main()
 
 
 	// Are we in the 2nd pass? 
-	if ( int(renderPassNumber) == 2 )
+	if ( int(renderPassNumber) == 2)
 	{ 
 //		vec3 ObjectColour = texture( texObjectColour, vertUV_x2.st ).rgb;
 //		vec3 ObjectNormal = texture( texObjectColour, vertUV_x2.st ).rgb;
 	
 		// 2nd pass (very simple)
-		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st ).rgb;
+		vec4 texture2 = texture( texture00, vertUV_x2.st ).rgba;
+		if (!(texture2.g > 0.5 && texture2.r < 0.5))
+		{
+			texture2 *= 0.01;
+		}
 		
-//		float bw =   0.2126f * finalOutputColour.r
-//                   + 0.7152f * finalOutputColour.g 
-//				   + 0.0722f * finalOutputColour.b;
-//		
-//		finalOutputColour.rgb = vec3(bw,bw,bw);
-		
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st + 0.005*vec2( cos(vertUV_x2.s),sin(1024.0*vertUV_x2.t))).rgb
+		                           + texture2.rgb;
+								   
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st).rgb;
+				
 		finalOutputColour.a = 1.0f;
+		if(texture2.b > 0.5)
+		{
+			finalOutputColour.r = 0.7f;
+			finalOutputColour.g = 0.7f;
+			finalOutputColour.b = 0.7f;
+			finalOutputColour.a = 0.5f;
+		}
 		return;
+	}
+		
+	//Generate Bloom Effect
+	if (int(renderPassNumber) == 3)
+	{
+		float step = 0.001f;
+		float size = 0.003f;
+
+		//float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+		float weight[10] = float[] (0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+			
+		vec2 tex_offset = 1.0 / textureSize(texPass1OutputTexture, 0); // gets size of single texel
+		
+		finalOutputColour.rgb = texture( texPass1OutputTexture, vertUV_x2.st).rgb;
+		vec3 newValuesX = finalOutputColour.rgb;
+		vec3 newValuesY = finalOutputColour.rgb;
+		finalOutputColour.rgb = vec3(0.0f, 0.0f, 0.0f);
+		
+		vec3 result = finalOutputColour.rgb * weight[0];
+		
+		for(int n = 0; n < 5; n++)
+		{
+	
+		float brightnessX = dot(newValuesX, vec3(0.2126, 0.7152, 0.0722));
+		float brightnessY = dot(newValuesY, vec3(0.2126, 0.7152, 0.0722));
+		
+		
+		//if(brightnessX > 1.0f)
+		{
+			newValuesX = newValuesX * weight[0]; // current fragment's contribution
+				
+			for(int i = 1; i < 10; ++i)
+			{
+						newValuesX += texture(texPass1OutputTexture, vertUV_x2.st + vec2(step * i, 0.0f)).rgb * weight[i];
+						newValuesX += texture(texPass1OutputTexture, vertUV_x2.st - vec2(step * i, 0.0f)).rgb * weight[i];
+			}
+			
+		}
+		//if(brightnessY > 1.0f)
+		{
+			newValuesY = newValuesY * weight[0]; // current fragment's contribution
+				
+			for(int i = 1; i < 10; ++i)
+			{
+						newValuesY += texture(texPass1OutputTexture, vertUV_x2.st + vec2(0.0f, step * i)).rgb * weight[i];
+						newValuesY += texture(texPass1OutputTexture, vertUV_x2.st - vec2(0.0f, step * i)).rgb * weight[i];
+			}
+		}
+		
+			result += (newValuesX + newValuesY) / 2.0f;
+		
+			newValuesX = texture( texPass1OutputTexture, vertUV_x2.st + vec2(step * n, 0.0f)).rgb;
+			newValuesY = texture( texPass1OutputTexture, vertUV_x2.st + vec2(0.0f, step * n)).rgb;
+		}
+		
+				
+		finalOutputColour.rgb = result.rgb / 10;
+			
+		finalOutputColour.a = 1.0f;
+		//}
+		
+		
+		return;
+//			float step = 0.001f;
+//			float size = 0.003f;
+//		
+//			vec3 vecSample = vec3(0.0f, 0.0f, 0.0f );
+//			int count = 0;
+//			for ( float x = -size; x <= size; x += step )
+//			{
+//				for ( float y = -size; y <= size; y += step )
+//			{
+//			count++;
+//					vecSample += texture( texPass1OutputTexture, vertUV_x2.st + vec2(x, y)).rgb;
+//				}
+//			}
+//					finalOutputColour.rgb = (vecSample.rgb / float(count));	
+//		return;	
 	}
 	
 	
@@ -205,16 +295,16 @@ void main()
 	
 	// You could add the reflection and refraction colours to your
 	// object's colour, but here I'm going to combine and exit early.
-//	if ( bAddReflect || bAddRefract )
-//	{
-//		float amountOfReflect = 0.5f;
-//		float amountOfRefract = 0.5f;
-//	
-//		finalOutputColour.rgb =   (rgbReflect * amountOfReflect)
-//		                        + (rgbRefract * amountOfRefract);
-//		finalOutputColour.a = 1.0f;	
-//		return;	
-//	}
+	if ( bAddReflect || bAddRefract )
+	{
+		float amountOfReflect = 0.5f;
+		float amountOfRefract = 0.5f;
+	
+		finalOutputColour.rgb =   (rgbReflect * amountOfReflect)
+		                        + (rgbRefract * amountOfRefract);
+		finalOutputColour.a = 1.0f;	
+		return;	
+	}
 	
 	
 

@@ -56,7 +56,7 @@ void addClothNode(std::vector< cEntity* > &vec_pObjectsToDraw)
 {
 	cEntity * testObj = new cEntity();
 	float scale = 1.5f;
-	testObj->m_EntityPhysics->uniformScale = scale;
+	testObj->m_EntityPhysics->setUniformScale(scale);
 	testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
 	testObj->friendlyName = "ClothNode";
 	testObj->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -132,7 +132,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
 			{
 				cEntity * testObj = new cEntity();
-				testObj->m_EntityPhysics->uniformScale = config.RigidBodyDefs[c].Mass;
+				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
 				testObj->friendlyName = "sphere" + std::to_string(sphereCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -165,7 +165,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane0") == 0)
 			{
 				cEntity * testObj1 = new cEntity();
-				testObj1->m_EntityPhysics->uniformScale = (2.0f);
+				testObj1->m_EntityPhysics->setUniformScale(2.0f);
 				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
 				testObj1->friendlyName = "plane" + std::to_string(planeCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -220,7 +220,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane1") == 0)
 			{
 				cEntity * testObj1 = new cEntity();
-				testObj1->m_EntityPhysics->uniformScale = (2.0f);
+				testObj1->m_EntityPhysics->setUniformScale(2.0f);
 				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane1.ply"));
 				testObj1->friendlyName = "plane" + std::to_string(planeCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -276,7 +276,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane2") == 0)
 			{
 			cEntity * testObj1 = new cEntity();
-			testObj1->m_EntityPhysics->uniformScale = (2.0f);
+			testObj1->m_EntityPhysics->setUniformScale(2.0f);
 			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane2.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -332,7 +332,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane3") == 0)
 			{
 			cEntity * testObj1 = new cEntity();
-			testObj1->m_EntityPhysics->uniformScale = (2.0f);
+			testObj1->m_EntityPhysics->setUniformScale(2.0f);
 			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane3.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -388,7 +388,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane4") == 0)
 			{
 			cEntity * testObj1 = new cEntity();
-			testObj1->m_EntityPhysics->uniformScale = (2.0f);
+			testObj1->m_EntityPhysics->setUniformScale(2.0f);
 			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane4.ply"));
 			testObj1->friendlyName = "plane" + std::to_string(planeCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -448,7 +448,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Box") == 0)
 			{
 				cEntity * testObj = new cEntity();
-				testObj->m_EntityPhysics->uniformScale = config.RigidBodyDefs[c].Mass;
+				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
 				testObj->friendlyName = "box" + std::to_string(boxCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -513,7 +513,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Cylinder") == 0)
 			{
 				cEntity * testObj = new cEntity();
-				testObj->m_EntityPhysics->uniformScale = config.RigidBodyDefs[c].Mass;
+				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cylinderUV.ply"));
 				testObj->friendlyName = "cylinder" + std::to_string(cylinderCount);
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
@@ -555,7 +555,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Cone") == 0)
 			{
 			cEntity * testObj = new cEntity();
-			testObj->m_EntityPhysics->uniformScale = config.RigidBodyDefs[c].Mass;
+			testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 			testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("coneUV.ply"));
 			testObj->friendlyName = "cone" + std::to_string(coneCount);
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;

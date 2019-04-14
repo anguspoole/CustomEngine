@@ -30,11 +30,12 @@ GLint texBW_0_UniLoc = -1;
 GLint texBW_1_UniLoc = -1;
 
 // Texture sampler for off screen texture
-GLint texPass1OutputColourTexture_UniLoc = -1;
-GLint texPass1OutputNormalTexture_Uniloc = -1;
-GLint texPeas1OutputVertexWorldPosTexture_Uniloc = -1;
-GLint texPeas1OutputSpecular_Uniloc = -1;
+GLint texPass1OutputTexture_UniLoc = -1;
+//Texture sampler for reticle texture
+GLint texPass1ReticleTexture_UniLoc = -1;
 
+
+cCamera* currentCamera = NULL;
 
 // This is to change the full screen FBO objects when the window changes size
 // See: http://www.glfw.org/docs/latest/window_guide.html#window_size
@@ -98,71 +99,87 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 		HACK_bTextureUniformLocationsLoaded = true;
 
 
-		texPass1OutputColourTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1OutputColour");
-		texPass1OutputNormalTexture_Uniloc = glGetUniformLocation(shaderProgramID, "texPass1OutputNormal");
-		texPeas1OutputVertexWorldPosTexture_Uniloc = glGetUniformLocation(shaderProgramID, "texPass1OutputVertWorldPos");
-		texPeas1OutputSpecular_Uniloc = glGetUniformLocation(shaderProgramID, "texPass1OutputSpecular");
+		texPass1OutputTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1OutputTexture");
+		texPass1ReticleTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1ReticleTexture");
 
 	}//if(!HACK_bTextureUniformLocationsLoaded )
 
 
 
-	switch (RenderPassNumber)
+	if (pCurrentEntity->m_EntityMesh->b_HACK_UsesOffscreenFBO)
 	{
-	case 0:
-	case 1:
-		// Do nothing. Use regular texture bindings
-		// Pass 1 - G buffer
-		break;
+		// Connect the texture for this object to the FBO texture
+		// Pick texture unit 16 (just because - I randomly picked that)
 
-	case 2:
-	{
-		// Lighting pass
-		int FBO_Texture_Unit_Colour = 40;
-		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Colour);
+		int FBO_Texture_Unit_Michael_Picked = 1;
+		//if (pFBOObj->ID == 1)
+		//{
+		//	FBO_Texture_Unit_Michael_Picked++;
+		//}
+
+		// 0x84C0  (or 33984)		
+		// Please bind to texture unit 34,000. Why gawd, why?
+		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Michael_Picked);
+
+		// Connect the specific texture to THIS texture unit
+//		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
 		glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
-		glUniform1i(texPass1OutputColourTexture_UniLoc, FBO_Texture_Unit_Colour);
-
-		int FBO_Texture_Unit_Normal = 41;
-		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Normal);
-		glBindTexture(GL_TEXTURE_2D, fbo->normalTexture_1_ID);
-		glUniform1i(texPass1OutputNormalTexture_Uniloc, FBO_Texture_Unit_Normal);
-
-		int FBO_Texture_Unit_VertexWorldPos = 42;
-		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_VertexWorldPos);
-		glBindTexture(GL_TEXTURE_2D, fbo->vertexWorldPos_2_ID);
-		glUniform1i(texPeas1OutputVertexWorldPosTexture_Uniloc, FBO_Texture_Unit_VertexWorldPos);
-
-		int FBO_Texture_Unit_Specular = 43;
-		glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Specular);
-		glBindTexture(GL_TEXTURE_2D, fbo->vertexSpecular_3_ID);
-		glUniform1i(texPeas1OutputSpecular_Uniloc, FBO_Texture_Unit_Specular);
-	}
-	break;
-
-	case 3:
-	{
-		// Effects pass
-		int FBO_Effects_Texture_Unit_Colour = 40;
-		glActiveTexture(GL_TEXTURE0 + FBO_Effects_Texture_Unit_Colour);
-		glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
-		glUniform1i(texPass1OutputColourTexture_UniLoc, FBO_Effects_Texture_Unit_Colour);
-	}
-
-	break;
-	};
-
-	//if ( pCurrentMesh->b_HACK_UsesOffscreenFBO )
-	//{
-	//	// Connect the texture for this object to the FBO texture
-	//	// Pick texture unit 16 (just because - I randomly picked that)
+		// Now pick to read from the normal (output from the 1st pass):
+//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->normalTexture_1_ID );
+//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->depthTexture_ID );
+//		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->vertexWorldPos_2_ID );
 
 
+		// Set the sampler (in the shader) to ALSO point to texture unit 16
+		// This one takes the unchanged texture unit numbers 
+//		glUniform1i( tex00_UniLoc, FBO_Texture_Unit_Michael_Picked );
+		glUniform1i(texPass1OutputTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
 
-	//	// NOTE: Early return (so we don't set any other textures
-	//	// Again; HACK!!
-	//	return;
-	//}//if ( pCurrentMesh->b_HACK_UsesOffscreenFBO )
+
+		// Set the blending to that it's 0th texture sampler
+		// NOTE: it's only the 0th (1st) texture that we are mixing from
+//		glUniform4f( texBW_0_UniLoc, 1.0f, 0.0f, 0.0f, 0.0f );		// <---- Note the 1.0f
+//		glUniform4f( texBW_1_UniLoc, 0.0f, 0.0f, 0.0f, 0.0f );
+
+		if (!pCurrentEntity->m_EntityMesh->vecTextures.empty())
+		{
+			if (pCurrentEntity->m_EntityMesh->vecTextures[0].strength > 0.2f)
+			{
+				glActiveTexture(GL_TEXTURE0 + 0);
+
+				// Connect the specific texture to THIS texture unit
+				std::string texName = pCurrentEntity->m_EntityMesh->vecTextures[0].name;
+
+				GLuint texID = ::g_TheTextureManager->getTextureIDFromName(texName);
+
+				glBindTexture(GL_TEXTURE_2D, texID);
+
+				glUniform1i(texPass1OutputTexture_UniLoc, 0);
+			}
+			else
+			{
+				glActiveTexture(GL_TEXTURE0 + 0);
+
+				glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+
+				glUniform1i(texPass1ReticleTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
+			}
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE0 + 0);
+
+			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+
+			glUniform1i(texPass1ReticleTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
+		}
+
+
+
+		// NOTE: Early return (so we don't set any other textures
+		// Again; HACK!!
+		return;
+	}//if ( pCurrentMesh->b_HACK_UsesOffscreenFBO )
 	//// ******************************************************************** 
 	//// ******************************************************************** 
 	//// ******************************************************************** 
@@ -300,7 +317,7 @@ void DrawObject(cEntity* pCurrentEntity,
 			cEntity * clothNode = findObjectByFriendlyName("ClothNode");
 			float scale;
 			pCurrentEntity->m_EntityPhysics->softBody->GetNodeRadius(i, scale);
-			clothNode->m_EntityPhysics->uniformScale = scale;
+			clothNode->m_EntityPhysics->setUniformScale(scale);
 			pCurrentEntity->m_EntityPhysics->softBody->GetNodePosition(i, clothNode->m_EntityPhysics->position); //update position
 			pCurrentEntity->m_EntityMesh->bIsVisible = true; //set visible to true
 			glm::mat4x4 clothMatModel = glm::mat4x4(1.0f);		// mat4x4_identity(m);
@@ -332,7 +349,7 @@ void DrawObject(cEntity* pCurrentEntity,
 	// And now scale
 
 	glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
-	glm::vec3(pCurrentEntity->m_EntityPhysics->uniformScale, pCurrentEntity->m_EntityPhysics->uniformScale, pCurrentEntity->m_EntityPhysics->uniformScale));
+	glm::vec3(pCurrentEntity->m_EntityPhysics->nonUniformScale.x, pCurrentEntity->m_EntityPhysics->nonUniformScale.y, pCurrentEntity->m_EntityPhysics->nonUniformScale.z));
 	matModel = matModel * matScale;
 
 	//************************************
@@ -458,7 +475,7 @@ void DrawObject(cEntity* pCurrentEntity,
 
 		// For now, pick the 0th one
 
-		float camObjectDistance = glm::distance(::g_Camera->eye,
+		float camObjectDistance = glm::distance(currentCamera->eye,
 			pCurrentEntity->m_EntityPhysics->position);
 
 		// Look for a model that is the closest to the camera but within that

@@ -9,7 +9,7 @@ cEntityPhysics::cEntityPhysics()
 	this->velocity = glm::vec3(0.0f);
 	this->accel = glm::vec3(0.0f);
 	this->setMeshOrientationEulerAngles(glm::vec3(0.0f, 0.0f, 0.0f));
-	this->uniformScale = 1.0f;
+	this->nonUniformScale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 
@@ -63,6 +63,11 @@ void cEntityPhysics::adjMeshOrientationQ(glm::quat adjOrientQ)
 {
 	this->m_meshQOrientation *= adjOrientQ;
 	return;
+}
+
+void cEntityPhysics::setUniformScale(float scale)
+{
+	this->nonUniformScale = glm::vec3(scale, scale, scale);
 }
 
 void cEntityPhysics::Update(double deltaTime)

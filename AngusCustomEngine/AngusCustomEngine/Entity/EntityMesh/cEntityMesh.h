@@ -59,6 +59,8 @@ public:
 	// If there's only 1, then we AREN'T using LOD
 	std::vector<sLODInfo> vecLODMeshs;
 
+	bool b_HACK_UsesOffscreenFBO = false;
+
 	//For FBOs
 	unsigned int renderPassNumber;
 

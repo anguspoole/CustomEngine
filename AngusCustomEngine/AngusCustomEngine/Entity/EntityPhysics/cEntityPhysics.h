@@ -32,7 +32,7 @@ public:
 	glm::vec3 velocity;
 	glm::vec3 accel;
 
-	float uniformScale;
+	glm::vec3 nonUniformScale;
 	float mass;
 	float inverseMass;
 
@@ -61,6 +61,8 @@ public:
 	void adjMeshOrientationEulerAngles(glm::vec3 adjAngleEuler, bool bIsDegrees = false);
 	void adjMeshOrientationEulerAngles(float x, float y, float z, bool bIsDegrees = false);
 	void adjMeshOrientationQ(glm::quat adjOrientQ);
+
+	void setUniformScale(float scale);
 
 	void Update(double deltaTime);
 

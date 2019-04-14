@@ -292,6 +292,11 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	cone.meshFileName = "coneUV.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cone, shaderProgramID);
 
+	//Quad for FBOs
+	sModelDrawInfo p2SidedQuad;
+	p2SidedQuad.meshFileName = "1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(p2SidedQuad, shaderProgramID);
+
 	pTheVAOMeshManager->m_LoadModelFromFile_ASYNC();
 }
 
@@ -325,7 +330,7 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		pSkyBoxObject->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 105.0f / 255.0f, 180.0f / 255.0f));
 		pSkyBoxObject->m_EntityMesh->bUseVertexColour = false;
 		pSkyBoxObject->friendlyName = "SkyBoxObject";
-		pSkyBoxObject->m_EntityPhysics->uniformScale = 5000.0f;
+		pSkyBoxObject->m_EntityPhysics->setUniformScale(5000.0f);
 		//		pSkyBoxObject->meshName = "Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply";			// "Sphere_320_faces_xyz.ply";
 		pSkyBoxObject->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv_INVERTED_NORMALS.ply"));
 		//		pSkyBoxObject->bIsWireFrame = true;
@@ -353,7 +358,7 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 
 		pDebugSphere->friendlyName = "DebugSphere";
-		pDebugSphere->m_EntityPhysics->uniformScale = 3.0f;
+		pDebugSphere->m_EntityPhysics->setUniformScale(3.0f);
 		//		pDebugSphere->meshName = "Sphere_320_faces_xyz_n_GARBAGE_uv.ply";		// "Sphere_320_faces_xyz.ply";
 		pDebugSphere->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
 		pDebugSphere->m_EntityMesh->bIsWireFrame = false;
@@ -368,6 +373,24 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 
 		//pTerrain->nonUniformScale = glm::vec3(0.1f,0.1f,0.1f);
-		vec_pObjectsToDraw.push_back(pDebugSphere);
+		//vec_pObjectsToDraw.push_back(pDebugSphere);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* p2SidedQuad = new cEntity();
+		p2SidedQuad->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		p2SidedQuad->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
+		p2SidedQuad->m_EntityMesh->setSpecularPower(100.0f);
+		p2SidedQuad->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		p2SidedQuad->friendlyName = "2SidedQuad";
+		p2SidedQuad->m_EntityPhysics->setUniformScale(10.0f);
+		p2SidedQuad->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
+		p2SidedQuad->m_EntityMesh->bIsWireFrame = false;
+		//pDebugSphere->m_EntityMesh->bDontLight = false;
+		p2SidedQuad->m_EntityMesh->bIsVisible = false;
+		p2SidedQuad->m_EntityMesh->bUseVertexColour = false;
+
+		vec_pObjectsToDraw.push_back(p2SidedQuad);
 	}
 }

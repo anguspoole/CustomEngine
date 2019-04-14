@@ -21,6 +21,7 @@ int windowWidth = 0;
 int windowHeight = 0;
 
 cCamera* g_Camera = NULL;
+cCamera* player_Camera = NULL;
 cShaderManager* pTheShaderManager = NULL;
 cVAOMeshManager* g_VAOMeshManager = NULL;
 cBasicTextureManager* g_TheTextureManager = NULL;
@@ -29,6 +30,8 @@ cLightManager* g_LightManager = NULL;
 std::vector< cEntity* > vec_pObjectsToDraw;
 
 nLoad::sConfig config;
+
+cFBO* g_pFBOMain;
 
 void main()
 {
@@ -77,9 +80,17 @@ void main()
 	GLuint program = pTheShaderManager->getIDFromFriendlyName("BasicUberShader");
 
 	g_Camera = new cCamera();
+	player_Camera = new cCamera();
 	g_VAOMeshManager = new cVAOMeshManager();
 	g_TheTextureManager = new cBasicTextureManager();
 	g_LightManager = new cLightManager();
+
+	::g_pFBOMain = new cFBO();
+
+	std::string FBOErrorString;
+	int fbWidth, fbHeight;
+	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+	::g_pFBOMain->init(fbWidth, fbHeight, FBOErrorString);
 
 	// Point back to default frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -113,9 +124,11 @@ void main()
 	//***********************************************************
 	//***********************************************************
 
-	g_Camera->eye = glm::vec3(0.0f, 20.0f, -10.0f);
+	g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
+	g_Camera->targetPos = glm::vec3(0.0f, 0.0f, 1.0f);
+	player_Camera->eye = glm::vec3(0.0f, 20.0f, -10.0f);
 	//g_Camera->eye = glm::vec3(0.0f, 10.0f, -30.0f);
-	g_Camera->targetPos = glm::vec3(0.0f, -1.0f, 1.0f);
+	player_Camera->targetPos = glm::vec3(0.0f, -1.0f, 1.0f);
 	//g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
 	//g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
 
@@ -169,8 +182,11 @@ void main()
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
+		glBindFramebuffer(GL_FRAMEBUFFER, ::g_pFBOMain->ID);
+		::g_pFBOMain->clearBuffers(true, true);
 
+		currentCamera = player_Camera;
 													// Get the size of the actual (screen) frame buffer
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 		float ratio = windowWidth / (float)windowHeight;
@@ -191,7 +207,7 @@ void main()
 		//Assign camera to new point
 		//g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		glm::mat4 matView = glm::lookAt(g_Camera->eye, g_Camera->getAtInWorldSpace(), g_Camera->getUpVector());
+		glm::mat4 matView = glm::lookAt(player_Camera->eye, player_Camera->getAtInWorldSpace(), player_Camera->getUpVector());
 
 		//mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		glm::mat4 matProjection = glm::perspective(0.6f,			// FOV
@@ -199,7 +215,7 @@ void main()
 			0.1f,			// Near clipping plane
 			10000.0f);	// Far clipping plane
 
-		glUniform3f(eyeLocation_location, g_Camera->eye.x, g_Camera->eye.y, g_Camera->eye.z);
+		glUniform3f(eyeLocation_location, player_Camera->eye.x, player_Camera->eye.y, player_Camera->eye.z);
 
 		glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
 		glUniformMatrix4fv(matProj_location, 1, GL_FALSE, glm::value_ptr(matProjection));
@@ -230,7 +246,7 @@ void main()
 			cEntity* pSkyBox = findObjectByFriendlyName("SkyBoxObject");
 			//			cMeshObject* pSkyBox = findObjectByFriendlyName("SkyPirate");
 						// Place skybox object at camera location
-			pSkyBox->m_EntityPhysics->position = g_Camera->eye;
+			pSkyBox->m_EntityPhysics->position = player_Camera->eye;
 			pSkyBox->m_EntityMesh->bIsVisible = true;
 			pSkyBox->m_EntityMesh->bIsWireFrame = false;
 
@@ -263,7 +279,7 @@ void main()
 			glUniform1f(useSkyBoxTexture_UniLoc, (float)GL_TRUE);
 
 			glm::mat4 matIdentity = glm::mat4(1.0f);
-			DrawObject(pSkyBox, matIdentity, program, 0, NULL);
+			DrawObject(pSkyBox, matIdentity, program, 1, NULL);
 
 			//glEnable( GL_CULL_FACE );
 			//glCullFace( GL_BACK );
@@ -290,13 +306,90 @@ void main()
 		cEntity * userSphere = findObjectByFriendlyName("sphere0");
 		userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
 		glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
-		glm::vec3 targetDir = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - g_Camera->eye);
-		glm::quat q = glm::inverse(glm::lookAt(targetPos - g_Camera->eye, targetDir, g_Camera->getUpVector()));
-		g_Camera->setMeshOrientationQ(q);
-		g_Camera->m_UpdateAtFromOrientation();
+		glm::vec3 targetDir = glm::normalize(glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z) - player_Camera->eye);
+		glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+		player_Camera->setMeshOrientationQ(q);
+		player_Camera->m_UpdateAtFromOrientation();
 
 
-		DrawScene_Simple(vec_pObjectsToDraw, program, 0, NULL);
+		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
+
+		//All objects have been drawn - now render scene to quad
+		{
+			//**********************************
+			//Third Pass
+			//**********************************
+			cEntity* fullQuad = findObjectByFriendlyName("2SidedQuad");
+			// 1. Set the Framebuffer output to the main framebuffer
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
+														// Get the size of the actual (screen) frame buffer
+			glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+			ratio = windowWidth / (float)windowHeight;
+			glViewport(0, 0, windowWidth, windowHeight);
+
+			currentCamera = g_Camera;
+
+			glEnable(GL_DEPTH);		// Enables the KEEPING of the depth information
+			glEnable(GL_DEPTH_TEST);	// When drawing, checked the existing depth
+			glEnable(GL_CULL_FACE);	// Discared "back facing" triangles
+
+			// 2. Clear everything **ON THE MAIN FRAME BUFFER** 
+			//     (NOT the offscreen buffer)
+			// This clears the ACTUAL screen framebuffer
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// 3. Bind 1 texture (what we drew)
+			fullQuad->m_EntityMesh->bIsVisible = true;
+			fullQuad->m_EntityMesh->b_HACK_UsesOffscreenFBO = true;
+			fullQuad->m_EntityMesh->bDontLight = true;
+			fullQuad->m_EntityMesh->bUseVertexColour = false;
+			fullQuad->m_EntityMesh->materialDiffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+			fullQuad->m_EntityPhysics->nonUniformScale.x = (fullQuad->m_EntityPhysics->nonUniformScale.y / ratio);
+
+			//g_Camera->eye = glm::vec3(0.0f);
+
+			fullQuad->m_EntityPhysics->setMeshOrientationEulerAngles(90.0f, 0.0f, 90.0f, true);
+			//fullQuad->position = ::g_pFlyCamera->eye + (40.0f * ::g_pFlyCamera->getCameraDirection());
+			fullQuad->m_EntityPhysics->position = ::g_Camera->eye;
+			//fullQuad->position = glm::vec3(7.0f, 7.5f, 3.0f);
+			//fullQuad->position = glm::vec3(0.0f, 3.5f, 2.0f);
+			fullQuad->m_EntityPhysics->position.z = ::g_Camera->eye.z + 15.0f;
+
+
+			//glUniform3f(eyeLocation_location, ::g_pFlyCamera->eye.x, ::g_pFlyCamera->eye.y, ::g_pFlyCamera->eye.z);
+			//matView = glm::lookAt(::g_pFlyCamera->eye,	// Eye
+			//	::g_pFlyCamera->getAtInWorldSpace(),		// At
+			//	::g_pFlyCamera->getUpVector());// Up
+
+			glm::vec3 cameraFullScreenQuad = glm::vec3(0.0, 0.0, 0.0f);
+
+			glUniform3f(eyeLocation_location, g_Camera->eye.x, g_Camera->eye.y, g_Camera->eye.z);
+			matView = glm::lookAt(g_Camera->eye,			// Eye
+				fullQuad->m_EntityPhysics->position,					// At
+				glm::vec3(0.0f, 1.0f, 0.0f));			// Up
+
+			glUniformMatrix4fv(matView_location, 1, GL_FALSE, glm::value_ptr(matView));
+			//DrawScene_Simple(vec_pObjectsToDraw, program, 0);
+
+			// Tell the shader this is the 3rd pass...
+			// This will run a very simple shader, which
+			//  does NOT lighting, and only samples from a single texture
+			//  (for now: soon there will be multiple textures)
+			glUniform1f(renderPassNumber_UniLoc, 2.0f);	// Tell shader it's the 2nd pass
+
+			// 4. Draw a single quad		
+			glm::mat4 matModel = glm::mat4(1.0f);	// identity
+			fullQuad->m_EntityMesh->bIsVisible = true;
+			DrawObject(fullQuad, matModel, program, 1, g_pFBOMain);
+			//DrawObject(fullQuad, matModel, program, NULL);
+
+			// 5. Enjoy.
+			// Make this invisible for the "regular" pass
+			fullQuad->m_EntityMesh->bIsVisible = false;
+
+			glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
+		}
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

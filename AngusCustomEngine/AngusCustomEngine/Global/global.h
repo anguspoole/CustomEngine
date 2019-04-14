@@ -28,6 +28,8 @@
 #include "../Entity/cEntity.h"
 
 extern cCamera* g_Camera;
+extern cCamera* player_Camera;
+extern cCamera* currentCamera;
 extern cVAOMeshManager* g_VAOMeshManager;
 extern cBasicTextureManager* g_TheTextureManager;
 extern cLightManager* g_LightManager;
@@ -65,5 +67,9 @@ void makeSliderConstraint(cEntity * objA, cEntity* objB);
 
 //extern double dT;
 extern nLoad::sConfig config;
+
+// The main Frame Buffer Object (off screen rendering)
+// (You can create one of these for each off screen rendered thing, if you'd like)
+extern cFBO* g_pFBOMain;
 
 #endif
