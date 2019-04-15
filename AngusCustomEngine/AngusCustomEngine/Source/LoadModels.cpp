@@ -211,8 +211,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Idle", "assets/modelsFBX/kachujin_Idle(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Attack-Kick-L1", "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Jump", "assets/modelsFBX/kachujin_JumpNew(2013).fbx");
-	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Walk", "assets/modelsFBX/kachujin_Walking(2013).FBX");
-	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Run", "assets/modelsFBX/kachujin_Running(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Walk", "assets/modelsFBX/kachujin_Walking(2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Run", "assets/modelsFBX/kachujin_Running(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-L3", "assets/modelsFBX/kachujin_Punching(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-R3", "assets/modelsFBX/RPG-Character_Unarmed-Attack-R3(FBX2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-R", "assets/modelsFBX/kachujin_Left_Strafe(2013).FBX");

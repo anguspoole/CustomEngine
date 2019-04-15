@@ -8,6 +8,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "../Entity/cEntity.h"
 
@@ -340,11 +341,18 @@ void DrawObject(cEntity* pCurrentEntity,
 
 	matModel = matModel * matTranslation;		// matMove
 
-	glm::quat qRotation = pCurrentEntity->m_EntityPhysics->getQOrientation();
-	// Generate the 4x4 matrix for that
-	glm::mat4 matQrotation = glm::mat4(qRotation);
+	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
+	{
+		
+	}
+	else
+	{
+		glm::quat qRotation = pCurrentEntity->m_EntityPhysics->getQOrientation();
+		// Generate the 4x4 matrix for that
+		glm::mat4 matQrotation = glm::mat4(qRotation);
 
-	matModel = matModel * matQrotation;
+		matModel = matModel * matQrotation;
+	}
 
 	// Calculate the inverse transpose before the scaling
 	glm::mat4 matModelInvTrans = glm::inverse(glm::transpose(matModel));
@@ -569,7 +577,8 @@ void DrawObject(cEntity* pCurrentEntity,
 			glm::mat4 boneLocal = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 			float scale = pCurrentEntity->m_EntityPhysics->nonUniformScale.x;
 			glm::mat4 boneScale = boneLocal * scale;
-			glm::mat4 boneRotation = glm::mat4(pCurrentEntity->m_EntityPhysics->getQOrientation());
+			glm::mat4 boneRotation;
+			pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(boneRotation);
 
 			boneRotation = boneRotation * boneScale;
 
@@ -606,25 +615,26 @@ void DrawObject(cEntity* pCurrentEntity,
 				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;
 				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
-				//pKatana->m_EntityPhysics->position = currentTransform[3];
-				glm::quat newRotation = glm::toQuat(boneT);
+
+				glm::vec3 scale, scaleBase;
+				glm::quat rotation, rotBase;
+				glm::vec3 translation, transBase;
+				glm::vec3 skew, skewBase;
+				glm::vec4 perspective, perspBase;
+				glm::decompose(boneT, scale, rotation, translation, skew, perspective);
+				glm::decompose(currentTransform, scaleBase, rotBase, transBase, skewBase, perspBase);
+
+				glm::quat qRot = glm::toQuat(currentTransform);
+				glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
+				glm::quat newRotation = glm::toQuat(boneTRot);
 				pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
-				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneT);
-				glm::mat4 boneTS = boneT * pKatana->m_EntityPhysics->nonUniformScale.x;
-				glm::mat4 boneTR = glm::mat4(pCurrentEntity->m_EntityPhysics->getQOrientation());
-				boneTR = boneTR * boneTS;
-				newRotation = glm::toQuat(boneTR);
-				pKatana->m_EntityPhysics->setQOrientation(newRotation);
+				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTRot);
 
 				glm::vec4 rotatedOffset = (boneRotation * glm::vec4((pKatana->m_EntityPhysics->position), 1.0f));
 
 				glm::vec3 newPos = glm::vec3(currentTransform[3]) + glm::vec3(rotatedOffset);
 				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
 				pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
-
-				//pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTR);
-				//pKatana->m_EntityPhysics->adjMeshOrientationQ(newRotation);
-				//gPhysicsWorld->RemoveBody(pKatana->m_EntityPhysics->rigidBody);
 			}
 		}
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )

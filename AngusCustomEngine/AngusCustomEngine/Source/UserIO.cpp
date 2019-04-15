@@ -228,17 +228,26 @@ void ProcessAsyncKeys(GLFWwindow* window)
 		glm::vec3 vel;
 		player->m_EntityPhysics->rigidBody->GetVelocity(vel);
 
+		cEntity* katana = findObjectByFriendlyName("Katana");
+
 		if (glfwGetKey(window, GLFW_KEY_W))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
+			//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
+			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
 			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
 			player->m_EntityPhysics->rigidBody->SetVelocity(force);
+			//katana->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
+			player->m_EntityMesh->currentAnimation = "Run";
 		}
 		if (glfwGetKey(window, GLFW_KEY_S))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
+			//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
+			glm::vec3 force = glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
 			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
 			player->m_EntityPhysics->rigidBody->SetVelocity(force);
+			player->m_EntityMesh->currentAnimation = "Run";
 		}
 		if (glfwGetKey(window, GLFW_KEY_A))
 		{
