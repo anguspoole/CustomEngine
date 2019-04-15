@@ -243,23 +243,30 @@ void ProcessAsyncKeys(GLFWwindow* window)
 		if (glfwGetKey(window, GLFW_KEY_S))
 		{
 			//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
-			glm::vec3 force = glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
+			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
 			force.y = vel.y;
-			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
+			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 			player->m_EntityPhysics->rigidBody->SetVelocity(force);
 			player->m_EntityMesh->currentAnimation = "Run";
 		}
 		if (glfwGetKey(window, GLFW_KEY_A))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(-2.0f, 0.0f, 0.0f, 1.0f);
+			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
 			force.y = vel.y;
+			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 			player->m_EntityPhysics->rigidBody->SetVelocity(force);
+			player->m_EntityMesh->currentAnimation = "Run";
 		}
 		if (glfwGetKey(window, GLFW_KEY_D))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(2.0f, 0.0f, 0.0f, 1.0f);
+			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
 			force.y = vel.y;
+			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 			player->m_EntityPhysics->rigidBody->SetVelocity(force);
+			player->m_EntityMesh->currentAnimation = "Run";
 		}
 
 		//if (glfwGetKey(window, GLFW_KEY_I)) { pTheShip->adjMeshOrientationEulerAngles(glm::vec3(95.0f, 0.0f, 0.0f), true); }
