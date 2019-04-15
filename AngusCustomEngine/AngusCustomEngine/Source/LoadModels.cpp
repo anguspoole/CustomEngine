@@ -179,7 +179,7 @@ bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID)
 {
-	player = new cEntity();
+	//player = new cEntity();
 	::g_pRPGSkinnedMesh = new cSimpleAssimpSkinnedMesh();
 
 	//if ( ! ::g_pRPGSkinnedMesh->LoadMeshFromFile( "assets/modelsMD5monsters/hellknight/attack2.md5anim" ) ) 
@@ -293,6 +293,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
 			makeCapsule(pTestSM, config.RigidBodyDefs[c], 0.1f, 2.26989f);
+
+			player = pTestSM;
 
 			vec_pObjectsToDraw.push_back(pTestSM);
 

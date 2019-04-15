@@ -19,6 +19,8 @@ namespace nPhysics
 
 		virtual void GetVelocity(glm::vec3& velocityOut) = 0;
 
+		virtual void GetOrientation(glm::mat4& orientationOut) = 0;
+
 		virtual void SetTransform(glm::mat4& transformIn) = 0;
 
 		virtual void SetPosition(glm::vec3 p) = 0;

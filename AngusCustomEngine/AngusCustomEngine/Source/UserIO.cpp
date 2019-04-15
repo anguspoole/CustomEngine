@@ -99,39 +99,50 @@ void ProcessAsyncKeys(GLFWwindow* window)
 	{
 		float speed = 2.0f;
 
-		cEntity* userSphere = findObjectByFriendlyName("sphere0");
+		//cEntity* userSphere = findObjectByFriendlyName("sphere0");
+		cEntity* userSphere = findObjectByFriendlyName("Player");
+
+
+		
+		glm::mat4 targetTransform;
+		player->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
+		glm::vec3 oldTargetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
+		glm::vec3 targetPos = oldTargetPos;
+		targetPos.y = player_Camera->eye.y;
+		glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
+		glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+		player_Camera->setMeshOrientationQ(q);
+		player_Camera->m_UpdateAtFromOrientation();
 
 		glm::mat4 matVelRotation = glm::mat4(::player_Camera->getQOrientation());
 
+		//Need to get the velocity so we're still affected by gravity
+		glm::vec3 vel;
+		player->m_EntityPhysics->rigidBody->GetVelocity(vel);
+
 		if (glfwGetKey(window, GLFW_KEY_W))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 10.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
+			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetVelocity(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -10.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
+			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
+			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetVelocity(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_A))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(-10.0f, 0.0f, 0.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
+			glm::vec3 force = matVelRotation * glm::vec4(-2.0f, 0.0f, 0.0f, 1.0f);
+			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetVelocity(force);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D))
 		{
-			glm::vec3 force = matVelRotation * glm::vec4(10.0f, 0.0f, 0.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
-		}
-		if (glfwGetKey(window, GLFW_KEY_Q))
-		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, -2.0f, 0.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
-		}
-		if (glfwGetKey(window, GLFW_KEY_E))
-		{
-			glm::vec3 force = matVelRotation * glm::vec4(0.0f, 2.0f, 0.0f, 1.0f);
-			userSphere->m_EntityPhysics->rigidBody->ApplyForce(force);
+			glm::vec3 force = matVelRotation * glm::vec4(2.0f, 0.0f, 0.0f, 1.0f);
+			force.y = vel.y;
+			player->m_EntityPhysics->rigidBody->SetVelocity(force);
 		}
 
 		//if (glfwGetKey(window, GLFW_KEY_I)) { pTheShip->adjMeshOrientationEulerAngles(glm::vec3(95.0f, 0.0f, 0.0f), true); }
@@ -165,5 +176,12 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			::player_Camera->MoveForward_Z(-speed);
 			//			::player_Camera->MoveUpDown_Y( -cameraSpeed );
 		}
+
+
+		targetPos = oldTargetPos;
+		targetDir = glm::normalize(targetPos - player_Camera->eye);
+		q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+		player_Camera->setMeshOrientationQ(q);
+		player_Camera->m_UpdateAtFromOrientation();
 	}
 }

@@ -19,9 +19,9 @@
         {
           "Type": "Simple",
           "Shape": "Player",
-          "Mass": 100.0,
+          "Mass": 60.0,
           "Position.x": 5.0,
-          "Position.y": 0.0,
+          "Position.y": 1.0,
           "Position.z": 5.0,
           "Velocity.x": 0.0,
           "Velocity.y": 0.0,

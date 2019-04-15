@@ -61,10 +61,13 @@ namespace nPhysics
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(0, 0, colShape, localInertia);
 			rbInfo.m_restitution = 0.9f;
-			rbInfo.m_friction = 10.0f;
+			//rbInfo.m_friction = 10.0f;
 
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
+
+			mBody->setCollisionFlags(mBody->getCollisionFlags() |
+				btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 		}
 		if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_BOX)
 		{
@@ -165,20 +168,23 @@ namespace nPhysics
 				colShape->calculateLocalInertia(mass, localInertia);
 			}
 			startTransform.setOrigin(nConvert::ToBullet(def.Position));
+			startTransform.setOrigin(nConvert::ToBullet(def.Position));
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mMotionState, colShape, localInertia);
 			
 			rbInfo.m_restitution = 0.0f;
-			rbInfo.m_friction = 0.0f;
+			//rbInfo.m_friction = 0.0f;
 
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
 
+			//mBody->setAngularFactor(btVector3(0.0f, 1.0f, 0.0f));
 			mBody->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
 
 			mBody->setCollisionFlags(mBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 
+			mBody->setSleepingThresholds(0, 0);
 		}
 	}
 
@@ -220,6 +226,13 @@ namespace nPhysics
 		velocityOut = nConvert::ToSimple(vel);
 	}
 
+	void cBulletRigidBody::GetOrientation(glm::mat4& orientationOut)
+	{
+		btQuaternion btQuat = this->mBody->getOrientation();
+		glm::quat glmQuat(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
+		orientationOut = glm::mat4(glmQuat);
+	}
+
 	void cBulletRigidBody::SetTransform(glm::mat4& transformIn)
 	{
 
@@ -238,10 +251,23 @@ namespace nPhysics
 
 	void cBulletRigidBody::SetVelocity(glm::vec3 v)
 	{
-		glm::vec3 currentV;
-		GetVelocity(currentV);
-		glm::vec3 velDiff = v - currentV;
-		ApplyForce(velDiff);
+		glm::mat4 currentOrientation;
+		this->GetOrientation(currentOrientation);
+
+		//Set velocity after rotating
+		glm::vec3 currentX = (currentOrientation * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)) * v.x;
+		glm::vec3 currentY = (currentOrientation * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)) * v.y;
+		glm::vec3 currentZ = (currentOrientation * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f)) * v.z;
+
+		glm::vec3 newGlmVel = currentX + currentY + currentZ;
+
+		btVector3 newBtVel = nConvert::ToBullet(newGlmVel);
+		//glm::vec3 currentV;
+		//GetVelocity(currentV);
+		//glm::vec3 velDiff = v - currentV;
+		//ApplyForce(velDiff);
+		this->mBody->activate();
+		this->mBody->setLinearVelocity(newBtVel);
 	}
 
 	void cBulletRigidBody::SetAcceleration(glm::vec3 a)

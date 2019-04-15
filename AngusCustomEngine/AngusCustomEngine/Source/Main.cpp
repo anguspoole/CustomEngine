@@ -182,6 +182,16 @@ void main()
 			deltaTime = MAX_DELTA_TIME;
 		}
 
+		gPhysicsWorld->Update(deltaTime);
+
+		{
+			glm::mat4 targetTransform;
+			cEntity * userSphere = findObjectByFriendlyName("Player");
+			userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
+			glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
+			userSphere->m_EntityPhysics->position = targetPos;
+		}
+
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
 
@@ -305,16 +315,16 @@ void main()
 		//************************************
 		// Refocus Camera
 		//************************************
-		glm::mat4 targetTransform;
-		//cEntity * userSphere = findObjectByFriendlyName("sphere0");
-		cEntity * userSphere = findObjectByFriendlyName("Player");
+		//glm::mat4 targetTransform;
+		////cEntity * userSphere = findObjectByFriendlyName("sphere0");
+		//cEntity * userSphere = findObjectByFriendlyName("Player");
 		//userSphere->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
 		//glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
-		glm::vec3 targetPos = userSphere->m_EntityPhysics->position;
-		glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
-		glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
-		player_Camera->setMeshOrientationQ(q);
-		player_Camera->m_UpdateAtFromOrientation();
+		////glm::vec3 targetPos = userSphere->m_EntityPhysics->position;
+		//glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
+		//glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+		//player_Camera->setMeshOrientationQ(q);
+		//player_Camera->m_UpdateAtFromOrientation();
 
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
