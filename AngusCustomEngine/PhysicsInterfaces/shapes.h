@@ -70,4 +70,17 @@ namespace nPhysics
 		iConeShape(const iConeShape& other) : iShape(other) {}
 		iConeShape& operator=(const iConeShape& other) { return *this; }
 	};
+
+	// CAPSULE
+	class iCapsuleShape : public virtual iShape
+	{
+	public:
+		virtual ~iCapsuleShape() {}
+		virtual float GetRadius() = 0;
+		virtual float GetHeight() = 0;
+	protected:
+		iCapsuleShape() : iShape(SHAPE_TYPE_CAPSULE) {}
+		iCapsuleShape(const iCapsuleShape& other) : iShape(other) {}
+		iCapsuleShape& operator=(const iCapsuleShape& other) { return *this; }
+	};
 }

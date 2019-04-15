@@ -143,4 +143,31 @@ namespace nPhysics
 		return 0.0f;
 	}
 
+	//***********************************************
+	// CAPSULE SHAPE
+	//***********************************************
+
+	cBulletCapsuleShape::cBulletCapsuleShape(float radius, float height)
+		: iBulletShapeInterface()
+		, iShape(SHAPE_TYPE_CAPSULE)
+	{
+		this->mBulletShape = new btCapsuleShape(btScalar(radius), btScalar(height));
+	}
+
+	cBulletCapsuleShape::~cBulletCapsuleShape()
+	{
+		delete this->mBulletShape;
+	}
+
+	//Placeholder function, unused but could be used in future
+	float cBulletCapsuleShape::GetRadius()
+	{
+		return ((btCapsuleShape*)(this->mBulletShape))->getRadius();
+	}
+
+	//Placeholder function, unused but could be used in future
+	float cBulletCapsuleShape::GetHeight()
+	{
+		return ((btCapsuleShape*)(this->mBulletShape))->getHalfHeight();
+	}
 }

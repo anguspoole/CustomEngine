@@ -290,8 +290,9 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			pTestSM->m_EntityPhysics->setUniformScale(0.008f);
 
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
-			glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
-			makeBox(pTestSM, config.RigidBodyDefs[c], extents);
+			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
+			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 0.1f * scale, 2.26989f * scale);
 
 			vec_pObjectsToDraw.push_back(pTestSM);
 

@@ -18,6 +18,7 @@ void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, flo
 void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents);
 void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeCapsule(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, float radius, float height);
 
 bool InitPhysicsStuff(const nLoad::sConfig& config)
 {
@@ -644,6 +645,14 @@ void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
 void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
 {
 	nPhysics::iConeShape* coneShape0 = gPhysicsFactory->CreateConeShape(bodyDef0.Mass, bodyDef0.Mass);
+	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, coneShape0);
+	gPhysicsWorld->AddBody(rigidBody0);
+	obj->m_EntityPhysics->rigidBody = rigidBody0;
+}
+
+void makeCapsule(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, float radius, float height)
+{
+	nPhysics::iConeShape* coneShape0 = gPhysicsFactory->CreateConeShape(radius, height);
 	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, coneShape0);
 	gPhysicsWorld->AddBody(rigidBody0);
 	obj->m_EntityPhysics->rigidBody = rigidBody0;

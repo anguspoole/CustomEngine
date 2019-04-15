@@ -147,6 +147,33 @@ namespace nPhysics
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
 		}
+		if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_CAPSULE)
+		{
+			btCollisionShape* colShape = dynamic_cast<cBulletCapsuleShape*>(shape)->GetBulletShape();
+
+			/// Create Dynamic Objects
+			btTransform startTransform;
+			startTransform.setIdentity();
+
+			btScalar mass(def.Mass);
+
+			//rigidbody is dynamic if and only if mass is non zero, otherwise static
+			bool isDynamic = (mass != 0.f);
+			btVector3 localInertia(0, 0, 0);
+			if (isDynamic)
+			{
+				colShape->calculateLocalInertia(mass, localInertia);
+			}
+			startTransform.setOrigin(nConvert::ToBullet(def.Position));
+			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+			mMotionState = new btDefaultMotionState(startTransform);
+			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mMotionState, colShape, localInertia);
+			rbInfo.m_restitution = 0.9f;
+			rbInfo.m_friction = 10.0f;
+
+			mBody = new btRigidBody(rbInfo);
+			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
+		}
 	}
 
 	cBulletRigidBody::~cBulletRigidBody()

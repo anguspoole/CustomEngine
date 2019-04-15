@@ -52,6 +52,12 @@ namespace nPhysics
 		cBulletConeShape* shape = new cBulletConeShape(radius, height);
 		return shape;
 	}
+
+	iCapsuleShape * cBulletPhysicsFactory::CreateCapsuleShape(float radius, float height)
+	{
+		cBulletCapsuleShape* shape = new cBulletCapsuleShape(radius, height);
+		return shape;
+	}
 	
 	iSoftBody * cBulletPhysicsFactory::CreateSoftBody(const sSoftBodyDef & sbDef)
 	{

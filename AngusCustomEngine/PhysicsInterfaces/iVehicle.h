@@ -1,5 +1,6 @@
 #pragma once
 #include <game_math.h>
+#include "iCollisionBody.h"
 
 namespace nPhysics
 {

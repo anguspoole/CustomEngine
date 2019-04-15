@@ -63,4 +63,13 @@ namespace nPhysics
 		virtual float GetRadius();
 		virtual float GetHeight();
 	};
+
+	class cBulletCapsuleShape : public iBulletShapeInterface, public iCapsuleShape
+	{
+	public:
+		cBulletCapsuleShape(float radius, float height);
+		virtual ~cBulletCapsuleShape();
+		virtual float GetRadius();
+		virtual float GetHeight();
+	};
 }
