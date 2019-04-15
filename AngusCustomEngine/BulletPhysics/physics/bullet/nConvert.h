@@ -25,6 +25,14 @@ namespace nPhysics
 		{
 			vecOut.setValue(vecIn.x, vecIn.y, vecIn.z);
 		}
+		inline glm::quat ToSimple(const btQuaternion& qIn)
+		{
+			return glm::quat(qIn.x(), qIn.y(), qIn.z(), qIn.w());
+		}
+		inline btQuaternion ToBullet(const glm::quat& qIn)
+		{
+			return btQuaternion(qIn.x, qIn.y, qIn.z, qIn.w);
+		}
 		inline glm::mat4 ToSimple(const btTransform& transformIn)
 		{
 			glm::mat4 mat;

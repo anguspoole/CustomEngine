@@ -129,7 +129,7 @@ namespace nPhysics
 		{
 			cBtPointPointConstraint* btConstraint = dynamic_cast<cBtPointPointConstraint*>(constraint);
 			
-			this->mDynamicsWorld->addConstraint(btConstraint->GetConstraint());
+			this->mDynamicsWorld->addConstraint(btConstraint->GetConstraint(), true);
 		}
 		if (constraintType == nPhysics::eConstraintType::HINGE)
 		{

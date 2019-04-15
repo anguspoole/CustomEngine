@@ -116,4 +116,22 @@ namespace nPhysics
 	{
 		return this->constraint;
 	}
+
+	//Fixed Constraint
+	cBtFixedConstraint::cBtFixedConstraint(cBulletRigidBody * rbA, cBulletRigidBody * rbB, const btTransform& tA, const btTransform& tB)
+	{
+		this->constraint = new btFixedConstraint(*rbA->GetBulletBody(), *rbB->GetBulletBody(), tA, tB);
+	}
+	cBtFixedConstraint::~cBtFixedConstraint()
+	{
+		delete this->constraint;
+	}
+	eConstraintType cBtFixedConstraint::GetConstraintType()
+	{
+		return eConstraintType::FIXED;
+	}
+	btFixedConstraint * cBtFixedConstraint::GetConstraint()
+	{
+		return this->constraint;
+	}
 }

@@ -720,6 +720,14 @@ void makeSliderConstraint(cEntity * objA, cEntity* objB)
 	gPhysicsWorld->AddConstraint(constraint);
 }
 
+void makeFixedConstraint(cEntity * objA, cEntity* objB)
+{
+	nPhysics::iRigidBody* rigidBody0 = objA->m_EntityPhysics->rigidBody;
+	nPhysics::iRigidBody* rigidBody1 = objB->m_EntityPhysics->rigidBody;
+	nPhysics::iConstraint* constraint = gPhysicsFactory->CreateFixedConstraint(rigidBody0, rigidBody1);
+	gPhysicsWorld->AddConstraint(constraint);
+}
+
 void makeSoftBody(cEntity * obj, nPhysics::sSoftBodyDef bodyDef0)
 {
 	nPhysics::iSoftBody* softBody0 = gPhysicsFactory->CreateSoftBody(bodyDef0);

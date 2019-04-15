@@ -111,4 +111,10 @@ namespace nPhysics
 		cBtSliderConstraint* constraint = new cBtSliderConstraint(dynamic_cast<cBulletRigidBody*>(rbA), dynamic_cast<cBulletRigidBody*>(rbB));
 		return constraint;
 	}
+
+	iConstraint* cBulletPhysicsFactory::CreateFixedConstraint(iRigidBody* rbA, iRigidBody* rbB)
+	{
+		cBtFixedConstraint* constraint = new cBtFixedConstraint(dynamic_cast<cBulletRigidBody*>(rbA), dynamic_cast<cBulletRigidBody*>(rbB), dynamic_cast<cBulletRigidBody*>(rbA)->GetBtTransform(), dynamic_cast<cBulletRigidBody*>(rbA)->GetBtTransform());
+		return constraint;
+	}
 }

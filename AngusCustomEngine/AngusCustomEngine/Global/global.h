@@ -74,6 +74,7 @@ void makeConeTwistConstraint(cEntity * objA);
 void makeConeTwistConstraint(cEntity * objA, cEntity* objB);
 void makeSliderConstraint(cEntity * objA);
 void makeSliderConstraint(cEntity * objA, cEntity* objB);
+void makeFixedConstraint(cEntity * objA, cEntity* objB);
 
 extern nLoad::sConfig config;
 

@@ -21,6 +21,8 @@ namespace nPhysics
 			return mBody;
 		}
 
+		btTransform GetBtTransform();
+
 		virtual void GetVelocity(glm::vec3& velocityOut);
 		void GetOrientation(glm::mat4& orientationOut);
 
@@ -29,7 +31,7 @@ namespace nPhysics
 		virtual void SetPosition(glm::vec3 p);
 		virtual void SetVelocity(glm::vec3 v);
 		virtual void SetAcceleration(glm::vec3 a);
-		virtual void SetOrientation(glm::vec3 o);
+		virtual void SetOrientation(glm::mat4 o);
 		virtual void SetMass(float m);
 
 	protected:

@@ -26,7 +26,7 @@ namespace nPhysics
 		virtual void SetPosition(glm::vec3 p) = 0;
 		virtual void SetVelocity(glm::vec3 v) = 0;
 		virtual void SetAcceleration(glm::vec3 a) = 0;
-		virtual void SetOrientation(glm::vec3 o) = 0;
+		virtual void SetOrientation(glm::mat4 o) = 0;
 		virtual void SetMass(float m) = 0;
 
 	protected:

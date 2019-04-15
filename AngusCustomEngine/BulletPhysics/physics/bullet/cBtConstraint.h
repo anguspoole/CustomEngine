@@ -76,4 +76,21 @@ namespace nPhysics
 	private:
 		btSliderConstraint* constraint;
 	};
+
+	class cBtFixedConstraint : public iConstraint
+	{
+	public:
+		//Constructors
+		cBtFixedConstraint(cBulletRigidBody* rbA, cBulletRigidBody* rbB, const btTransform& tA, const btTransform& tB);
+
+		~cBtFixedConstraint();
+
+		virtual eConstraintType GetConstraintType();
+
+		btFixedConstraint* GetConstraint();
+
+	private:
+		btFixedConstraint* constraint;
+	};
+
 }

@@ -1,6 +1,7 @@
 #include <cBulletRigidBody.h>
 #include <eShapeType.h>
 #include "nConvert.h"
+#include <glm/gtx/quaternion.hpp>
 #include <iostream>
 
 namespace nPhysics
@@ -203,6 +204,13 @@ namespace nPhysics
 		nConvert::ToSimple(transform, transformOut);
 	}
 
+	btTransform cBulletRigidBody::GetBtTransform()
+	{
+		btTransform transform;
+		mMotionState->getWorldTransform(transform);
+		return transform;
+	}
+
 	void cBulletRigidBody::ApplyForce(const glm::vec3& force)
 	{
 		btVector3 newForce = nConvert::ToBullet(force);
@@ -277,9 +285,13 @@ namespace nPhysics
 
 	}
 
-	void cBulletRigidBody::SetOrientation(glm::vec3 o)
+	void cBulletRigidBody::SetOrientation(glm::mat4 o)
 	{
-
+		glm::quat q = glm::toQuat(o);
+		btQuaternion btQ = nConvert::ToBullet(q);
+		btTransform btT = this->mBody->getWorldTransform();
+		btT.setRotation(btQ);
+		this->mBody->setWorldTransform(btT);
 	}
 
 	void cBulletRigidBody::SetMass(float m)

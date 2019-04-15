@@ -486,13 +486,13 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 	{	// This sphere is the tiny little debug sphere
 		cEntity* pKatana = new cEntity();
-		pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 10.0f, 0.0f);
-		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 1.0f, 1.0f));
+		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
 		pKatana->m_EntityMesh->setSpecularPower(100.0f);
 		pKatana->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
 		pKatana->friendlyName = "Katana";
 		float scale = 0.03f;
+		pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 50.0f);
 		pKatana->m_EntityPhysics->setUniformScale(scale);
 		pKatana->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("katana.ply"));
 		pKatana->m_EntityMesh->bIsWireFrame = false;
@@ -509,11 +509,13 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		nPhysics::sRigidBodyDef katanaDef;
 		katanaDef.Mass = 5.0f;
-		katanaDef.Position = pKatana->m_EntityPhysics->position;
+		//katanaDef.Position = pKatana->m_EntityPhysics->position;
+		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
-		makePointPointConstraint(pKatana, player, glm::vec3(0.0f), glm::vec3(0.0f));
+		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		makeFixedConstraint(pKatana, player);
 
 		vec_pObjectsToDraw.push_back(pKatana);
 	}

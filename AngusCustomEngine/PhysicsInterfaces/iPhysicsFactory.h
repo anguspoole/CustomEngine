@@ -37,6 +37,7 @@ namespace nPhysics
 		virtual iConstraint* CreateConeTwistConstraint(iRigidBody* rbA, iRigidBody* rbB) = 0;
 		virtual iConstraint* CreateSliderConstraint(iRigidBody* rb) = 0;
 		virtual iConstraint* CreateSliderConstraint(iRigidBody* rbA, iRigidBody* rbB) = 0;
+		virtual iConstraint* CreateFixedConstraint(iRigidBody* rbA, iRigidBody* rbB) = 0;
 
 		//more interesting things
 		//virtual iWreckingBallPhysics* CreateWreckingBall(const std::vector<sWreckingBallNodeDef>& wreckingDef) = 0;

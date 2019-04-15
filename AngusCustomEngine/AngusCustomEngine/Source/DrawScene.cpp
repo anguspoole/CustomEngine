@@ -603,13 +603,27 @@ void DrawObject(cEntity* pCurrentEntity,
 
 			if (boneIndex == 25)
 			{
+				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;
 				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
-				pKatana->m_EntityPhysics->position = currentTransform[3];
-				glm::vec3 newPos = (glm::vec3(boneBallLocation)) + pCurrentEntity->m_EntityPhysics->position;
+				//pKatana->m_EntityPhysics->position = currentTransform[3];
+				glm::quat newRotation = glm::toQuat(boneT);
+				pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
+				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneT);
+				glm::mat4 boneTS = boneT * pKatana->m_EntityPhysics->nonUniformScale.x;
+				glm::mat4 boneTR = glm::mat4(pCurrentEntity->m_EntityPhysics->getQOrientation());
+				boneTR = boneTR * boneTS;
+				newRotation = glm::toQuat(boneTR);
+				pKatana->m_EntityPhysics->setQOrientation(newRotation);
+
+				glm::vec4 rotatedOffset = (boneRotation * glm::vec4((pKatana->m_EntityPhysics->position), 1.0f));
+
+				glm::vec3 newPos = glm::vec3(currentTransform[3]) + glm::vec3(rotatedOffset);
 				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
 				pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
-				//pKatana->m_EntityPhysics->rigidBody->SetOrientation()
+
+				//pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTR);
+				//pKatana->m_EntityPhysics->adjMeshOrientationQ(newRotation);
 				//gPhysicsWorld->RemoveBody(pKatana->m_EntityPhysics->rigidBody);
 			}
 		}

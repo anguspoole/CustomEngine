@@ -37,6 +37,7 @@ namespace nPhysics
 		virtual iConstraint* CreateConeTwistConstraint(iRigidBody* rbA, iRigidBody* rbB);
 		virtual iConstraint* CreateSliderConstraint(iRigidBody* rb);
 		virtual iConstraint* CreateSliderConstraint(iRigidBody* rbA, iRigidBody* rbB);
+		virtual iConstraint* CreateFixedConstraint(iRigidBody* rbA, iRigidBody* rbB);
 
 	};
 }
