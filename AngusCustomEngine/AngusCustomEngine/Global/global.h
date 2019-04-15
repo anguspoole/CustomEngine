@@ -75,7 +75,6 @@ void makeConeTwistConstraint(cEntity * objA, cEntity* objB);
 void makeSliderConstraint(cEntity * objA);
 void makeSliderConstraint(cEntity * objA, cEntity* objB);
 
-//extern double dT;
 extern nLoad::sConfig config;
 
 extern bool animationComplete; //boolean for if current animation is done
@@ -83,5 +82,7 @@ extern bool animationComplete; //boolean for if current animation is done
 // The main Frame Buffer Object (off screen rendering)
 // (You can create one of these for each off screen rendered thing, if you'd like)
 extern cFBO* g_pFBOMain;
+
+extern double deltaTime;
 
 #endif

@@ -37,6 +37,114 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	return;
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	// A regular mouse wheel returns the y value
+	::player_Camera->setMouseWheelDelta(yoffset);
+
+	//	std::cout << "Mouse wheel: " << yoffset << std::endl;
+
+	return;
+}
+
+void ProcessAsyncMouse(GLFWwindow* window)
+{
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+
+	::player_Camera->setMouseXY(x, y);
+
+	const float MOUSE_SENSITIVITY = 0.1f;
+
+	//	std::cout << ::player_Camera->getMouseX() << ", " << ::player_Camera->getMouseY() << std::endl;
+
+	glm::mat4 transform;
+	player->m_EntityPhysics->rigidBody->GetTransform(transform);
+	glm::vec3 targetPos = glm::vec3(transform[3].x, transform[3].y, transform[3].z);
+
+	//Direction from Camera to Target
+	glm::vec3 dir = player_Camera->eye - targetPos;
+	//Distance from Camera to Target
+	float dist = glm::distance(player_Camera->eye, targetPos);
+	//Normalized Direction from Camera to Target
+	glm::vec3 dirN = glm::normalize(dir);
+
+	//Move Camera to target position
+	player_Camera->eye = targetPos;
+
+	// Mouse left (primary?) button pressed? 
+	// AND the mouse is inside the window...
+	if (g_MouseIsInsideWindow)
+	//{
+		// Mouse button is down so turn the camera
+		::player_Camera->Yaw_LeftRight(-::player_Camera->getDeltaMouseX() * MOUSE_SENSITIVITY);
+		glm::vec3 dirNR = glm::rotate(dirN, -::player_Camera->getDeltaMouseX() * MOUSE_SENSITIVITY * 0.1f, ::player_Camera->getUpVector());
+		::player_Camera->Pitch_UpDown(::player_Camera->getDeltaMouseY() * MOUSE_SENSITIVITY);
+	//}
+
+	//Translate Camera back, and re-point at target
+	player_Camera->eye = targetPos + (dirNR * dist);
+	player_Camera->targetPos = glm::normalize(targetPos - player_Camera->eye);
+
+	if (dist > player_Camera->maxDist)
+	{
+		player_Camera->tooFar = true;
+	}
+	else if (dist <= (player_Camera->maxDist - 5.0f))
+	{
+		player_Camera->tooFar = false;
+	}
+
+	if (player_Camera->tooFar)
+	{
+		player_Camera->eye -= (dirN * (float)(4.0f * deltaTime));
+	}
+	if (player_Camera->tooClose)
+	{
+
+		player_Camera->eye += (dirN * (float)(4.0f * deltaTime));
+	}
+
+	if (dist < player_Camera->minDist)
+	{
+		player_Camera->tooClose = true;
+	}
+	else if (dist >= (player_Camera->minDist + 5.0f))
+	{
+		player_Camera->tooClose = false;
+	}
+
+	//// Adjust the mouse speed
+	//if (::g_MouseIsInsideWindow)
+	//{
+	//	const float MOUSE_WHEEL_SENSITIVITY = 0.1f;
+
+	//	// Adjust the movement speed based on the wheel position
+	//	float mouseAdjust = (::player_Camera->getMouseWheel() * MOUSE_WHEEL_SENSITIVITY);
+	//	if (mouseAdjust > 0.01f || mouseAdjust < -0.01f)
+	//	{
+	//		player_Camera->eye -= (dirN * mouseAdjust * (float)deltaTime);
+	//		dist = glm::distance(player_Camera->eye, targetPos);
+	//		if (dist > player_Camera->maxDist)
+	//		{
+	//			dist = player_Camera->maxDist - 1.0f;
+	//			//player_Camera->eye -= (dirN);
+	//			player_Camera->eye += (dirN);
+	//			player_Camera->resetMouseWheel();
+	//		}
+	//		else if (dist < player_Camera->minDist)
+	//		{
+	//			dist = player_Camera->minDist + 1.0f;
+	//			//player_Camera->eye -= (dirN);
+	//			player_Camera->eye += (dirN);
+	//			player_Camera->resetMouseWheel();
+	//		}
+	//	}
+	//}
+
+	return;
+}//ProcessAsyncMouse(...
+
 //Function for getting key callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {

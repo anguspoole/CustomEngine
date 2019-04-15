@@ -16,6 +16,14 @@ cCamera::cCamera()
 	this->m_UpdateAtFromOrientation();
 	this->m_UpdateUpFromOrientation();
 
+	// If we are using the mouse
+	this->setMouseXY(0.0, 0.0);
+	this->m_MouseWheel = 0.0f;
+
+	this->m_Mouse_Initial_State_Is_Set = false;
+
+	this->bKeepCameraFacingUp = true;
+
 }
 
 
@@ -209,4 +217,65 @@ void cCamera::m_UpdateUpFromOrientation(void)
 glm::vec3 cCamera::getUpVector(void)
 {
 	return this->m_up;
+}
+
+void cCamera::setMouseXY(double newX, double newY)
+{
+	this->m_lastMouse_X = this->m_Mouse_X;
+	this->m_Mouse_X = (float)newX;
+
+	this->m_lastMouse_Y = this->m_Mouse_Y;
+	this->m_Mouse_Y = (float)newY;
+
+	// Can return value numbers
+	this->m_Mouse_Initial_State_Is_Set = true;
+
+	return;
+}
+
+void cCamera::setMouseWheelDelta(double deltaWheel)
+{
+	this->m_lastMouse_Wheel = this->m_MouseWheel;
+	this->m_MouseWheel += (float)deltaWheel;
+	return;
+}
+
+void cCamera::resetMouseWheel()
+{
+	this->m_lastMouse_Wheel = 0.0f;
+	this->m_MouseWheel = 0.0f;
+	return;
+}
+
+float cCamera::getMouseX(void)
+{
+	return this->m_Mouse_X;
+}
+
+float cCamera::getMouseY(void)
+{
+	return this->m_Mouse_Y;
+}
+
+float cCamera::getDeltaMouseX(void)
+{
+	if (!this->m_Mouse_Initial_State_Is_Set)
+	{
+		return 0.0f;
+	}
+	return this->m_Mouse_X - this->m_lastMouse_X;
+}
+
+float cCamera::getDeltaMouseY(void)
+{
+	if (!this->m_Mouse_Initial_State_Is_Set)
+	{
+		return 0.0f;
+	}
+	return this->m_Mouse_Y - this->m_lastMouse_Y;
+}
+
+float cCamera::getMouseWheel(void)
+{
+	return this->m_MouseWheel;
 }

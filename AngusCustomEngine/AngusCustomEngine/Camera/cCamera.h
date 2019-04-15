@@ -34,6 +34,11 @@ public:
 	glm::vec3 m_forward;
 	glm::vec3 m_right;
 
+	float minDist = 22.0f;
+	float maxDist = 30.0f;
+
+	bool tooFar = false;
+	bool tooClose = false;
 	bool bKeepCameraFacingUp;
 
 	void MoveForward_Z(float amount);
@@ -57,11 +62,37 @@ public:
 	void adjMeshOrientationQ(glm::quat adjOrientQ);
 	void m_UpdateAtFromOrientation(void);
 	void m_UpdateUpFromOrientation(void);
+	
+	// These set methods will also clear the "last" mouse positions
+	void setMouseXY(double newX, double newY);
+	// The mouse wheel (on windows) only returns the delta, or the amount you scrolled
+	void setMouseWheelDelta(double deltaWheel);
+	void resetMouseWheel();
+
+	float getMouseX(void);				// ...but we only need floats
+	float getMouseY(void);
+
+	float getDeltaMouseX(void);
+	float getDeltaMouseY(void);
+	float getMouseWheel(void);
+
+	float zoomAmount = 0.0f;
 
 private:
 	glm::quat qOrientation;
 	float mYaw;
 	float mPitch;
+
+	float m_lastMouse_X;
+	float m_lastMouse_Y;
+	float m_lastMouse_Wheel;
+	float m_Mouse_X;
+	float m_Mouse_Y;
+	float m_MouseWheel;
+	// We don't know where the mouse is at the start, 
+	//	so things like getDeltaMouse() methods will return 
+	//	crazy things... this flag indicates the values are OK
+	bool m_Mouse_Initial_State_Is_Set;
 
 };
 

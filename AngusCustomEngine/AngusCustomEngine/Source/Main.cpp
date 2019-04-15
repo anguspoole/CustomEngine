@@ -35,6 +35,8 @@ nLoad::sConfig config;
 
 cFBO* g_pFBOMain;
 
+double deltaTime = 0.0f;
+
 void main()
 {
 	//Make window
@@ -173,7 +175,7 @@ void main()
 
 		// High res timer (likely in ms or ns)
 		double currentTime = glfwGetTime();
-		double deltaTime = currentTime - lastTime;
+		deltaTime = currentTime - lastTime;
 		double dT = deltaTime;
 
 		double MAX_DELTA_TIME = 0.1;	// 100 ms
@@ -412,7 +414,7 @@ void main()
 
 		ProcessAsyncKeys(window);
 
-		//ProcessAsyncMouse(window);
+		ProcessAsyncMouse(window);
 	}
 
 	glfwDestroyWindow(window);
