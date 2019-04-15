@@ -34,8 +34,8 @@ public:
 	glm::vec3 m_forward;
 	glm::vec3 m_right;
 
-	float minDist = 22.0f;
-	float maxDist = 30.0f;
+	float minDist = 42.0f;
+	float maxDist = 50.0f;
 
 	bool tooFar = false;
 	bool tooClose = false;

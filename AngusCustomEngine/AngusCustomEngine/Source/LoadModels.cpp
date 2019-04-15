@@ -258,8 +258,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			pTestSM->friendlyName = "Player";
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
 			pTestSM->m_EntityPhysics->position = config.RigidBodyDefs[c].Position;
-			float scale = (0.020f);
-			pTestSM->m_EntityPhysics->nonUniformScale = glm::vec3(scale);
+			float scale = (0.05f);
+			pTestSM->m_EntityPhysics->nonUniformScale = glm::vec3(scale, scale, scale);
 			pTestSM->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("RPG-Character.ply"));
 			pTestSM->m_EntityMesh->bIsVisible = true;
 			pTestSM->m_EntityPhysics->bIsUpdatedByPhysics = true;
@@ -287,18 +287,15 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			testObjectTexture.strength = 1.0f;
 
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
-			pTestSM->m_EntityPhysics->setUniformScale(0.008f);
 
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 0.1f, 2.26989f);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
 
 			player = pTestSM;
 
-			vec_pObjectsToDraw.push_back(pTestSM);
-
-			
+			vec_pObjectsToDraw.push_back(pTestSM);			
 		}
 	}//if ( ! AssimpSM_to_VAO_Converter(
 
@@ -380,6 +377,10 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	sModelDrawInfo cone;
 	cone.meshFileName = "coneUV.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cone, shaderProgramID);
+
+	sModelDrawInfo katana;
+	katana.meshFileName = "katana.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(katana, shaderProgramID);
 
 	//Quad for FBOs
 	sModelDrawInfo p2SidedQuad;
@@ -481,5 +482,39 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		p2SidedQuad->m_EntityMesh->bUseVertexColour = false;
 
 		vec_pObjectsToDraw.push_back(p2SidedQuad);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* pKatana = new cEntity();
+		pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 10.0f, 0.0f);
+		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 1.0f, 1.0f));
+		pKatana->m_EntityMesh->setSpecularPower(100.0f);
+		pKatana->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		pKatana->friendlyName = "Katana";
+		float scale = 0.03f;
+		pKatana->m_EntityPhysics->setUniformScale(scale);
+		pKatana->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("katana.ply"));
+		pKatana->m_EntityMesh->bIsWireFrame = false;
+		pKatana->m_EntityMesh->bIsVisible = true;
+		pKatana->m_EntityMesh->bUseVertexColour = false;
+		pKatana->m_EntityPhysics->bIsUpdatedByPhysics = true;
+
+		sTextureInfo stone;
+		stone.name = "rock.bmp";
+		stone.strength = 1.0f;
+		pKatana->m_EntityMesh->vecTextures.push_back(stone);
+
+		pKatana->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
+
+		nPhysics::sRigidBodyDef katanaDef;
+		katanaDef.Mass = 5.0f;
+		katanaDef.Position = pKatana->m_EntityPhysics->position;
+		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
+		makePointPointConstraint(pKatana, player, glm::vec3(0.0f), glm::vec3(0.0f));
+
+		vec_pObjectsToDraw.push_back(pKatana);
 	}
 }

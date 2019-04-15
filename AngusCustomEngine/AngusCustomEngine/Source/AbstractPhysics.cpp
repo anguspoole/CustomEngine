@@ -652,8 +652,8 @@ void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
 
 void makeCapsule(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, float radius, float height)
 {
-	nPhysics::iCapsuleShape* coneShape0 = gPhysicsFactory->CreateCapsuleShape(radius, height);
-	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, coneShape0);
+	nPhysics::iCapsuleShape* capsuleShape0 = gPhysicsFactory->CreateCapsuleShape(radius, height);
+	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, capsuleShape0);
 	gPhysicsWorld->AddBody(rigidBody0);
 	obj->m_EntityPhysics->rigidBody = rigidBody0;
 }

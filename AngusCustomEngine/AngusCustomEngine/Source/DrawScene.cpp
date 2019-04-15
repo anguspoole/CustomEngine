@@ -575,6 +575,8 @@ void DrawObject(cEntity* pCurrentEntity,
 
 			glm::vec4 boneBallLocation = boneRotation * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+			cEntity* pKatana = findObjectByFriendlyName("Katana");
+
 			// Update the extents of the mesh
 			if (boneIndex == 0)
 			{
@@ -599,10 +601,18 @@ void DrawObject(cEntity* pCurrentEntity,
 				}
 			}//if ( boneIndex == 0 )
 
-
+			if (boneIndex == 25)
+			{
+				glm::mat4 currentTransform;
+				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
+				pKatana->m_EntityPhysics->position = currentTransform[3];
+				glm::vec3 newPos = (glm::vec3(boneBallLocation)) + pCurrentEntity->m_EntityPhysics->position;
+				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
+				pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
+				//pKatana->m_EntityPhysics->rigidBody->SetOrientation()
+				//gPhysicsWorld->RemoveBody(pKatana->m_EntityPhysics->rigidBody);
+			}
 		}
-
-
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
 //  ___ _   _                  _ __  __        _    
 // / __| |_(_)_ _  _ _  ___ __| |  \/  |___ __| |_  

@@ -242,11 +242,13 @@ namespace nPhysics
 	{
 		btTransform transform;
 		mMotionState->getWorldTransform(transform);
+		//transform = this->mBody->getCenterOfMassTransform();
 
 		btVector3 btPos = nConvert::ToBullet(p);
 		transform.setOrigin(btPos);
 
 		mMotionState->setWorldTransform(transform);
+		//this->mBody->setCenterOfMassTransform(transform);
 	}
 
 	void cBulletRigidBody::SetVelocity(glm::vec3 v)

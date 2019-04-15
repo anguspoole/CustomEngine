@@ -117,15 +117,15 @@ void main()
 	std::cout << "loaded json" << std::endl;
 
 	//LoadSkinnedMeshModel(vec_pObjectsToDraw, program);
-	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
-	LoadModelsIntoScene(vec_pObjectsToDraw);
 
 	//********************************************************
 	// TERM 2 PHYSICS FACTORY STUFF
 	//********************************************************
 	InitPhysicsStuff(config);
 	buildPhysicsWorld();
+	LoadModelTypes_ASYNC(g_VAOMeshManager, program);
 	buildPhysicsObjects(config, ::vec_pObjectsToDraw, program);
+	LoadModelsIntoScene(vec_pObjectsToDraw);
 	//***********************************************************
 	//***********************************************************
 
