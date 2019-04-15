@@ -168,11 +168,17 @@ namespace nPhysics
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mMotionState, colShape, localInertia);
-			rbInfo.m_restitution = 0.9f;
-			rbInfo.m_friction = 10.0f;
+			
+			rbInfo.m_restitution = 0.0f;
+			rbInfo.m_friction = 0.0f;
 
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
+
+			mBody->setAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+
+			mBody->setCollisionFlags(mBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
 		}
 	}
 

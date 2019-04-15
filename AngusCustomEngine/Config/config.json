@@ -21,7 +21,7 @@
           "Shape": "Player",
           "Mass": 100.0,
           "Position.x": 5.0,
-          "Position.y": 5.0,
+          "Position.y": 0.0,
           "Position.z": 5.0,
           "Velocity.x": 0.0,
           "Velocity.y": 0.0,
