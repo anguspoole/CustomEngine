@@ -15,6 +15,24 @@
   //],
   "RigidBodyDefs": [
     {
+      "Players": [
+        {
+          "Type": "Simple",
+          "Shape": "Player",
+          "Mass": 100.0,
+          "Position.x": 5.0,
+          "Position.y": 5.0,
+          "Position.z": 5.0,
+          "Velocity.x": 0.0,
+          "Velocity.y": 0.0,
+          "Velocity.z": 0.0,
+          "Orientation.x": 0.0,
+          "Orientation.y": 0.0,
+          "Orientation.z": 0.0
+        }
+      ]
+    },
+    {
       "Spheres": [
         {
           "Type": "Simple",

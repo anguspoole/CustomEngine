@@ -44,7 +44,7 @@ cEntity* findObjectByFriendlyName(std::string theNameToFind);
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
 // Skinned mesh model...
-void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
+void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
 
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
@@ -57,11 +57,11 @@ extern nPhysics::iPhysicsFactory* gPhysicsFactory; //global physics factory
 extern nPhysics::iPhysicsWorld* gPhysicsWorld;
 bool InitPhysicsStuff(const nLoad::sConfig& config);
 bool buildPhysicsWorld();
-void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw);
+void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw, GLuint shaderProgramID);
 void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, float d);
 void makeSoftBody(cEntity * obj, nPhysics::sSoftBodyDef bodyDef0);
-void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents);
 void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 

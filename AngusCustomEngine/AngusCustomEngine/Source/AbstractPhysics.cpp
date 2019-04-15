@@ -15,7 +15,7 @@ nPhysics::iPhysicsWorld* gPhysicsWorld = NULL;
 
 void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, float d);
-void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents);
 void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 
@@ -80,7 +80,7 @@ void addClothNode(std::vector< cEntity* > &vec_pObjectsToDraw)
 	vec_pObjectsToDraw.push_back(testObj);
 }
 
-void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw)
+void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw, GLuint shaderProgramID)
 {
 
 	size_t numRigidShapes = config.RigidShapeTypes.size();
@@ -129,7 +129,11 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 	{
 		if (std::strcmp(config.RigidObjTypes[c].c_str(), "Simple") == 0)
 		{
-			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
+			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Player") == 0)
+			{
+				LoadPlayerMeshModel(config, c, vec_pObjectsToDraw, shaderProgramID);
+			}
+			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
 			{
 				cEntity * testObj = new cEntity();
 				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
@@ -474,7 +478,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 
 				vec_pObjectsToDraw.push_back(testObj);
 				//sphereList.push_back(testObj);
-				makeBox(testObj, config.RigidBodyDefs[c]);
+				glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
+				makeBox(testObj, config.RigidBodyDefs[c], extents);
 
 				if (boxCount == 0)
 				{
@@ -495,7 +500,9 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 
 						//sphereObj->rigidBody->SetPosition(posA + (glm::vec3(1.0f, 0.0f, 1.0f)));
 
-						makeBox(testObj, config.RigidBodyDefs[c]);
+						glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
+
+						makeBox(testObj, config.RigidBodyDefs[c], extents);
 
 						glm::vec3 pivotA = posB + glm::vec3(1.0f, 0.0f, 0.0f);
 						//glm::vec3 pivotA = (posB - posA) + posA;// +glm::vec3(30.0f, 0.0f, 0.0f);
@@ -616,9 +623,8 @@ void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, flo
 	obj->m_EntityPhysics->rigidBody = rigidBody0;
 }
 
-void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
+void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents)
 {
-	glm::vec3 extents = glm::vec3(bodyDef0.Mass);
 	nPhysics::iBoxShape* boxShape0 = gPhysicsFactory->CreateBoxShape(extents);
 	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, boxShape0);
 	gPhysicsWorld->AddBody(rigidBody0);

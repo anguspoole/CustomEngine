@@ -176,7 +176,7 @@ bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 	return true;
 }
 
-void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
+void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID)
 {
 	player = new cEntity();
@@ -256,7 +256,8 @@ void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
 			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
 			pTestSM->friendlyName = "Player";
-			pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
+			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
+			pTestSM->m_EntityPhysics->position = config.RigidBodyDefs[c].Position;
 			float scale = (0.020f);
 			pTestSM->m_EntityPhysics->nonUniformScale = glm::vec3(scale);
 			pTestSM->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("RPG-Character.ply"));
@@ -287,6 +288,11 @@ void LoadSkinnedMeshModel(std::vector<cEntity*> &vec_pObjectsToDraw,
 
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
 			pTestSM->m_EntityPhysics->setUniformScale(0.008f);
+
+			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
+			glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
+			makeBox(pTestSM, config.RigidBodyDefs[c], extents);
+
 			vec_pObjectsToDraw.push_back(pTestSM);
 
 			

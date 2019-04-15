@@ -182,7 +182,9 @@ namespace nLoad
 		//This will loop through an array of arrays
 		for (Json::Value::ArrayIndex i = 0; i != jsonRigidBodyDefs.size(); i++)
 		{
-			if (jsonRigidBodyDefs[i].isMember("Spheres"))
+			if (jsonRigidBodyDefs[i].isMember("Players"))
+				jsonVector.push_back(jsonRigidBodyDefs[i]["Players"]);
+			else if (jsonRigidBodyDefs[i].isMember("Spheres"))
 				jsonVector.push_back(jsonRigidBodyDefs[i]["Spheres"]);
 			else if (jsonRigidBodyDefs[i].isMember("Planes"))
 				jsonVector.push_back(jsonRigidBodyDefs[i]["Planes"]);
@@ -252,6 +254,10 @@ namespace nLoad
 								else if (strcmp(shape.c_str(), "Cone") == 0)
 								{
 									configOut.RigidShapeTypes.push_back("Cone");
+								}
+								else if (strcmp(shape.c_str(), "Player") == 0)
+								{
+									configOut.RigidShapeTypes.push_back("Player");
 								}
 								else
 								{
