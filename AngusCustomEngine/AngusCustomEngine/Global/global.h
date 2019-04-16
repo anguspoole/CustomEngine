@@ -7,6 +7,7 @@
 */
 
 #include <string.h>
+#include <map>
 #include <iostream>
 
 #include <glm/glm.hpp>
@@ -85,5 +86,7 @@ extern bool animationComplete; //boolean for if current animation is done
 extern cFBO* g_pFBOMain;
 
 extern double deltaTime;
+extern std::map<std::string, float> mapAnimToDuration;
+void resetHackTime(cEntity* entity);
 
 #endif

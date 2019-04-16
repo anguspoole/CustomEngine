@@ -33,7 +33,15 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		if (player->status == eEntityStatus::IDLE || player->status == eEntityStatus::RUNNING)
+		{
+			player->status = eEntityStatus::ATTACKING;
+			player->m_EntityMesh->currentAnimation = "Stab-Attack";
+			resetHackTime(player);
+		}
+	}
 	return;
 }
 
@@ -148,23 +156,11 @@ void ProcessAsyncMouse(GLFWwindow* window)
 //Function for getting key callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	cEntity* pSM = findObjectByFriendlyName("Player");
-
-	if (animationComplete)
-	{
-		//If not moving, default to Idle animation
-		if ((pSM->m_EntityPhysics->velocity.x + pSM->m_EntityPhysics->velocity.y + pSM->m_EntityPhysics->velocity.z) < 0.01f && pSM->m_EntityMesh->currentAnimation != "Unarmed-Walk")
-		{
-			pSM->m_EntityMesh->currentAnimation = "Idle";
-		}
-	}
-
 	//Close window if Escape is pressed
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
-
 }
 
 bool IsShiftDown(GLFWwindow* window)
@@ -210,63 +206,95 @@ void ProcessAsyncKeys(GLFWwindow* window)
 		//cEntity* userSphere = findObjectByFriendlyName("sphere0");
 		cEntity* userSphere = findObjectByFriendlyName("Player");
 
-
-		
-		glm::mat4 targetTransform;
-		player->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
-		glm::vec3 oldTargetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
-		glm::vec3 targetPos = oldTargetPos;
-		targetPos.y = player_Camera->eye.y;
-		glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
-		glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
-		player_Camera->setMeshOrientationQ(q);
-		player_Camera->m_UpdateAtFromOrientation();
-
-		glm::mat4 matVelRotation = glm::mat4(::player_Camera->getQOrientation());
-
-		//Need to get the velocity so we're still affected by gravity
-		glm::vec3 vel;
-		player->m_EntityPhysics->rigidBody->GetVelocity(vel);
-
-		cEntity* katana = findObjectByFriendlyName("Katana");
-
-		if (glfwGetKey(window, GLFW_KEY_W))
+		if (player->status == eEntityStatus::IDLE || eEntityStatus::RUNNING)
 		{
-			//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
-			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
-			force.y = vel.y;
-			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
-			player->m_EntityPhysics->rigidBody->SetVelocity(force);
-			//katana->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
-			player->m_EntityMesh->currentAnimation = "Run";
-		}
-		if (glfwGetKey(window, GLFW_KEY_S))
-		{
-			//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
-			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
-			force.y = vel.y;
-			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
-			player->m_EntityPhysics->rigidBody->SetVelocity(force);
-			player->m_EntityMesh->currentAnimation = "Run";
-		}
-		if (glfwGetKey(window, GLFW_KEY_A))
-		{
-			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
-			force.y = vel.y;
-			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
-			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
-			player->m_EntityPhysics->rigidBody->SetVelocity(force);
-			player->m_EntityMesh->currentAnimation = "Run";
-		}
-		if (glfwGetKey(window, GLFW_KEY_D))
-		{
-			glm::vec3 force = glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
-			force.y = vel.y;
-			glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
-			player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
-			player->m_EntityPhysics->rigidBody->SetVelocity(force);
-			player->m_EntityMesh->currentAnimation = "Run";
+			glm::mat4 targetTransform;
+			player->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
+			glm::vec3 oldTargetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
+			glm::vec3 targetPos = oldTargetPos;
+			targetPos.y = player_Camera->eye.y;
+			glm::vec3 targetDir = glm::normalize(targetPos - player_Camera->eye);
+			glm::quat q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+			player_Camera->setMeshOrientationQ(q);
+			player_Camera->m_UpdateAtFromOrientation();
+
+			glm::mat4 matVelRotation = glm::mat4(::player_Camera->getQOrientation());
+
+			//Need to get the velocity so we're still affected by gravity
+			glm::vec3 vel;
+			player->m_EntityPhysics->rigidBody->GetVelocity(vel);
+
+			cEntity* katana = findObjectByFriendlyName("Katana");
+
+			eEntityStatus oldStatus = player->status;
+			player->status = eEntityStatus::IDLE;
+
+			float movespeed = 5.0f;
+
+			if (glfwGetKey(window, GLFW_KEY_W))
+			{
+				//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, 2.0f, 1.0f);
+				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
+				force.y = vel.y;
+				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
+				player->m_EntityPhysics->rigidBody->SetVelocity(force);
+				//katana->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
+				player->m_EntityMesh->currentAnimation = "Run";
+				player->status = eEntityStatus::RUNNING;
+			}
+			if (glfwGetKey(window, GLFW_KEY_S))
+			{
+				//glm::vec3 force = matVelRotation * glm::vec4(0.0f, 0.0f, -2.0f, 1.0f);
+				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
+				force.y = vel.y;
+				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
+				player->m_EntityPhysics->rigidBody->SetVelocity(force);
+				player->m_EntityMesh->currentAnimation = "Run";
+				player->status = eEntityStatus::RUNNING;
+			}
+			if (glfwGetKey(window, GLFW_KEY_A))
+			{
+				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
+				force.y = vel.y;
+				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
+				player->m_EntityPhysics->rigidBody->SetVelocity(force);
+				player->m_EntityMesh->currentAnimation = "Run";
+				player->status = eEntityStatus::RUNNING;
+			}
+			if (glfwGetKey(window, GLFW_KEY_D))
+			{
+				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
+				force.y = vel.y;
+				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
+				player->m_EntityPhysics->rigidBody->SetVelocity(force);
+				player->m_EntityMesh->currentAnimation = "Run";
+				player->status = eEntityStatus::RUNNING;
+			}
+
+			if (player->status != oldStatus)
+			{
+				resetHackTime(player);
+			}
+
+			if (player->status == eEntityStatus::IDLE && oldStatus == eEntityStatus::RUNNING)
+			{
+				//If not moving, default to Idle animation
+				if ((player->m_EntityPhysics->velocity.x + player->m_EntityPhysics->velocity.y + player->m_EntityPhysics->velocity.z) < 0.01f)
+				{
+					player->m_EntityMesh->currentAnimation = "Idle";
+					player->status = eEntityStatus::IDLE;
+					resetHackTime(player);
+				}
+			}
+
+			targetPos = oldTargetPos;
+			targetDir = glm::normalize(targetPos - player_Camera->eye);
+			q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
+			player_Camera->setMeshOrientationQ(q);
+			player_Camera->m_UpdateAtFromOrientation();
 		}
 
 		//if (glfwGetKey(window, GLFW_KEY_I)) { pTheShip->adjMeshOrientationEulerAngles(glm::vec3(95.0f, 0.0f, 0.0f), true); }
@@ -300,12 +328,5 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			::player_Camera->MoveForward_Z(-speed);
 			//			::player_Camera->MoveUpDown_Y( -cameraSpeed );
 		}
-
-
-		targetPos = oldTargetPos;
-		targetDir = glm::normalize(targetPos - player_Camera->eye);
-		q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
-		player_Camera->setMeshOrientationQ(q);
-		player_Camera->m_UpdateAtFromOrientation();
 	}
 }

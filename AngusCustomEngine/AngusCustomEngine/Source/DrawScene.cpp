@@ -276,10 +276,12 @@ void DrawScene_Simple(std::vector<cEntity*> vec_pEntities,
 	return;
 }
 
-static float g_HACK_CurrentTime = 0.0f;
-
 static float g_HACK_blend_ratio = 0.0f;
 
+void resetHackTime(cEntity* entity)
+{
+	entity->animTime = 0.0f;
+}
 
 void DrawObject(cEntity* pCurrentEntity,
 	glm::mat4x4 &matModel,
@@ -526,7 +528,7 @@ void DrawObject(cEntity* pCurrentEntity,
 
 		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
 			//0.0f,	// curFrameTime,
-			g_HACK_CurrentTime,	// curFrameTime,
+			pCurrentEntity->animTime,	// curFrameTime,
 //										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
 //										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
 //										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
@@ -536,13 +538,15 @@ void DrawObject(cEntity* pCurrentEntity,
 			vecOffsets);                 // local offset for each bone
 
 
-		::g_HACK_CurrentTime += 0.01f;		// Frame time, but we are going at 60HZ
-		if (g_HACK_CurrentTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration())
+		pCurrentEntity->animTime += 0.01f;		// Frame time, but we are going at 60HZ
+		float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
+		if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(customDuration))
 		{
-			g_HACK_CurrentTime = 0.0f;
+			pCurrentEntity->animTime = 0.0f;
 		}
-		if (attackAnimation == pCurrentEntity->m_EntityMesh->currentAnimation && g_HACK_CurrentTime < 0.01f)
+		if (pCurrentEntity->animTime < 0.01f)
 		{
+			pCurrentEntity->status = eEntityStatus::IDLE;
 			pCurrentEntity->m_EntityMesh->currentAnimation = "Idle";
 			attackAnimation = "";
 			animationComplete = true;

@@ -64,7 +64,7 @@ public:
 	bool LoadMeshFromFile( const std::string &friendlyName, 
 						   const std::string &filename );		// mesh we draw
 	bool LoadMeshAnimation( const std::string &friendlyName,
-							const std::string &filename );	// Only want animations
+							const std::string &filename);	// Only want animations
 
 	// Added to assist with the forward kinematics (id and bone names)
 	void GetListOfBoneIDandNames( std::vector<std::string> &vecBoneNames );
@@ -115,7 +115,7 @@ public:
 	
 	unsigned int GetNums(void) const { return this->mNumBones; }
 
-	float GetDuration(void);
+	float GetDuration(float customDuration);
 	
 	std::vector<sVertexBoneData> vecVertexBoneData;	//Bones;
 	glm::mat4 mGlobalInverseTransformation;
@@ -154,7 +154,6 @@ public:
 	std::map<std::string /*BoneName*/, unsigned int /*BoneIndex*/> m_mapBoneNameToBoneIndex;	//mMapping;
 	std::vector<sBoneInfo> mBoneInfo;
 	unsigned int mNumBones;	//mNums;
-
 };
 
 #endif

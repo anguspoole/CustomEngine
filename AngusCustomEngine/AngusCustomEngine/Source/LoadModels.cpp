@@ -5,6 +5,8 @@
 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh = NULL;
 
+std::map<std::string, float> mapAnimToDuration;
+
 // Here's the 'Assimp to VAO Converer" thing....
 bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 	unsigned int shaderProgramID)
@@ -209,12 +211,13 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 	// Now load another animation file... 
 	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Idle", "assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx" );
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Idle", "assets/modelsFBX/kachujin_Idle(2013).fbx");
-	::g_pRPGSkinnedMesh->LoadMeshAnimation("Unarmed-Attack-Kick-L1", "assets/modelsFBX/RPG-Character_Unarmed-Attack-Kick-L1(FBX2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("TwoHand-Attack", "assets/modelsFBX/kachujin_Heavy_Weapon_Swing(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Jump", "assets/modelsFBX/kachujin_JumpNew(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Walk", "assets/modelsFBX/kachujin_Walking(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Run", "assets/modelsFBX/kachujin_Running(2013).FBX");
-	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-L3", "assets/modelsFBX/kachujin_Punching(2013).fbx");
-	::g_pRPGSkinnedMesh->LoadMeshAnimation("Attack-R3", "assets/modelsFBX/RPG-Character_Unarmed-Attack-R3(FBX2013).FBX");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Stab-Attack", "assets/modelsFBX/kachujin_StabbingM(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Backflip", "assets/modelsFBX/kachujin_Backflip(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Frontflip", "assets/modelsFBX/kachujin_Running_Forward_Flip(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-R", "assets/modelsFBX/kachujin_Left_Strafe(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-L", "assets/modelsFBX/kachujin_Right_Strafe(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Roll", "assets/modelsFBX/kachujin_Roll(2013).FBX");
@@ -226,6 +229,13 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 	//::g_pRPGSkinnedMesh->LoadMeshAnimation( "Unarmed-Jump", "assets/modelsFBX/RPG-Character_Unarmed-Jump(FBX2013).FBX" );
 
 	::g_pRPGSkinnedMesh->friendlyName = "RPG-Character";
+
+	mapAnimToDuration.insert(std::pair<std::string, float>("Idle", 2.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("Run", 0.3f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("TwoHand-Attack", 1.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("Stab-Attack", 2.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("Backflip", 1.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("Frontflip", 1.0f));
 
 	cMesh* pTheMesh = ::g_pRPGSkinnedMesh->CreateMeshObjectFromCurrentModel();
 
@@ -298,8 +308,6 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			vec_pObjectsToDraw.push_back(pTestSM);			
 		}
 	}//if ( ! AssimpSM_to_VAO_Converter(
-
-
 	return;
 }
 

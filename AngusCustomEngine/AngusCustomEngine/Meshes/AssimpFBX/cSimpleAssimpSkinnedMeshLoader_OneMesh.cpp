@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 
 #include <sstream>
+#include <iostream>
 
 
 //#define OUTPUT_STUFF 1
@@ -578,10 +579,20 @@ void cSimpleAssimpSkinnedMesh::CalcGLMInterpolatedScaling(float AnimationTime, c
 	return;
 }
 
-float cSimpleAssimpSkinnedMesh::GetDuration(void)
+float cSimpleAssimpSkinnedMesh::GetDuration(float customDuration)
 {
-	float duration = (float)(this->pScene->mAnimations[0]->mDuration / this->pScene->mAnimations[0]->mTicksPerSecond) * 120.0f;
+	//std::cout << "Duration: " << this->pScene->mAnimations[0]->mDuration << std::endl;
+	//std::cout << "TPS: " << this->pScene->mAnimations[0]->mTicksPerSecond << std::endl;
 
+	float duration = 0.0f;
+	if (customDuration > 0.0f)
+	{
+		duration = (60.0f * customDuration) / this->pScene->mAnimations[0]->mTicksPerSecond;
+	}
+	else
+	{
+		duration = (float)(this->pScene->mAnimations[0]->mDuration / this->pScene->mAnimations[0]->mTicksPerSecond) * 120.0f;
+	}
 	return duration; 
 }
 
