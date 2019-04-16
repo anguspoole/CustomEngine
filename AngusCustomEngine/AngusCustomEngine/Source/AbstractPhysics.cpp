@@ -134,6 +134,10 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			{
 				LoadPlayerMeshModel(config, c, vec_pObjectsToDraw, shaderProgramID);
 			}
+			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Enemy") == 0)
+			{
+				LoadEnemyMeshModel(config, c, vec_pObjectsToDraw, shaderProgramID);
+			}
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
 			{
 				cEntity * testObj = new cEntity();

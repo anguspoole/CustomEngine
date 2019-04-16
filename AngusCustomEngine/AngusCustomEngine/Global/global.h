@@ -36,16 +36,21 @@ extern cBasicTextureManager* g_TheTextureManager;
 extern cLightManager* g_LightManager;
 
 extern cEntity* player;
+extern std::vector<cEntity*> enemyList;
 
 // Skinned mesh object 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh; //= NULL;
+extern std::vector<cSimpleAssimpSkinnedMesh*> skinnedMeshes;
 
 cEntity* findObjectByFriendlyName(std::string theNameToFind);
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
-// Skinned mesh model...
+// Player skinned mesh model
 void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
+	GLuint shaderProgramID);
+// Enemy skinned mesh model
+void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
 
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);

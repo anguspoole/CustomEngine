@@ -28,6 +28,7 @@ cBasicTextureManager* g_TheTextureManager = NULL;
 cLightManager* g_LightManager = NULL;
 
 cEntity* player = NULL;
+std::vector<cEntity*> enemyList;
 
 std::vector< cEntity* > vec_pObjectsToDraw;
 
