@@ -306,12 +306,16 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 	enemySkinnedMesh->LoadMeshAnimation("EnemyIdle", "assets/modelsFBX/heraklios_Idle(2013).fbx");
 	enemySkinnedMesh->LoadMeshAnimation("EnemyRun", "assets/modelsFBX/heraklios_Running(2013).FBX");
 	enemySkinnedMesh->LoadMeshAnimation("EnemyAttack", "assets/modelsFBX/heraklios_Horizontal_Attack(2013).fbx");
+	enemySkinnedMesh->LoadMeshAnimation("EnemyHit", "assets/modelsFBX/heraklios_Hit_Reaction(2013).fbx");
+	enemySkinnedMesh->LoadMeshAnimation("EnemyDeath", "assets/modelsFBX/heraklios_Standing_Death(2013).fbx");
 
 	enemySkinnedMesh->friendlyName = "Enemy" + std::to_string(enemyList.size());
 
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyIdle", 2.0f));
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyRun", 0.3f));
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyAttack", 2.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyHit", 2.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyDeath", 2.0f));
 
 	cMesh* pTheMesh = enemySkinnedMesh->CreateMeshObjectFromCurrentModel();
 
