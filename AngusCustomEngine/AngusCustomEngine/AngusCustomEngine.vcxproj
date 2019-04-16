@@ -191,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\cCamera.h" />
+    <ClInclude Include="Entity\eEntityStatus.h" />
     <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h" />
     <ClInclude Include="Entity\EntityMesh\cEntityMesh.h" />
     <ClInclude Include="Entity\cEntity.h" />

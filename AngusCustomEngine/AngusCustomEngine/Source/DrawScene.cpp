@@ -280,7 +280,7 @@ static float g_HACK_blend_ratio = 0.0f;
 
 void resetHackTime(cEntity* entity)
 {
-	entity->animTime = 0.0f;
+	entity->animTime = -0.01f; //set to negative so that it will be reset to 0 in draw loop
 }
 
 void DrawObject(cEntity* pCurrentEntity,
@@ -546,9 +546,21 @@ void DrawObject(cEntity* pCurrentEntity,
 		}
 		if (pCurrentEntity->animTime < 0.01f)
 		{
-			pCurrentEntity->status = eEntityStatus::IDLE;
-			pCurrentEntity->m_EntityMesh->currentAnimation = "Idle";
-			attackAnimation = "";
+			if (pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.size() > 0)
+			{
+				//get name of next animation
+				pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].name;
+				//erase from queue
+				pCurrentEntity->status = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].status;
+				pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.erase(pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.begin());
+				pCurrentEntity->animTime = 0.00f;
+			}
+			else //queue is empty
+			{
+				//set to idle
+				pCurrentEntity->status = eEntityStatus::IDLE;
+				pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->defaultAnimation.name;
+			}
 			animationComplete = true;
 		}
 
@@ -614,7 +626,7 @@ void DrawObject(cEntity* pCurrentEntity,
 				}
 			}//if ( boneIndex == 0 )
 
-			if (boneIndex == 25)
+			if (boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
 			{
 				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;

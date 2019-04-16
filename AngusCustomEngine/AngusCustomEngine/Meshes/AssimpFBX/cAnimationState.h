@@ -7,6 +7,8 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "../../Entity/eEntityStatus.h"
+
 class cAnimationState
 {
 public:
@@ -19,6 +21,7 @@ public:
 			totalTime(0.0f),
 			frameStepTime(0.0f){};
 		std::string name;
+		eEntityStatus status;
 		float currentTime;		// Time (frame) in current animation
 		float totalTime;		// Total time animation goes
 		float frameStepTime;	// Number of seconds to 'move' the animation	

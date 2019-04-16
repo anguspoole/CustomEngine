@@ -184,6 +184,8 @@ namespace nLoad
 		{
 			if (jsonRigidBodyDefs[i].isMember("Players"))
 				jsonVector.push_back(jsonRigidBodyDefs[i]["Players"]);
+			else if (jsonRigidBodyDefs[i].isMember("Enemies"))
+				jsonVector.push_back(jsonRigidBodyDefs[i]["Enemies"]);
 			else if (jsonRigidBodyDefs[i].isMember("Spheres"))
 				jsonVector.push_back(jsonRigidBodyDefs[i]["Spheres"]);
 			else if (jsonRigidBodyDefs[i].isMember("Planes"))
@@ -258,6 +260,10 @@ namespace nLoad
 								else if (strcmp(shape.c_str(), "Player") == 0)
 								{
 									configOut.RigidShapeTypes.push_back("Player");
+								}
+								else if (strcmp(shape.c_str(), "Enemy") == 0)
+								{
+									configOut.RigidShapeTypes.push_back("Enemy");
 								}
 								else
 								{

@@ -37,8 +37,14 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	{
 		if (player->status == eEntityStatus::IDLE || player->status == eEntityStatus::RUNNING)
 		{
-			player->status = eEntityStatus::ATTACKING;
-			player->m_EntityMesh->currentAnimation = "Stab-Attack";
+			cAnimationState::sStateDetails newState;
+			newState.name = "Stab-Attack";
+			newState.status = player->status = eEntityStatus::ATTACKING;
+
+			//if (player->m_EntityMesh->pAniState->vecAnimationQueue.size() == 0)
+			//{
+			player->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+			//}
 			resetHackTime(player);
 		}
 	}
@@ -226,8 +232,11 @@ void ProcessAsyncKeys(GLFWwindow* window)
 
 			cEntity* katana = findObjectByFriendlyName("Katana");
 
-			eEntityStatus oldStatus = player->status;
-			player->status = eEntityStatus::IDLE;
+			//eEntityStatus oldStatus = player->status;
+			//player->status = eEntityStatus::IDLE;
+			cAnimationState::sStateDetails newState;
+			newState.name = "Idle";
+			newState.status = eEntityStatus::IDLE;
 
 			float movespeed = 5.0f;
 
@@ -239,8 +248,8 @@ void ProcessAsyncKeys(GLFWwindow* window)
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
 				//katana->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation);
-				player->m_EntityMesh->currentAnimation = "Run";
-				player->status = eEntityStatus::RUNNING;
+				newState.name = "Run";
+				newState.status = eEntityStatus::RUNNING;
 			}
 			if (glfwGetKey(window, GLFW_KEY_S))
 			{
@@ -250,8 +259,8 @@ void ProcessAsyncKeys(GLFWwindow* window)
 				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
-				player->m_EntityMesh->currentAnimation = "Run";
-				player->status = eEntityStatus::RUNNING;
+				newState.name = "Run";
+				newState.status = eEntityStatus::RUNNING;
 			}
 			if (glfwGetKey(window, GLFW_KEY_A))
 			{
@@ -260,8 +269,8 @@ void ProcessAsyncKeys(GLFWwindow* window)
 				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
-				player->m_EntityMesh->currentAnimation = "Run";
-				player->status = eEntityStatus::RUNNING;
+				newState.name = "Run";
+				newState.status = eEntityStatus::RUNNING;
 			}
 			if (glfwGetKey(window, GLFW_KEY_D))
 			{
@@ -270,22 +279,30 @@ void ProcessAsyncKeys(GLFWwindow* window)
 				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
-				player->m_EntityMesh->currentAnimation = "Run";
-				player->status = eEntityStatus::RUNNING;
+				newState.name = "Run";
+				newState.status = eEntityStatus::RUNNING;
 			}
 
-			if (player->status != oldStatus)
+			if (newState.status != eEntityStatus::IDLE)
 			{
-				resetHackTime(player);
+				if (player->m_EntityMesh->pAniState->vecAnimationQueue.size() == 0)
+				{
+					player->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+				}
+				if (newState.status != player->status)
+				{
+					resetHackTime(player);
+				}
 			}
 
-			if (player->status == eEntityStatus::IDLE && oldStatus == eEntityStatus::RUNNING)
+			if (newState.status == eEntityStatus::IDLE && player->status == eEntityStatus::RUNNING)
 			{
 				//If not moving, default to Idle animation
 				if ((player->m_EntityPhysics->velocity.x + player->m_EntityPhysics->velocity.y + player->m_EntityPhysics->velocity.z) < 0.01f)
 				{
-					player->m_EntityMesh->currentAnimation = "Idle";
-					player->status = eEntityStatus::IDLE;
+					//cAnimationState::sStateDetails newState;
+					//newState.name = "Idle";
+					//newState.status = eEntityStatus::IDLE;
 					resetHackTime(player);
 				}
 			}

@@ -27,6 +27,7 @@
 #include "../Lighting/cLightManager.h"
 
 #include "../Entity/cEntity.h"
+#include "../Meshes/AssimpFBX/cAnimationState.h"
 
 extern cCamera* g_Camera;
 extern cCamera* player_Camera;

@@ -33,6 +33,24 @@
       ]
     },
     {
+      "Enemies": [
+        {
+          "Type": "Simple",
+          "Shape": "Enemy",
+          "Mass": 60.0,
+          "Position.x": -20.0,
+          "Position.y": 1.0,
+          "Position.z": 20.0,
+          "Velocity.x": 0.0,
+          "Velocity.y": 0.0,
+          "Velocity.z": 0.0,
+          "Orientation.x": 0.0,
+          "Orientation.y": 0.0,
+          "Orientation.z": 0.0
+        }
+      ]
+    },
+    {
       "Spheres": [
         {
           "Type": "Simple",
@@ -305,7 +323,7 @@
           "Orientation.z": 0.0
         }
       ]
-    }//,
+    } //,
     //{
     //  "Boxes": [
     //    {

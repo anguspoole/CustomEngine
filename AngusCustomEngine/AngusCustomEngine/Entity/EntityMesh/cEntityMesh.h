@@ -85,7 +85,7 @@ public:
 	cSimpleAssimpSkinnedMesh*	pSimpleSkinnedMesh;
 
 	// HACK
-	std::string currentAnimation;
+	std::string currentAnimation; //the current animation of the mesh
 	cAnimationState*	pAniState;
 
 	// Extent Values for skinned mesh

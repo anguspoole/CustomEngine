@@ -260,6 +260,9 @@
     <ClInclude Include="load\sConfig.h">
       <Filter>Json</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\eEntityStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fragment01.glsl">

@@ -363,7 +363,7 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 			cAnimationState* pAniState;
 			pTestSM->m_EntityMesh->pAniState = new cAnimationState();
 
-			pTestSM->m_EntityMesh->pAniState->defaultAnimation.name = "Idle";
+			pTestSM->m_EntityMesh->pAniState->defaultAnimation.name = "EnemyIdle";
 			pTestSM->m_EntityMesh->currentAnimation = pTestSM->m_EntityMesh->pAniState->defaultAnimation.name;
 
 
@@ -601,6 +601,8 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		makeCylinder(pKatana, katanaDef, extents);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		makeFixedConstraint(pKatana, player);
+
+		player->vec_pChildrenEntities.push_back(pKatana);
 
 		vec_pObjectsToDraw.push_back(pKatana);
 	}
