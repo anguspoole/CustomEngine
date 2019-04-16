@@ -100,7 +100,8 @@ namespace nPhysics
 		: iBulletShapeInterface()
 		, iShape(SHAPE_TYPE_CYLINDER)
 	{
-		this->mBulletShape = new btCylinderShape(extents);
+		//this->mBulletShape = new btCylinderShape(extents);
+		this->mBulletShape = new btCylinderShapeZ(extents);
 	}
 
 	cBulletCylinderShape::~cBulletCylinderShape()
@@ -110,7 +111,8 @@ namespace nPhysics
 
 	glm::vec3 cBulletCylinderShape::GetCylinderExtents()
 	{
-		btVector3 extents = ((btCylinderShape*)mBulletShape)->getHalfExtentsWithoutMargin();
+		//btVector3 extents = ((btCylinderShape*)mBulletShape)->getHalfExtentsWithoutMargin();
+		btVector3 extents = ((btCylinderShapeZ*)mBulletShape)->getHalfExtentsWithoutMargin();
 		glm::vec3 extentsOut = nConvert::ToSimple(extents);
 		return extentsOut;
 	}

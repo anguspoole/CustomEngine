@@ -631,11 +631,12 @@ void DrawObject(cEntity* pCurrentEntity,
 				glm::quat qRot = glm::toQuat(currentTransform);
 				glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
 				glm::quat newRotation = glm::toQuat(boneTRot);
-				pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
+				//pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
 				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTRot);
 
 				glm::vec4 rotatedOffset = (boneRotation * glm::vec4((pKatana->m_EntityPhysics->position), 1.0f));
 
+				//glm::vec3 newPos = glm::vec3(rotatedOffset);
 				glm::vec3 newPos = glm::vec3(currentTransform[3]) + glm::vec3(rotatedOffset);
 				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
 				pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));

@@ -64,6 +64,7 @@ void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, flo
 void makeSoftBody(cEntity * obj, nPhysics::sSoftBodyDef bodyDef0);
 void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents);
 void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
+void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents);
 void makeCone(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makeCapsule(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, float radius, float height);
 

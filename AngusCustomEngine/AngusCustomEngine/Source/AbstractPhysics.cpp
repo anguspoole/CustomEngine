@@ -446,10 +446,6 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			makePlane(testObj1, n, config.RigidBodyDefs[c], d);
 			planeCount++;
 			}
-			else
-			{
-			continue;
-			}
 			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Box") == 0)
 			{
 				cEntity * testObj = new cEntity();
@@ -482,39 +478,43 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
 				makeBox(testObj, config.RigidBodyDefs[c], extents);
 
-				if (boxCount == 0)
-				{
-					makePointPointConstraint(testObj, glm::vec3(1.0f));
-				}
-				else if (boxCount == 1)
-				{
-					cEntity* sphereObj = findObjectByFriendlyName("sphere1");
+				//if (boxCount == 0)
+				//{
+				//	makePointPointConstraint(testObj, glm::vec3(1.0f));
+				//}
+				//else if (boxCount == 1)
+				//{
+				//	cEntity* sphereObj = findObjectByFriendlyName("sphere1");
 
-					if (sphereObj != NULL)
-					{
-						glm::mat4 matA;
-						glm::mat4 matB;
-						testObj->m_EntityPhysics->rigidBody->GetTransform(matA);
-						sphereObj->m_EntityPhysics->rigidBody->GetTransform(matB);
-						glm::vec3 posA = glm::vec3(matA[3].x, matA[3].y, matA[3].z);
-						glm::vec3 posB = glm::vec3(matB[3].x, matB[3].y, matB[3].z);
+				//	if (sphereObj != NULL)
+				//	{
+				//		glm::mat4 matA;
+				//		glm::mat4 matB;
+				//		testObj->m_EntityPhysics->rigidBody->GetTransform(matA);
+				//		sphereObj->m_EntityPhysics->rigidBody->GetTransform(matB);
+				//		glm::vec3 posA = glm::vec3(matA[3].x, matA[3].y, matA[3].z);
+				//		glm::vec3 posB = glm::vec3(matB[3].x, matB[3].y, matB[3].z);
 
-						//sphereObj->rigidBody->SetPosition(posA + (glm::vec3(1.0f, 0.0f, 1.0f)));
+				//		//sphereObj->rigidBody->SetPosition(posA + (glm::vec3(1.0f, 0.0f, 1.0f)));
 
-						glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
+				//		glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
 
-						makeBox(testObj, config.RigidBodyDefs[c], extents);
+				//		makeBox(testObj, config.RigidBodyDefs[c], extents);
 
-						glm::vec3 pivotA = posB + glm::vec3(1.0f, 0.0f, 0.0f);
-						//glm::vec3 pivotA = (posB - posA) + posA;// +glm::vec3(30.0f, 0.0f, 0.0f);
-						glm::vec3 pivotB = posA;// +glm::vec3(-1.0f, 0.0f, 0.0f);
-						
-						//makePointPointConstraint(testObj, sphereObj, pivotA, pivotB);
-						//makePointPointConstraint(sphereObj, testObj, pivotB, pivotA);
-						//makeHingeConstraint(testObj, pivotA, glm::vec3(0.0f, 1.0f, 0.0f));
-						makeHingeConstraint(testObj, sphereObj, pivotA, pivotB, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-					}
-				}
+				//		glm::vec3 pivotA = posB + glm::vec3(1.0f, 0.0f, 0.0f);
+				//		//glm::vec3 pivotA = (posB - posA) + posA;// +glm::vec3(30.0f, 0.0f, 0.0f);
+				//		glm::vec3 pivotB = posA;// +glm::vec3(-1.0f, 0.0f, 0.0f);
+				//		
+				//		//makePointPointConstraint(testObj, sphereObj, pivotA, pivotB);
+				//		//makePointPointConstraint(sphereObj, testObj, pivotB, pivotA);
+				//		//makeHingeConstraint(testObj, pivotA, glm::vec3(0.0f, 1.0f, 0.0f));
+				//		makeHingeConstraint(testObj, sphereObj, pivotA, pivotB, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+				//	}
+				//}
+
+				//float scale = 0.03f;
+				//extents = glm::vec3(13.0f * scale, 14.0f * scale, 260.0f * scale);
+				//makeBox(testObj, config.RigidBodyDefs[c], extents);
 
 				boxCount++;
 			}
@@ -547,18 +547,23 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 
 				vec_pObjectsToDraw.push_back(testObj);
 				//sphereList.push_back(testObj);
-				makeCylinder(testObj, config.RigidBodyDefs[c]);
+
+				float scale = 0.03f;
+				testObj->m_EntityPhysics->nonUniformScale = glm::vec3(13.0f * scale, 14.0f * scale, 130.0f * scale);
+				glm::vec3 extents = glm::vec3(13.0f * scale, 14.0f * scale, 130.0f * scale);
+
+				makeCylinder(testObj, config.RigidBodyDefs[c], extents);
 				cylinderCount++;
 
-				if (cylinderCount == 1)
-				{
-					cEntity* sphereObj = findObjectByFriendlyName("sphere4");
+				//if (cylinderCount == 1)
+				//{
+				//	cEntity* sphereObj = findObjectByFriendlyName("sphere4");
 
-					if (sphereObj != NULL)
-					{
-						makeSliderConstraint(testObj, sphereObj);
-					}
-				}
+				//	if (sphereObj != NULL)
+				//	{
+				//		makeSliderConstraint(testObj, sphereObj);
+				//	}
+				//}
 			}
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Cone") == 0)
 			{
@@ -636,6 +641,14 @@ void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
 {
 	glm::vec3 extents = glm::vec3(bodyDef0.Mass);
 	extents.x = 1;
+	nPhysics::iCylinderShape* cylinderShape0 = gPhysicsFactory->CreateCylinderShape(extents);
+	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, cylinderShape0);
+	gPhysicsWorld->AddBody(rigidBody0);
+	obj->m_EntityPhysics->rigidBody = rigidBody0;
+}
+
+void makeCylinder(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents)
+{
 	nPhysics::iCylinderShape* cylinderShape0 = gPhysicsFactory->CreateCylinderShape(extents);
 	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, cylinderShape0);
 	gPhysicsWorld->AddBody(rigidBody0);

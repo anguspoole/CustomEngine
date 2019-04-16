@@ -123,6 +123,8 @@ namespace nPhysics
 
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
+
+			mBody->setSleepingThresholds(0, 0);
 		}
 		if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_CONE)
 		{
@@ -248,15 +250,17 @@ namespace nPhysics
 
 	void cBulletRigidBody::SetPosition(glm::vec3 p)
 	{
+		this->mBody->activate(true);
 		btTransform transform;
-		mMotionState->getWorldTransform(transform);
-		//transform = this->mBody->getCenterOfMassTransform();
+		//mMotionState->getWorldTransform(transform);
+		transform = this->mBody->getWorldTransform();
 
 		btVector3 btPos = nConvert::ToBullet(p);
+		this->mBody->translate(btPos);
 		transform.setOrigin(btPos);
 
-		mMotionState->setWorldTransform(transform);
-		//this->mBody->setCenterOfMassTransform(transform);
+		//mMotionState->setWorldTransform(transform);
+		this->mBody->setWorldTransform(transform);
 	}
 
 	void cBulletRigidBody::SetVelocity(glm::vec3 v)

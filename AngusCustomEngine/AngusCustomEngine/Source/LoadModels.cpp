@@ -517,11 +517,13 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		nPhysics::sRigidBodyDef katanaDef;
 		katanaDef.Mass = 5.0f;
-		//katanaDef.Position = pKatana->m_EntityPhysics->position;
-		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+		katanaDef.Position = pKatana->m_EntityPhysics->position;
+		//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 extents = glm::vec3(13.0f * scale, 14.0f * scale, 130.0f * scale);
 
-		makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
+		//makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
+		makeCylinder(pKatana, katanaDef, extents);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		makeFixedConstraint(pKatana, player);
 
