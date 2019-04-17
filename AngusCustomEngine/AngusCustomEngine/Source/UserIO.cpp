@@ -84,6 +84,7 @@ void ProcessAsyncMouse(GLFWwindow* window)
 	glm::vec3 dirN = glm::normalize(dir);
 
 	//Move Camera to target position
+	glm::vec3 oldEye = player_Camera->eye;
 	player_Camera->eye = targetPos;
 
 	// Mouse left (primary?) button pressed? 
@@ -96,12 +97,9 @@ void ProcessAsyncMouse(GLFWwindow* window)
 		::player_Camera->Pitch_UpDown(::player_Camera->getDeltaMouseY() * MOUSE_SENSITIVITY);
 	//}
 
-	//Translate Camera back, and re-point at target
-	player_Camera->eye = targetPos + (dirNR * dist);
-	player_Camera->targetPos = glm::normalize(targetPos - player_Camera->eye);
-
 	if (dist > player_Camera->maxDist)
 	{
+		dist = player_Camera->maxDist;
 		player_Camera->tooFar = true;
 	}
 	else if (dist <= (player_Camera->maxDist - 5.0f))
@@ -111,22 +109,29 @@ void ProcessAsyncMouse(GLFWwindow* window)
 
 	if (player_Camera->tooFar)
 	{
-		player_Camera->eye -= (dirN * (float)(4.0f * deltaTime));
+		player_Camera->eye -= (dirN * (float)(10.0f * deltaTime));
 	}
 	if (player_Camera->tooClose)
 	{
 
-		player_Camera->eye += (dirN * (float)(4.0f * deltaTime));
+		player_Camera->eye += (dirN * (float)(10.0f * deltaTime));
 	}
 
 	if (dist < player_Camera->minDist)
 	{
+		dist = player_Camera->minDist;
 		player_Camera->tooClose = true;
 	}
 	else if (dist >= (player_Camera->minDist + 5.0f))
 	{
 		player_Camera->tooClose = false;
 	}
+
+	//Translate Camera back, and re-point at target
+	player_Camera->eye = targetPos + (dirNR * dist);
+	player_Camera->eye.y = oldEye.y;
+	player_Camera->targetPos = glm::normalize(targetPos - player_Camera->eye);
+
 
 	//// Adjust the mouse speed
 	//if (::g_MouseIsInsideWindow)

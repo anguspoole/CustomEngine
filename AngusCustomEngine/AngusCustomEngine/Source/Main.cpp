@@ -132,7 +132,7 @@ void main()
 
 	g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 	g_Camera->targetPos = glm::vec3(0.0f, 0.0f, 1.0f);
-	player_Camera->eye = glm::vec3(0.0f, 20.0f, -10.0f);
+	player_Camera->eye = glm::vec3(0.0f, 30.0f, -30.0f);
 	//g_Camera->eye = glm::vec3(0.0f, 10.0f, -30.0f);
 	player_Camera->targetPos = glm::vec3(0.0f, -1.0f, 1.0f);
 	//g_Camera->targetPos = vec_pObjectsToDraw[1]->m_EntityPhysics->position;
