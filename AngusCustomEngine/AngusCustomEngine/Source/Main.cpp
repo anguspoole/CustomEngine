@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
+#include <time.h>
+
 #include <iPhysicsFactory.h>
 #include <../load/nLoad.h>
 
@@ -29,6 +31,7 @@ cLightManager* g_LightManager = NULL;
 
 cEntity* player = NULL;
 std::vector<cEntity*> enemyList;
+std::vector<cEntity*> globList;
 
 std::vector< cEntity* > vec_pObjectsToDraw;
 
@@ -40,6 +43,8 @@ double deltaTime = 0.0f;
 
 void main()
 {
+	srand(NULL);
+
 	//Make window
 	window = InitWindow(1024, 480, "Hello World");
 
@@ -183,6 +188,17 @@ void main()
 		if (deltaTime > MAX_DELTA_TIME)
 		{
 			deltaTime = MAX_DELTA_TIME;
+		}
+
+		for (int i = 0; i < enemyList.size(); i++)
+		{
+			if (enemyList[i]->status == eEntityStatus::DEAD && enemyList[i]->spray)// && enemyList[i]->healthTimer > 1.8f)
+			{
+				SpawnGlob(enemyList[i], vec_pObjectsToDraw, program);
+				SpawnGlob(enemyList[i], vec_pObjectsToDraw, program);
+				SpawnGlob(enemyList[i], vec_pObjectsToDraw, program);
+				enemyList[i]->spray = false;
+			}
 		}
 
 		gPhysicsWorld->Update(deltaTime);

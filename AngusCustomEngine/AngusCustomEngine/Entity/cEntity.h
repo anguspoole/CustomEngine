@@ -30,6 +30,8 @@ public:
 	float health = 30.0f;
 	float healthTimer = 0.0f;
 
+	bool spray = true;
+
 	void Update(double deltaTime);
 	void UpdateHealthTimer(float dt);
 

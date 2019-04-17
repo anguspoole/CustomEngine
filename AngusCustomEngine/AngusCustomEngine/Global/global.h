@@ -38,6 +38,7 @@ extern cLightManager* g_LightManager;
 
 extern cEntity* player;
 extern std::vector<cEntity*> enemyList;
+extern std::vector<cEntity*> globList;
 
 // Skinned mesh object 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh; //= NULL;
@@ -53,6 +54,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 // Enemy skinned mesh model
 void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
+void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel);
 
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
 void DrawScene_Simple(std::vector<cEntity*> vec_pEntities, GLuint shaderProgramID, unsigned int passNumber, cFBO* fbo);
@@ -98,5 +100,6 @@ void resetHackTime(cEntity* entity);
 
 //Update entities that are taking damage
 void CheckForHits();
+void SpawnGlob(cEntity* obj, std::vector<cEntity*>& vec_pObjectsToDraw, GLuint program);
 
 #endif

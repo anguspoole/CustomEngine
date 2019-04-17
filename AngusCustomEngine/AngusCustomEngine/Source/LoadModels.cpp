@@ -507,6 +507,47 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios.bmp", "assets/textures"), true);
 }
 
+void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel)
+{
+	{	// This sphere is the tiny little debug sphere
+		cEntity* pGlob = new cEntity();
+		pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 1.0f, 1.0f));
+		pGlob->m_EntityMesh->setSpecularPower(100.0f);
+		pGlob->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		pGlob->friendlyName = "Glob" + std::to_string(globList.size());
+		float scale = 1.0f;
+		pGlob->m_EntityPhysics->position = startPos;
+		pGlob->m_EntityPhysics->setUniformScale(scale);
+		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
+		pGlob->m_EntityMesh->bIsWireFrame = false;
+		pGlob->m_EntityMesh->bIsVisible = true;
+		pGlob->m_EntityMesh->bUseVertexColour = false;
+		pGlob->m_EntityPhysics->bIsUpdatedByPhysics = true;
+
+		pGlob->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
+
+		nPhysics::sRigidBodyDef globDef;
+		globDef.Mass = 1.0f;
+		globDef.Position = pGlob->m_EntityPhysics->position;
+		//globDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+		globDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+		globDef.Velocity = startVel;
+
+		makeSphere(pGlob, globDef);
+		//makePointPointConstraint(pGlob, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		//makeFixedConstraint(pGlob, player);
+
+		pGlob->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PAINTGLOB);
+		pGlob->m_EntityPhysics->rigidBody->SetName(pGlob->friendlyName);
+
+		//player->vec_pChildrenEntities.push_back(pGlob);
+		globList.push_back(pGlob);
+
+		vec_pObjectsToDraw.push_back(pGlob);
+	}
+}
+
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
 {
 	LoadTextures_ASYNC();

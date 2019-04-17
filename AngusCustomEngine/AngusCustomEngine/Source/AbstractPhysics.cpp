@@ -211,9 +211,14 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				//testObj1->shapeType = cEntity::BOX;
 
 				sTextureInfo stone;
-				stone.name = "grass.bmp";
-				stone.strength = 1.0f;
+				stone.name = "metal_halomap.bmp";
+				stone.strength = 0.7f;
 				testObj1->m_EntityMesh->vecTextures.push_back(stone);
+
+				sTextureInfo plate;
+				plate.name = "metallplates.bmp";
+				plate.strength = 0.3f;
+				testObj1->m_EntityMesh->vecTextures.push_back(plate);
 
 				vec_pObjectsToDraw.push_back(testObj1);
 
@@ -224,6 +229,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				float d = dx + dy + dz;
 
 				makePlane(testObj1, n, config.RigidBodyDefs[c], d);
+				testObj1->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENVIRONMENT);
 				planeCount++;
 			}
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Plane1") == 0)

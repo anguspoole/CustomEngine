@@ -36,6 +36,11 @@ namespace nPhysics
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
 			mBody->setSleepingThresholds(0, 0);
+
+			mBody->setCollisionFlags(mBody->getCollisionFlags() |
+				btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+			mBody->setUserPointer(this);
 		}
 
 		else if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_PLANE)
