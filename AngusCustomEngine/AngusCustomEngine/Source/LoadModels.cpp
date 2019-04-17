@@ -107,10 +107,10 @@ bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 		}
 		if (pTheAssimpSM->pScene->mMeshes[0]->HasTextureCoords(1))	// 2nd UV coords
 		{
-			theSMDrawInfo.pMeshData->pVertices[vertIndex].u0
-				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1]->x;
-			theSMDrawInfo.pMeshData->pVertices[vertIndex].v0
-				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1]->y;
+			theSMDrawInfo.pMeshData->pVertices[vertIndex].u1
+				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1][vertIndex].x;
+			theSMDrawInfo.pMeshData->pVertices[vertIndex].v1
+				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1][vertIndex].y;
 		}
 		// TODO: add additional texture coordinates (mTextureCoords[1], etc.)
 
@@ -242,6 +242,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			cEntity* pTestSM = new cEntity();
 			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
+			pTestSM->m_EntityMesh->bUseVertexColour = false;
 			pTestSM->friendlyName = "Player";
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
 			pTestSM->m_EntityPhysics->position = config.RigidBodyDefs[c].Position;
@@ -270,9 +271,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 
 
 			sTextureInfo testObjectTexture;
-			testObjectTexture.name = "grass.bmp";
+			testObjectTexture.name = "kachujin.bmp";
 			testObjectTexture.strength = 1.0f;
-
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
 
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
@@ -346,7 +346,7 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 
 		{	// Bind pose Skinned Mesh object
 			cEntity* pTestSM = new cEntity();
-			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));	// Yellow
+			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
 			pTestSM->friendlyName = "Enemy" + std::to_string(enemyList.size());
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
@@ -356,6 +356,7 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 			pTestSM->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("RPG-Character.ply"));
 			pTestSM->m_EntityMesh->bIsVisible = true;
 			pTestSM->m_EntityPhysics->bIsUpdatedByPhysics = true;
+			pTestSM->m_EntityMesh->bUseVertexColour = false;
 
 			// Wireframe, to make it easier to see (for now)
 //			pTestSM->bIsWireFrame = true;
@@ -376,10 +377,15 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 
 
 			sTextureInfo testObjectTexture;
-			testObjectTexture.name = "grass.bmp";
-			testObjectTexture.strength = 1.0f;
-
+			testObjectTexture.name = "heraklios.bmp";
+			testObjectTexture.strength = 0.5f;
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
+
+			sTextureInfo secondTexture;
+			secondTexture.name = "metal_halomap.bmp";
+			secondTexture.strength = 0.5f;
+			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(secondTexture));
+
 
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
@@ -496,6 +502,9 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Plasma_Ring.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("rock.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("kachujin.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metal_halomap.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metallplates.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios.bmp", "assets/textures"), true);
 }
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
