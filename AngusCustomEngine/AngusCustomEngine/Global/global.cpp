@@ -24,6 +24,8 @@ void CheckForHits()
 					newState.name = "EnemyHit";
 					newState.status = eEntityStatus::TAKING_DAMAGE;
 
+					enemyList[i]->health -= 10.0f;
+
 					enemyList[i]->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
 					resetHackTime(enemyList[i]);
 

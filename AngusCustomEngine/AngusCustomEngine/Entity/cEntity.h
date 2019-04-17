@@ -4,6 +4,7 @@
 #include "EntityMesh/cEntityMesh.h"
 #include "EntityPhysics/cEntityPhysics.h"
 #include "eEntityStatus.h"
+#include "../Meshes/AssimpFBX/cAnimationState.h"
 
 class cEntity
 {
@@ -26,7 +27,7 @@ public:
 
 	float animTime = 0.0f;
 
-	float health = 0.0f;
+	float health = 30.0f;
 	float healthTimer = 0.0f;
 
 	void Update(double deltaTime);

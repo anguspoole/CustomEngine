@@ -238,7 +238,7 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			newState.name = "Idle";
 			newState.status = eEntityStatus::IDLE;
 
-			float movespeed = 5.0f;
+			float movespeed = 10.0f;
 
 			if (glfwGetKey(window, GLFW_KEY_W))
 			{

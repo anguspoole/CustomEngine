@@ -318,7 +318,7 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyRun", 0.3f));
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyAttack", 2.0f));
 	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyHit", 2.0f));
-	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyDeath", 2.0f));
+	mapAnimToDuration.insert(std::pair<std::string, float>("EnemyDeath", 1.6f));
 
 	cMesh* pTheMesh = enemySkinnedMesh->CreateMeshObjectFromCurrentModel();
 

@@ -538,13 +538,13 @@ void DrawObject(cEntity* pCurrentEntity,
 			vecOffsets);                 // local offset for each bone
 
 
-		pCurrentEntity->animTime += 0.01f;		// Frame time, but we are going at 60HZ
+		pCurrentEntity->animTime += 0.02f;		// Frame time, but we are going at 60HZ
 		float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
 		if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(customDuration))
 		{
 			pCurrentEntity->animTime = 0.0f;
 		}
-		if (pCurrentEntity->animTime < 0.01f)
+		if (pCurrentEntity->animTime < 0.02f)
 		{
 			if (pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.size() > 0)
 			{
@@ -557,9 +557,16 @@ void DrawObject(cEntity* pCurrentEntity,
 			}
 			else //queue is empty
 			{
-				//set to idle
-				pCurrentEntity->status = eEntityStatus::IDLE;
-				pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->defaultAnimation.name;
+				if (pCurrentEntity->status == eEntityStatus::DEAD)
+				{
+					pCurrentEntity->animTime = customDuration - 0.001f; //set the animation time to right before the end
+				}
+				else
+				{
+					//set to idle
+					pCurrentEntity->status = eEntityStatus::IDLE;
+					pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->defaultAnimation.name;
+				}
 			}
 			animationComplete = true;
 		}

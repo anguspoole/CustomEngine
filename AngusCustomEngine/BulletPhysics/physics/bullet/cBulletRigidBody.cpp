@@ -61,8 +61,8 @@ namespace nPhysics
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(0, 0, colShape, localInertia);
-			rbInfo.m_restitution = 0.9f;
-			//rbInfo.m_friction = 10.0f;
+			rbInfo.m_restitution = 0.3f;
+			rbInfo.m_friction = 10.0f;
 
 			mBody = new btRigidBody(rbInfo);
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));

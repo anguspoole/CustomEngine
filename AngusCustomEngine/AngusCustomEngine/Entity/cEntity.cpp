@@ -36,4 +36,23 @@ void cEntity::UpdateHealthTimer(float dt)
 			//std::cout << this->status << std::endl;
 		}
 	}
+
+	//kill this entity if they are low enough
+	if (this->health < 1.0f && this->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
+	{
+		//Set to a flat 0
+		this->health = 0.0f;
+
+		//If this is an enemy, use the enemy animation
+		if (this->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::ENEMY)
+		{
+			if (this->status != eEntityStatus::DEAD && this->m_EntityMesh->pAniState->vecAnimationQueue.size() < 1)
+			{
+				cAnimationState::sStateDetails newState;
+				newState.name = "EnemyDeath";
+				newState.status = eEntityStatus::DEAD;
+				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+			}
+		}
+	}
 }
