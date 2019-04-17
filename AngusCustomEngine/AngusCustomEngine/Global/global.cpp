@@ -46,6 +46,7 @@ void CheckForHits()
 			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
 			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
 			globList[i]->m_EntityMesh->bIsVisible = false;
+			timeRemaining += 10.0f;
 		}
 	}
 }

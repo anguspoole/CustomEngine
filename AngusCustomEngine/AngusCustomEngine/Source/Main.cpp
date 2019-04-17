@@ -43,12 +43,14 @@ cFBO* g_pFBOMain;
 
 double deltaTime = 0.0f;
 
+float timeRemaining = 100.0f;
+
 void main()
 {
 	srand(NULL);
 
 	//Make window
-	window = InitWindow(1024, 480, "Hello World");
+	window = InitWindow(1024, 480, "Neon Samurai Ignition");
 
 	//Create shader manager
 	pTheShaderManager = new cShaderManager();
@@ -180,6 +182,15 @@ void main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+
+		if (timeRemaining <= 0.0f)
+		{
+			std::string newTitle = "Game Over";
+			UpdateWindowTitle(window, newTitle);
+			system("PAUSE");
+			break;
+		}
+
 		//g_Camera->targetPos = vec_pObjectsToDraw[3]->m_EntityPhysics->position;
 		//g_Camera->targetPos = glm::vec3(0.0f);
 
@@ -446,6 +457,16 @@ void main()
 			glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
 		}
 
+		timeRemaining -= deltaTime;
+
+		// #include sstream 
+		std::stringstream ssTitle;
+
+		ssTitle			// std::cout 
+			<< "Time Remaining: " << std::to_string(timeRemaining);
+
+		UpdateWindowTitle(window, ssTitle.str());
+
 		glfwSwapBuffers(window);		// Shows what we drew
 
 		glfwPollEvents();
@@ -475,4 +496,12 @@ cEntity* findObjectByFriendlyName(std::string theNameToFind)
 
 	// Didn't find it.
 	return NULL;	// 0 or nullptr
+}
+
+void UpdateWindowTitle(GLFWwindow* window, std::string title)
+{
+
+	glfwSetWindowTitle(window, title.c_str());
+
+	return;
 }

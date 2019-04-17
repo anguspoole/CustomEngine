@@ -42,11 +42,14 @@ extern std::vector<cEntity*> globList;
 extern std::vector<cEntity*> paintList;
 //extern std::vector<cEntity*> vec_pObjectsToDraw;
 
+extern float timeRemaining;
+
 // Skinned mesh object 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh; //= NULL;
 extern std::vector<cSimpleAssimpSkinnedMesh*> skinnedMeshes;
 
 cEntity* findObjectByFriendlyName(std::string theNameToFind);
+void UpdateWindowTitle(GLFWwindow* window, std::string title);
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID);
 void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
