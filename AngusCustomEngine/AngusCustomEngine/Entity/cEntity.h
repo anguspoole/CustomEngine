@@ -26,9 +26,14 @@ public:
 
 	float animTime = 0.0f;
 
+	float health = 0.0f;
+	float healthTimer = 0.0f;
+
 	void Update(double deltaTime);
+	void UpdateHealthTimer(float dt);
 
 private:
+
 };
 
 #endif // !_C_ENTITY_HG_

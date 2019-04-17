@@ -623,6 +623,7 @@ void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0)
 	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, sphereShape0);
 	gPhysicsWorld->AddBody(rigidBody0);
 	obj->m_EntityPhysics->rigidBody = rigidBody0;
+	rigidBody0->SetName(obj->friendlyName);
 }
 
 void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, float d)
@@ -631,6 +632,7 @@ void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, flo
 	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, planeShape0);
 	gPhysicsWorld->AddBody(rigidBody0);
 	obj->m_EntityPhysics->rigidBody = rigidBody0;
+	rigidBody0->SetName(obj->friendlyName);
 }
 
 void makeBox(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, glm::vec3 extents)

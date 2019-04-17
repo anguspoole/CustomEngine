@@ -69,6 +69,8 @@ namespace nPhysics
 
 			mBody->setCollisionFlags(mBody->getCollisionFlags() |
 				btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+			mBody->setUserPointer(this);
 		}
 		if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_BOX)
 		{
@@ -125,6 +127,11 @@ namespace nPhysics
 			mBody->setLinearVelocity(nConvert::ToBullet(def.Velocity));
 
 			mBody->setSleepingThresholds(0, 0);
+
+			mBody->setCollisionFlags(mBody->getCollisionFlags() |
+				btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+			this->mBody->setUserPointer(this);
 		}
 		if (shapeType == nPhysics::eShapeType::SHAPE_TYPE_CONE)
 		{
@@ -188,7 +195,11 @@ namespace nPhysics
 			mBody->setCollisionFlags(mBody->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 
 			mBody->setSleepingThresholds(0, 0);
+
+			this->mBody->setUserPointer(this);
 		}
+
+		this->mIsHit = false;
 	}
 
 	cBulletRigidBody::~cBulletRigidBody()
@@ -241,6 +252,31 @@ namespace nPhysics
 		btQuaternion btQuat = this->mBody->getOrientation();
 		glm::quat glmQuat(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
 		orientationOut = glm::mat4(glmQuat);
+	}
+
+	bool cBulletRigidBody::GetHitStatus()
+	{
+		return this->mIsHit;
+	}
+
+	std::string cBulletRigidBody::GetName()
+	{
+		return this->mName;
+	}
+
+	glm::vec3 cBulletRigidBody::GetColPos()
+	{
+		return this->colPos;
+	}
+
+	glm::vec3 cBulletRigidBody::GetColNorm()
+	{
+		return this->colNorm;
+	}
+
+	eEntityType cBulletRigidBody::GetEntityType()
+	{
+		return this->entityType;
 	}
 
 	void cBulletRigidBody::SetTransform(glm::mat4& transformIn)
@@ -301,5 +337,27 @@ namespace nPhysics
 	void cBulletRigidBody::SetMass(float m)
 	{
 
+	}
+	
+	void cBulletRigidBody::SetHitStatus(bool h)
+	{
+		this->mIsHit = h;
+	}
+
+	void cBulletRigidBody::SetName(std::string name)
+	{
+		this->mName = name;
+	}
+	void cBulletRigidBody::SetEntityType(eEntityType entityType)
+	{
+		this->entityType = entityType;
+	}
+	void cBulletRigidBody::SetColPos(glm::vec3 pos)
+	{
+		this->colPos = pos;
+	}
+	void cBulletRigidBody::SetColNorm(glm::vec3 pos)
+	{
+		this->colNorm = pos;
 	}
 }

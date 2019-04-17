@@ -315,6 +315,13 @@ void main()
 		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
 		gPhysicsWorld->Update(deltaTime);
 
+		for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
+		{
+			vec_pObjectsToDraw[i]->Update(deltaTime);
+		}
+
+		CheckForHits();
+
 		//************************************
 		// Refocus Camera
 		//************************************

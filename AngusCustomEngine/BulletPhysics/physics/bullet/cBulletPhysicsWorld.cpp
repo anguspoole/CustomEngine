@@ -2,9 +2,58 @@
 #include "cBulletRigidBody.h"
 #include "nConvert.h"
 #include "cBtConstraint.h"
+#include <iostream>
+
+extern ContactAddedCallback gContactAddedCallback;
 
 namespace nPhysics
 {
+	bool collisionCallback(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0Wrap,
+		int partId0, int index0, const btCollisionObjectWrapper * colObj1Wrap,
+		int partId1, int index1)
+	{
+		btRigidBody* rb0 = (btRigidBody*)(colObj0Wrap->getCollisionObject());
+		btRigidBody* rb1 = (btRigidBody*)(colObj1Wrap->getCollisionObject());
+
+		if (!(rb0 && rb1))
+		{
+			return false;
+		}
+
+		cBulletRigidBody* body0 = (cBulletRigidBody*)(rb0->getUserPointer());
+		cBulletRigidBody* body1 = (cBulletRigidBody*)(rb1->getUserPointer());
+
+		if (!(body0 && body1))
+		{
+			return false;
+		}
+
+		if (body0->GetEntityType() == eEntityType::PLAYERWEAPON && body1->GetEntityType() == eEntityType::ENEMY)
+		{
+			std::cout << "hit1" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
+		else if (body1->GetEntityType() == eEntityType::PLAYERWEAPON && body0->GetEntityType() == eEntityType::ENEMY)
+		{
+			std::cout << "hit0" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
+		else if (body0->GetEntityType() == eEntityType::PAINTGLOB && body1->GetEntityType() == eEntityType::ENVIRONMENT)
+		{
+			body0->SetHitStatus(true);
+			btVector3 posA = cp.getPositionWorldOnA();
+			btVector3 posB = cp.getPositionWorldOnB();
+			btVector3 normB = cp.m_normalWorldOnB;
+
+			body0->SetColPos(nConvert::ToSimple(posB));
+			body0->SetColNorm(nConvert::ToSimple(normB));
+		}
+
+		return true;
+	}
+
 	nPhysics::cBulletPhysicsWorld::cBulletPhysicsWorld()
 	{
 		mCollisionConfiguration = new btDefaultCollisionConfiguration();
@@ -12,6 +61,8 @@ namespace nPhysics
 		mOverlappingPairCache = new btDbvtBroadphase();
 		mSolver = new btSequentialImpulseConstraintSolver;
 		mDynamicsWorld = new btDiscreteDynamicsWorld(mDispatcher, mOverlappingPairCache, mSolver, mCollisionConfiguration);
+
+		gContactAddedCallback = collisionCallback;
 	}
 
 	nPhysics::cBulletPhysicsWorld::~cBulletPhysicsWorld()

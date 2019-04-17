@@ -158,6 +158,7 @@
     <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp" />
     <ClCompile Include="Entity\cEntity.cpp" />
     <ClCompile Include="FrameBuffers\cFBO.cpp" />
+    <ClCompile Include="Global\global.cpp" />
     <ClCompile Include="Global\gOpenGL.cpp" />
     <ClCompile Include="Lighting\cLightHelper.cpp" />
     <ClCompile Include="Lighting\cLightManager.cpp" />

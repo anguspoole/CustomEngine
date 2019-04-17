@@ -2,6 +2,7 @@
 #include <iPhysicsWorld.h>
 #include "btBulletDynamicsCommon.h"
 #include <iConstraint.h>
+#include <vector>
 
 namespace nPhysics
 {
@@ -28,6 +29,9 @@ namespace nPhysics
 		virtual bool AddConstraint(iConstraint* constraint);
 		virtual bool RemoveConstraint(iConstraint* constraint);
 
+		//virtual void AddNamePair(std::string name1, std::string name2);
+		//virtual std::vector<std::pair<std::string, std::string>> GetNamePairs();
+
 		virtual void Update(float dt);
 
 	protected:
@@ -52,6 +56,8 @@ namespace nPhysics
 
 		// The world!
 		btDiscreteDynamicsWorld* mDynamicsWorld;
+
+		std::vector<std::pair<std::string, std::string>> mNamePairList;
 
 	};
 }

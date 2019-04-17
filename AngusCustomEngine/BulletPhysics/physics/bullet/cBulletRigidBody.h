@@ -4,6 +4,7 @@
 #include <sRigidBodyDef.h>
 #include "bullet_shapes.h"
 #include "btBulletDynamicsCommon.h"
+#include <eEntityType.h>
 
 namespace nPhysics
 {
@@ -25,6 +26,11 @@ namespace nPhysics
 
 		virtual void GetVelocity(glm::vec3& velocityOut);
 		void GetOrientation(glm::mat4& orientationOut);
+		virtual bool GetHitStatus();
+		virtual std::string GetName();
+		virtual glm::vec3 GetColPos();
+		virtual glm::vec3 GetColNorm();
+		virtual eEntityType GetEntityType();
 
 		virtual void SetTransform(glm::mat4& transformIn);
 
@@ -33,6 +39,12 @@ namespace nPhysics
 		virtual void SetAcceleration(glm::vec3 a);
 		virtual void SetOrientation(glm::mat4 o);
 		virtual void SetMass(float m);
+		virtual void SetHitStatus(bool h);
+		virtual void SetName(std::string name);
+		virtual void SetEntityType(eEntityType entityType);
+		virtual void SetColPos(glm::vec3 pos);
+		virtual void SetColNorm(glm::vec3 pos);
+
 
 	protected:
 		cBulletRigidBody(const cBulletRigidBody& other) {}
@@ -42,5 +54,10 @@ namespace nPhysics
 		btDefaultMotionState* mMotionState;
 		btRigidBody* mBody;
 		btCollisionShape* mShape;
+		bool mIsHit;
+		std::string mName;
+		eEntityType entityType = eEntityType::NONE;
+		glm::vec3 colPos;
+		glm::vec3 colNorm;
 	};
 }

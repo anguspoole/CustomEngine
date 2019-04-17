@@ -1,5 +1,5 @@
 #include "cEntity.h"
-
+#include <iostream>
 
 
 cEntity::cEntity()
@@ -18,4 +18,22 @@ cEntity::~cEntity()
 void cEntity::Update(double deltaTime)
 {
 	this->m_EntityPhysics->Update(deltaTime);
+	UpdateHealthTimer(deltaTime);
+
+}
+
+void cEntity::UpdateHealthTimer(float dt)
+{
+	if (this->healthTimer > 0)
+	{
+			this->healthTimer -= dt;
+	}
+	else if (this->healthTimer <= 0 && this->status == eEntityStatus::TAKING_DAMAGE)
+	{
+			//kill or idle?
+		if (this->friendlyName == "Enemy0")
+		{
+			//std::cout << this->status << std::endl;
+		}
+	}
 }

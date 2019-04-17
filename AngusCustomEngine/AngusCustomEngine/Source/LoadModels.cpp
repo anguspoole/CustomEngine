@@ -240,7 +240,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 
 		{	// Bind pose Skinned Mesh object
 			cEntity* pTestSM = new cEntity();
-			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));	// Yellow
+			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
 			pTestSM->friendlyName = "Player";
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
@@ -279,6 +279,9 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
 			makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
+
+			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYER);
+			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
 
 			player = pTestSM;
 
@@ -381,7 +384,10 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 2.0f, 2.0f);
+
+			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENEMY);
+			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
 
 			vec_pObjectsToDraw.push_back(pTestSM);
 			enemyList.push_back(pTestSM);
@@ -489,6 +495,7 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Smoke_1.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Plasma_Ring.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("rock.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("kachujin.bmp", "assets/textures"), true);
 }
 
 void LoadModelTypes_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderProgramID)
@@ -605,6 +612,9 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		makeCylinder(pKatana, katanaDef, extents);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		makeFixedConstraint(pKatana, player);
+
+		pKatana->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYERWEAPON);
+		pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
 
 		player->vec_pChildrenEntities.push_back(pKatana);
 

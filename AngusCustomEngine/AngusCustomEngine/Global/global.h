@@ -96,4 +96,7 @@ extern double deltaTime;
 extern std::map<std::string, float> mapAnimToDuration;
 void resetHackTime(cEntity* entity);
 
+//Update entities that are taking damage
+void CheckForHits();
+
 #endif
