@@ -40,6 +40,12 @@ void CheckForHits()
 		if (globList[i]->m_EntityPhysics->rigidBody->GetHitStatus())
 		{
 			//std::cout << "Glob hit!" << std::endl;
+			glm::vec3 startPos = globList[i]->m_EntityPhysics->rigidBody->GetColPos();
+			startPos.y += 0.01f;
+			LoadPaintCube(vec_pObjectsToDraw, startPos);
+			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
+			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
+			globList[i]->m_EntityMesh->bIsVisible = false;
 		}
 	}
 }

@@ -39,6 +39,7 @@ extern cLightManager* g_LightManager;
 extern cEntity* player;
 extern std::vector<cEntity*> enemyList;
 extern std::vector<cEntity*> globList;
+extern std::vector<cEntity*> vec_pObjectsToDraw;
 
 // Skinned mesh object 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh; //= NULL;
@@ -55,6 +56,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
 void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel);
+void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos);
 
 void DrawObject(cEntity* pCurrentEntity, glm::mat4x4 &matModel, GLuint shaderProgramID, unsigned int RenderPassNumber, cFBO* fbo);
 void DrawScene_Simple(std::vector<cEntity*> vec_pEntities, GLuint shaderProgramID, unsigned int passNumber, cFBO* fbo);

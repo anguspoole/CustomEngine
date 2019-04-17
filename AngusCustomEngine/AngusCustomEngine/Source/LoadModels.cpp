@@ -469,6 +469,10 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	cube1x1x1.meshFileName = "cube_flat_shaded_xyz_n_uv.ply";			// "cube_flat_shaded_xyz.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cube1x1x1, shaderProgramID);
 
+	sModelDrawInfo twoSidedQuad;
+	twoSidedQuad.meshFileName = "1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply";			// "cube_flat_shaded_xyz.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(twoSidedQuad, shaderProgramID);
+
 	sModelDrawInfo cylinder;
 	cylinder.meshFileName = "cylinderUV.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(cylinder, shaderProgramID);
@@ -505,6 +509,8 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metal_halomap.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metallplates.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter1.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter2.bmp", "assets/textures"), true);
 }
 
 void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel)
@@ -543,6 +549,49 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 
 		//player->vec_pChildrenEntities.push_back(pGlob);
 		globList.push_back(pGlob);
+
+		vec_pObjectsToDraw.push_back(pGlob);
+	}
+}
+
+void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos)
+{
+	{	// This sphere is the tiny little debug sphere
+		cEntity* pGlob = new cEntity();
+		pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
+		pGlob->m_EntityMesh->setSpecularPower(100.0f);
+		pGlob->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		pGlob->friendlyName = "Glob" + std::to_string(globList.size());
+		float scale = 3.0f;
+		pGlob->m_EntityPhysics->position = startPos;
+		pGlob->m_EntityPhysics->nonUniformScale = glm::vec3(scale, 0.01f, scale);
+		//pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
+		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
+		pGlob->m_EntityMesh->bIsWireFrame = false;
+		pGlob->m_EntityMesh->bIsVisible = true;
+		pGlob->m_EntityMesh->bUseVertexColour = false;
+		pGlob->m_EntityPhysics->bIsUpdatedByPhysics = true;
+
+		pGlob->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::NONE;
+
+		int tex = rand() % 2 + 1; //either 1 or 2
+		if (tex == 1)
+		{
+			sTextureInfo sPaintInfo;
+			sPaintInfo.name = "splatter1.bmp";
+			sPaintInfo.strength = 1.0f;
+			pGlob->m_EntityMesh->vecTextures.push_back(sPaintInfo);
+			pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
+		}
+		else if (tex == 2)
+		{
+			sTextureInfo sPaintInfo;
+			sPaintInfo.name = "splatter2.bmp";
+			sPaintInfo.strength = 1.0f;
+			pGlob->m_EntityMesh->vecTextures.push_back(sPaintInfo);
+			pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
+		}
 
 		vec_pObjectsToDraw.push_back(pGlob);
 	}
