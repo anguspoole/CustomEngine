@@ -171,6 +171,9 @@
     <ClCompile Include="Global\global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AI\AIController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\global.h">
@@ -264,6 +267,9 @@
       <Filter>Json</Filter>
     </ClInclude>
     <ClInclude Include="Entity\eEntityStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

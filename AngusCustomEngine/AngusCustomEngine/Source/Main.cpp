@@ -16,6 +16,7 @@
 #include "../Global/gOpenGL.h"
 #include "../Shading/cShaderManager.h"
 #include "../Lighting/cLightHelper.h"
+#include "../AI/AIController.h"
 
 // "HEAP" Variables
 GLFWwindow* window = NULL;
@@ -175,6 +176,8 @@ void main()
 
 	double lastTime = glfwGetTime();
 
+	AIController* aiController = new AIController();
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//g_Camera->targetPos = vec_pObjectsToDraw[3]->m_EntityPhysics->position;
@@ -211,6 +214,8 @@ void main()
 			glm::vec3 targetPos = glm::vec3(targetTransform[3].x, targetTransform[3].y, targetTransform[3].z);
 			userSphere->m_EntityPhysics->position = targetPos;
 		}
+
+		aiController->UpdateBehaviours(enemyList, player);
 
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");

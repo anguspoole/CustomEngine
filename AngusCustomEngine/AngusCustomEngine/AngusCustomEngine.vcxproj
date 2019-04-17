@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\AIController.cpp" />
     <ClCompile Include="Camera\cCamera.cpp" />
     <ClCompile Include="Entity\EntityPhysics\cEntityPhysics.cpp" />
     <ClCompile Include="Entity\EntityMesh\cEntityMesh.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="TextureManager\CTextureFromBMP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AIController.h" />
     <ClInclude Include="Camera\cCamera.h" />
     <ClInclude Include="Entity\eEntityStatus.h" />
     <ClInclude Include="Entity\EntityPhysics\cEntityPhysics.h" />
