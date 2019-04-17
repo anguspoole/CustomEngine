@@ -32,6 +32,7 @@ cLightManager* g_LightManager = NULL;
 cEntity* player = NULL;
 std::vector<cEntity*> enemyList;
 std::vector<cEntity*> globList;
+std::vector<cEntity*> paintList;
 
 std::vector< cEntity* > vec_pObjectsToDraw;
 
@@ -354,6 +355,14 @@ void main()
 
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
+
+		glUniform1f(renderPassNumber_UniLoc, 4.0f);	// Tell shader it's the 1st pass
+
+		for (int i = 0; i < paintList.size(); i++)
+		{
+			glm::mat4 matmodel = glm::mat4(1.0f);
+			DrawObject(paintList[i], matmodel, program, 4, NULL);
+		}
 
 		//All objects have been drawn - now render scene to quad
 		{

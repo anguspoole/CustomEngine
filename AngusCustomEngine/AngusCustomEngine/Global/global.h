@@ -39,7 +39,8 @@ extern cLightManager* g_LightManager;
 extern cEntity* player;
 extern std::vector<cEntity*> enemyList;
 extern std::vector<cEntity*> globList;
-extern std::vector<cEntity*> vec_pObjectsToDraw;
+extern std::vector<cEntity*> paintList;
+//extern std::vector<cEntity*> vec_pObjectsToDraw;
 
 // Skinned mesh object 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh; //= NULL;

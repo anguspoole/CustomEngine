@@ -533,6 +533,16 @@ void main()
 		finalOutputColour.rgb += ( amountToAdd * rgbReflect );
 	}
 	
+	if(( int(renderPassNumber) == 4))
+	{
+		// Discard anything that's "white enough"
+		vec4 tex0Col = texture( texture00, vertUV_x2.st ).rgba;	// Imposter texture (smoke, fire)
+		float pixelBlackAndWhite = (0.3f * tex0Col.r) + (0.59f * tex0Col.g) + (0.11f * tex0Col.b);
+		if(pixelBlackAndWhite > 0.5f)
+		{
+			discard;
+		}
+	}
 	
 	// Particle imposter (smoke, fire, water, etc.)
 	if ( bIsParticleImposter ) 
