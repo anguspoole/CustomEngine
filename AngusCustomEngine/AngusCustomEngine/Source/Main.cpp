@@ -227,6 +227,7 @@ void main()
 		}
 
 		aiController->UpdateBehaviours(enemyList, player);
+		CheckForGlobHits();
 
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
@@ -353,7 +354,7 @@ void main()
 			vec_pObjectsToDraw[i]->Update(deltaTime);
 		}
 
-		CheckForHits();
+		//CheckForHits();
 
 		//************************************
 		// Refocus Camera

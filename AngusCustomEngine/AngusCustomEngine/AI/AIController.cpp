@@ -13,8 +13,12 @@ AIController::~AIController()
 
 void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* player)
 {
+	//cEntity * playerEntity = findObjectByFriendlyName("Player");
+	cEntity * katana = findObjectByFriendlyName("Katana");
+
 	for (int i = 0; i < aiEntities.size(); i++)
 	{
+		CheckForHits(aiEntities[i], player, katana);
 		if (aiEntities[i]->status == eEntityStatus::IDLE)
 		{
 			glm::mat4 aiTransform;

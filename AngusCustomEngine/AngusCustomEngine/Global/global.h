@@ -108,6 +108,8 @@ void resetHackTime(cEntity* entity);
 
 //Update entities that are taking damage
 void CheckForHits();
+void CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon);
 void SpawnGlob(cEntity* obj, std::vector<cEntity*>& vec_pObjectsToDraw, GLuint program);
+void CheckForGlobHits();
 
 #endif
