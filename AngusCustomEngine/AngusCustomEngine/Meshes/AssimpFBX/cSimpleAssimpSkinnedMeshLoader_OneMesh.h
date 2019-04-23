@@ -115,7 +115,7 @@ public:
 	
 	unsigned int GetNums(void) const { return this->mNumBones; }
 
-	float GetDuration(float customDuration);
+	float GetDuration(std::string currentAnimation);
 	
 	std::vector<sVertexBoneData> vecVertexBoneData;	//Bones;
 	glm::mat4 mGlobalInverseTransformation;

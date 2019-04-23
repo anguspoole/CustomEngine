@@ -19,7 +19,7 @@ void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* p
 	for (int i = 0; i < aiEntities.size(); i++)
 	{
 		CheckForHits(aiEntities[i], player, katana);
-		if (aiEntities[i]->status == eEntityStatus::IDLE)
+		if (aiEntities[i]->status == eEntityStatus::IDLE || aiEntities[i]->status == eEntityStatus::RUNNING)
 		{
 			glm::mat4 aiTransform;
 			glm::mat4 playerTransform;
@@ -36,7 +36,12 @@ void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* p
 					newState.name = "EnemyRun";
 					newState.status = eEntityStatus::RUNNING;
 					aiEntities[i]->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
-					resetHackTime(aiEntities[i]);
+
+					//Reset animation time only if we were in idle
+					if (aiEntities[i]->status == eEntityStatus::IDLE)
+					{
+						resetHackTime(aiEntities[i]);
+					}
 				}
 			}
 		}

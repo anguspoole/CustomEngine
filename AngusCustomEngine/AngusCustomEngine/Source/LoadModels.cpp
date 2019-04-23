@@ -6,6 +6,7 @@
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh = NULL;
 
 std::map<std::string, float> mapAnimToDuration;
+std::map<std::string, float> mapAnimToSpeed;
 
 // Here's the 'Assimp to VAO Converer" thing....
 bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,

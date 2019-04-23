@@ -579,20 +579,25 @@ void cSimpleAssimpSkinnedMesh::CalcGLMInterpolatedScaling(float AnimationTime, c
 	return;
 }
 
-float cSimpleAssimpSkinnedMesh::GetDuration(float customDuration)
+float cSimpleAssimpSkinnedMesh::GetDuration(std::string currentAnimation)
 {
 	//std::cout << "Duration: " << this->pScene->mAnimations[0]->mDuration << std::endl;
 	//std::cout << "TPS: " << this->pScene->mAnimations[0]->mTicksPerSecond << std::endl;
 
 	float duration = 0.0f;
-	if (customDuration > 0.0f)
+	std::map<std::string, sAnimationInfo>::iterator it = this->mapAnimationFriendlyNameTo_pScene.find(currentAnimation);
+	//if (customDuration > 0.0f)
+	//{
+	//	duration = (60.0f * customDuration) / this->pScene->mAnimations[0]->mTicksPerSecond;
+	//}
+	//else
+	//{
+	if (it != this->mapAnimationFriendlyNameTo_pScene.end())
 	{
-		duration = (60.0f * customDuration) / this->pScene->mAnimations[0]->mTicksPerSecond;
+		duration = (float)(this->mapAnimationFriendlyNameTo_pScene[currentAnimation].pAIScene->mAnimations[0]->mDuration 
+			/ this->mapAnimationFriendlyNameTo_pScene[currentAnimation].pAIScene->mAnimations[0]->mTicksPerSecond);
 	}
-	else
-	{
-		duration = (float)(this->pScene->mAnimations[0]->mDuration / this->pScene->mAnimations[0]->mTicksPerSecond) * 120.0f;
-	}
+
 	return duration; 
 }
 

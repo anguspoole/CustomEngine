@@ -104,6 +104,7 @@ extern cFBO* g_pFBOMain;
 
 extern double deltaTime;
 extern std::map<std::string, float> mapAnimToDuration;
+extern std::map<std::string, float> mapAnimToSpeed;
 void resetHackTime(cEntity* entity);
 
 //Update entities that are taking damage

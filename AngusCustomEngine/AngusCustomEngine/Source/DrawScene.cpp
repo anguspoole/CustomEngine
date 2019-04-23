@@ -280,7 +280,7 @@ static float g_HACK_blend_ratio = 0.0f;
 
 void resetHackTime(cEntity* entity)
 {
-	entity->animTime = -0.01f; //set to negative so that it will be reset to 0 in draw loop
+	entity->animTime = 0.0f; //set to negative so that it will be reset to 0 in draw loop
 }
 
 void DrawObject(cEntity* pCurrentEntity,
@@ -526,25 +526,12 @@ void DrawObject(cEntity* pCurrentEntity,
 				// Are there any animations in the queue?
 		//		if ( pCurrentMesh->pAniState->vecAnimationQueue.empty() )
 
-		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
-			//0.0f,	// curFrameTime,
-			pCurrentEntity->animTime,	// curFrameTime,
-//										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
-			pCurrentEntity->m_EntityMesh->currentAnimation,
-			vecFinalTransformation,		// Final bone transforms for mesh
-			pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
-			vecOffsets);                 // local offset for each bone
-
-
-		pCurrentEntity->animTime += 0.02f;		// Frame time, but we are going at 60HZ
-		float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
-		if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(customDuration))
+		//float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
+		if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
 		{
 			pCurrentEntity->animTime = 0.0f;
 		}
-		if (pCurrentEntity->animTime < 0.02f)
+		if (pCurrentEntity->animTime < 0.01f)
 		{
 			if (pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.size() > 0)
 			{
@@ -559,7 +546,7 @@ void DrawObject(cEntity* pCurrentEntity,
 			{
 				if (pCurrentEntity->status == eEntityStatus::DEAD)
 				{
-					pCurrentEntity->animTime = customDuration - 0.001f; //set the animation time to right before the end
+					//pCurrentEntity->animTime = customDuration - 0.001f; //set the animation time to right before the end
 				}
 				else
 				{
@@ -570,6 +557,19 @@ void DrawObject(cEntity* pCurrentEntity,
 			}
 			animationComplete = true;
 		}
+
+		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
+			//0.0f,	// curFrameTime,
+			pCurrentEntity->animTime,	// curFrameTime,
+//										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
+//										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
+//										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
+pCurrentEntity->m_EntityMesh->currentAnimation,
+vecFinalTransformation,		// Final bone transforms for mesh
+pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
+vecOffsets);                 // local offset for each bone
+
+		pCurrentEntity->animTime += deltaTime;		// Frame time, but we are going at 60HZ
 
 		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
 
@@ -607,8 +607,6 @@ void DrawObject(cEntity* pCurrentEntity,
 
 			glm::vec4 boneBallLocation = boneRotation * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-			cEntity* pKatana = findObjectByFriendlyName("Katana");
-
 			// Update the extents of the mesh
 			if (boneIndex == 0)
 			{
@@ -635,6 +633,7 @@ void DrawObject(cEntity* pCurrentEntity,
 
 			if (boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
 			{
+				cEntity* pKatana = findObjectByFriendlyName("Katana");
 				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;
 				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
