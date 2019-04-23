@@ -141,9 +141,17 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
 			{
 				cEntity * testObj = new cEntity();
-				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
+				if (config.RigidBodyDefs[c].Mass > 0.001f)
+				{
+					testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
+				}
+				else
+				{
+					testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Extents.x);
+				}
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("Sphere_320_faces_xyz_n_GARBAGE_uv.ply"));
-				testObj->friendlyName = "sphere" + std::to_string(sphereCount);
+				//testObj->friendlyName = "sphere" + std::to_string(sphereCount);
+				testObj->friendlyName = config.RigidBodyDefs[c].Name;
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 				//testObj->setMeshOrientationEulerAngles(orientation, true);
 				testObj->m_EntityMesh->bIsWireFrame = false;
@@ -176,7 +184,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				cEntity * testObj1 = new cEntity();
 				testObj1->m_EntityPhysics->setUniformScale(5.0f);
 				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
-				testObj1->friendlyName = "plane" + std::to_string(planeCount);
+				//testObj1->friendlyName = "plane" + std::to_string(planeCount);
+				testObj1->friendlyName = config.RigidBodyDefs[c].Name;
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 				//testObj1->setMeshOrientationEulerAngles(orientation, true);
 				//testObj1->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -237,7 +246,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				cEntity * testObj1 = new cEntity();
 				testObj1->m_EntityPhysics->setUniformScale(5.0f);
 				testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane1.ply"));
-				testObj1->friendlyName = "plane" + std::to_string(planeCount);
+				//testObj1->friendlyName = "plane" + std::to_string(planeCount);
+				testObj1->friendlyName = config.RigidBodyDefs[c].Name;
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 				//testObj1->setMeshOrientationEulerAngles(orientation, true);
 				//testObj1->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -293,7 +303,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			cEntity * testObj1 = new cEntity();
 			testObj1->m_EntityPhysics->setUniformScale(5.0f);
 			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane2.ply"));
-			testObj1->friendlyName = "plane" + std::to_string(planeCount);
+			//testObj1->friendlyName = "plane" + std::to_string(planeCount);
+			testObj1->friendlyName = config.RigidBodyDefs[c].Name;
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 			//testObj1->setMeshOrientationEulerAngles(orientation, true);
 			//testObj1->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -349,7 +360,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			cEntity * testObj1 = new cEntity();
 			testObj1->m_EntityPhysics->setUniformScale(5.0f);
 			testObj1->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane3.ply"));
-			testObj1->friendlyName = "plane" + std::to_string(planeCount);
+			//testObj1->friendlyName = "plane" + std::to_string(planeCount);
+			testObj1->friendlyName = config.RigidBodyDefs[c].Name;
 			//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 			//testObj1->setMeshOrientationEulerAngles(orientation, true);
 			//testObj1->setDiffuseColour(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -461,7 +473,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				cEntity * testObj = new cEntity();
 				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
-				testObj->friendlyName = "box" + std::to_string(boxCount);
+				//testObj->friendlyName = "box" + std::to_string(boxCount);
+				testObj->friendlyName = config.RigidBodyDefs[c].Name;
 				//glm::vec3 orientation = config.RigidBodyDefs[c].Orientation;
 				//testObj->setMeshOrientationEulerAngles(orientation, true);
 				testObj->m_EntityMesh->bIsWireFrame = false;

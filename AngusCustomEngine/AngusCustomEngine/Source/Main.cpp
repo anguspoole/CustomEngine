@@ -457,15 +457,15 @@ void main()
 			glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
 		}
 
-		timeRemaining -= deltaTime;
+		//timeRemaining -= deltaTime;
 
 		// #include sstream 
-		std::stringstream ssTitle;
+		//std::stringstream ssTitle;
 
-		ssTitle			// std::cout 
-			<< "Time Remaining: " << std::to_string(timeRemaining);
+		//ssTitle			// std::cout 
+		//	<< "Time Remaining: " << std::to_string(timeRemaining);
 
-		UpdateWindowTitle(window, ssTitle.str());
+		//UpdateWindowTitle(window, ssTitle.str());
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

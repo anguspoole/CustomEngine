@@ -286,6 +286,10 @@ namespace nLoad
 								std::cout << "No valid number for Mass - incorrect format" << std::endl;
 								return false;
 							}
+
+							//**************
+							//	POSITION
+							//**************
 							if (jsonBodyDef["Position.x"].isNumeric())
 							{
 								def.Position.x = jsonBodyDef["Position.x"].asFloat();
@@ -313,6 +317,10 @@ namespace nLoad
 								std::cout << "No valid number for Position.z - incorrect format" << std::endl;
 								return false;
 							}
+
+							//**************
+							//	VELOCITY
+							//**************
 							if (jsonBodyDef["Velocity.x"].isNumeric())
 							{
 								def.Velocity.x = jsonBodyDef["Velocity.x"].asFloat();
@@ -340,6 +348,10 @@ namespace nLoad
 								std::cout << "No valid number for Velocity.z - incorrect format" << std::endl;
 								return false;
 							}
+
+							//**************
+							//	ORIENTATION
+							//**************
 							if (jsonBodyDef["Orientation.x"].isNumeric())
 							{
 								def.Orientation.x = jsonBodyDef["Orientation.x"].asFloat();
@@ -367,6 +379,48 @@ namespace nLoad
 								std::cout << "No valid number for Orientation.z - incorrect format" << std::endl;
 								return false;
 							}
+
+							//**************
+							//	EXTENTS
+							//**************
+							if (jsonBodyDef["Extents.x"].isNumeric())
+							{
+								def.Extents.x = jsonBodyDef["Extents.x"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Extents.x - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Extents.y"].isNumeric())
+							{
+								def.Extents.y = jsonBodyDef["Extents.y"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Extents.y - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Extents.z"].isNumeric())
+							{
+								def.Extents.z = jsonBodyDef["Extents.z"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Orientation.z - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Name"].isString())
+							{
+								def.Name = jsonBodyDef["Name"].asString();
+							}
+							else
+							{
+								std::cout << "No valid string for Name - incorrect format" << std::endl;
+								return false;
+							}
+
+
 							configOut.RigidBodyDefs.push_back(def);
 						}
 					}

@@ -28,7 +28,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "Player"
         }
       ]
     },
@@ -46,7 +50,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "Enemy"
         },
         {
           "Type": "Simple",
@@ -60,7 +68,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "Enemy"
         },
         {
           "Type": "Simple",
@@ -74,7 +86,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "Enemy"
         },
         {
           "Type": "Simple",
@@ -88,7 +104,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "Enemy"
         }
       ]
     },
@@ -106,7 +126,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "sphere0"
         },
         {
           "Type": "Simple",
@@ -120,7 +144,11 @@
           "Velocity.z": 1.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "sphere1"
         }//,
         //{
         //  "Type": "Simple",
@@ -306,7 +334,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "plane0"
         },
         {
           "Type": "Simple",
@@ -320,7 +352,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "plane1"
         },
         {
           "Type": "Simple",
@@ -334,7 +370,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "plane2"
         },
         {
           "Type": "Simple",
@@ -348,7 +388,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "plane3"
         },
         {
           "Type": "Simple",
@@ -362,7 +406,11 @@
           "Velocity.z": 0.0,
           "Orientation.x": 0.0,
           "Orientation.y": 0.0,
-          "Orientation.z": 0.0
+          "Orientation.z": 0.0,
+          "Extents.x": 1.0,
+          "Extents.y": 1.0,
+          "Extents.z": 1.0,
+          "Name": "plane4"
         }
       ]
     } //,
