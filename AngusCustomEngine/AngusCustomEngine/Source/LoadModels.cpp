@@ -108,9 +108,9 @@ bool AssimpSM_to_VAO_Converter(cSimpleAssimpSkinnedMesh* pTheAssimpSM,
 		}
 		if (pTheAssimpSM->pScene->mMeshes[0]->HasTextureCoords(1))	// 2nd UV coords
 		{
-			theSMDrawInfo.pMeshData->pVertices[vertIndex].u1
+			theSMDrawInfo.pMeshData->pVertices[vertIndex].u0
 				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1][vertIndex].x;
-			theSMDrawInfo.pMeshData->pVertices[vertIndex].v1
+			theSMDrawInfo.pMeshData->pVertices[vertIndex].v0
 				= pTheAssimpSM->pScene->mMeshes[0]->mTextureCoords[1][vertIndex].y;
 		}
 		// TODO: add additional texture coordinates (mTextureCoords[1], etc.)
@@ -243,6 +243,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			cEntity* pTestSM = new cEntity();
 			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
+			pTestSM->m_EntityMesh->setSpecularPower(50.0f);
+			pTestSM->m_EntityMesh->setSpecularColour(glm::vec3(0.2f, 0.2f, 0.2f));
 			pTestSM->m_EntityMesh->bUseVertexColour = false;
 			pTestSM->friendlyName = "Player";
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
@@ -298,7 +300,9 @@ cSimpleAssimpSkinnedMesh* LoadEnemyMeshModel(const nLoad::sConfig& config, int c
 	//player = new cEntity();
 	cSimpleAssimpSkinnedMesh* enemySkinnedMesh = new cSimpleAssimpSkinnedMesh();
 
-	if (!enemySkinnedMesh->LoadMeshFromFile("RPG-Character", "assets/modelsFBX/heraklios(2013).fbx"))
+	if (!enemySkinnedMesh->LoadMeshFromFile("RPG-Character2", "assets/modelsFBX/heraklios(2013).fbx"))
+	//if (!enemySkinnedMesh->LoadMeshFromFile("RPG-Character2", "assets/modelsFBX/heraklios2(2013).fbx"))
+	//if (!enemySkinnedMesh->LoadMeshFromFile("RPG-Character2", "assets/modelsFBX/kachujin(2013).fbx"))
 	{
 		std::cout << "Error: problem loading the skinned mesh" << std::endl;
 	}
@@ -354,6 +358,8 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			cEntity* pTestSM = new cEntity();
 			pTestSM->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));	// Yellow
 			pTestSM->m_EntityMesh->setAlphaTransparency(1.0f);
+			pTestSM->m_EntityMesh->setSpecularPower(50.0f);
+			pTestSM->m_EntityMesh->setSpecularColour(glm::vec3(0.0f, 0.0f, 0.0f));
 			pTestSM->friendlyName = "Enemy" + std::to_string(enemyList.size());
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
 			pTestSM->m_EntityPhysics->position = config.RigidBodyDefs[c].Position;
@@ -383,14 +389,15 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 
 
 			sTextureInfo testObjectTexture;
-			testObjectTexture.name = "heraklios.bmp";
-			testObjectTexture.strength = 0.5f;
+			testObjectTexture.name = "heraklios2.bmp";
+			//testObjectTexture.name = "kachujin.bmp";
+			testObjectTexture.strength = 1.0f;
 			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(testObjectTexture));
 
-			sTextureInfo secondTexture;
-			secondTexture.name = "metal_halomap.bmp";
-			secondTexture.strength = 0.5f;
-			pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(secondTexture));
+			//sTextureInfo secondTexture;
+			//secondTexture.name = "metal_halomap.bmp";
+			//secondTexture.strength = 0.5f;
+			//pTestSM->m_EntityMesh->vecTextures.push_back(sTextureInfo(secondTexture));
 
 
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
@@ -514,7 +521,7 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("kachujin.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metal_halomap.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metallplates.bmp", "assets/textures"), true);
-	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios2.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter1.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter2.bmp", "assets/textures"), true);
 }
