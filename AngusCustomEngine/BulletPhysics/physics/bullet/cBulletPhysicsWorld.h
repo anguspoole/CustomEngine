@@ -29,6 +29,8 @@ namespace nPhysics
 		virtual bool AddConstraint(iConstraint* constraint);
 		virtual bool RemoveConstraint(iConstraint* constraint);
 
+		void DisableCollision(iRigidBody* rbA, iRigidBody* rbB);
+
 		//virtual void AddNamePair(std::string name1, std::string name2);
 		//virtual std::vector<std::pair<std::string, std::string>> GetNamePairs();
 

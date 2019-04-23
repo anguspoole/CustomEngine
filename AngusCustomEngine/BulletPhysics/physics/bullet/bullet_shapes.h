@@ -1,6 +1,7 @@
 #pragma once
 #include <shapes.h>
 #include "btBulletDynamicsCommon.h"
+#include <sModelPoint.h>
 
 namespace nPhysics
 {
@@ -71,5 +72,12 @@ namespace nPhysics
 		virtual ~cBulletCapsuleShape();
 		virtual float GetRadius();
 		virtual float GetHeight();
+	};
+
+	class cBulletConvexHullShape : public iBulletShapeInterface, public iConvexHullShape
+	{
+	public:
+		cBulletConvexHullShape(const sModelPoint* point, size_t numPoints);
+		virtual ~cBulletConvexHullShape();
 	};
 }

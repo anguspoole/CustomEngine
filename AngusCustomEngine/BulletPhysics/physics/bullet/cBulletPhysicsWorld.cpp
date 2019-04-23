@@ -276,6 +276,14 @@ namespace nPhysics
 
 	}
 
+	void nPhysics::cBulletPhysicsWorld::DisableCollision(iRigidBody* rbA, iRigidBody* rbB)
+	{
+		cBulletRigidBody* bodyA = dynamic_cast<cBulletRigidBody*>(rbA);
+		cBulletRigidBody* bodyB = dynamic_cast<cBulletRigidBody*>(rbB);
+		bodyA->GetBulletBody()->setIgnoreCollisionCheck(bodyB->GetBulletBody(), true);
+		bodyB->GetBulletBody()->setIgnoreCollisionCheck(bodyA->GetBulletBody(), true);
+	}
+
 	void nPhysics::cBulletPhysicsWorld::Update(float dt)
 	{
 		mDynamicsWorld->stepSimulation(dt, 10);

@@ -58,6 +58,12 @@ namespace nPhysics
 		cBulletCapsuleShape* shape = new cBulletCapsuleShape(radius, height);
 		return shape;
 	}
+
+	iConvexHullShape * cBulletPhysicsFactory::CreateConvexHullShape(const sModelPoint * point, size_t numPoints)
+	{
+		cBulletConvexHullShape* shape = new cBulletConvexHullShape(point, numPoints);
+		return shape;
+	}
 	
 	iSoftBody * cBulletPhysicsFactory::CreateSoftBody(const sSoftBodyDef & sbDef)
 	{

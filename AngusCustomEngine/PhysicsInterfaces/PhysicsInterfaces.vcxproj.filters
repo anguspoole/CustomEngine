@@ -78,5 +78,8 @@
     <ClInclude Include="eEntityType.h">
       <Filter>physics\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="sModelPoint.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

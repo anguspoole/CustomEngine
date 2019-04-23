@@ -403,7 +403,7 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 2.0f, 2.0f);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENEMY);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
@@ -572,15 +572,15 @@ void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos
 	{	// This sphere is the tiny little debug sphere
 		cEntity* pGlob = new cEntity();
 		pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
-		pGlob->m_EntityMesh->setSpecularPower(100.0f);
+		pGlob->m_EntityMesh->setSpecularPower(40.0f);
 		pGlob->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
 		pGlob->friendlyName = "Glob" + std::to_string(globList.size());
-		float scale = 3.0f;
+		float scale = 1.0f;
 		pGlob->m_EntityPhysics->position = startPos;
 		pGlob->m_EntityPhysics->nonUniformScale = glm::vec3(scale, 0.01f, scale);
-		//pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
-		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
+		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
+		//pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
 		pGlob->m_EntityMesh->bIsWireFrame = false;
 		pGlob->m_EntityMesh->bIsVisible = true;
 		pGlob->m_EntityMesh->bUseVertexColour = false;
@@ -692,8 +692,8 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 	{	// This sphere is the tiny little debug sphere
 		cEntity* pKatana = new cEntity();
-		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
-		pKatana->m_EntityMesh->setSpecularPower(100.0f);
+		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
+		pKatana->m_EntityMesh->setSpecularPower(0.3f);
 		pKatana->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
 		pKatana->friendlyName = "Katana";
@@ -713,23 +713,36 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		pKatana->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
+		sModelDrawInfo modelInfo;
+		modelInfo.meshFileName = "katana.ply";
+		g_VAOMeshManager->FindDrawInfoByModelName(modelInfo);
+		nPhysics::sModelPoint* modelPoints = new nPhysics::sModelPoint[modelInfo.numberOfVertices]();
+		for (size_t i = 0; i < modelInfo.numberOfVertices; i++)
+		{
+			modelPoints[i].vert = glm::vec4(modelInfo.pMeshData->pVertices->x, modelInfo.pMeshData->pVertices->y, 
+				modelInfo.pMeshData->pVertices->z, modelInfo.pMeshData->pVertices->w);
+		}
+
 		nPhysics::sRigidBodyDef katanaDef;
 		katanaDef.Mass = 5.0f;
-		katanaDef.Position = pKatana->m_EntityPhysics->position;
+		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 extents = glm::vec3(13.0f * scale, 14.0f * scale, 130.0f * scale);
+		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
 
 		//makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
 		makeCylinder(pKatana, katanaDef, extents);
+		//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		makeFixedConstraint(pKatana, player);
+		//makeFixedConstraint(pKatana, player);
 
 		pKatana->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYERWEAPON);
 		pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
 
 		player->vec_pChildrenEntities.push_back(pKatana);
 
-		vec_pObjectsToDraw.push_back(pKatana);
+		gPhysicsWorld->DisableCollision(player->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
+
+		//vec_pObjectsToDraw.push_back(pKatana);
 	}
 }

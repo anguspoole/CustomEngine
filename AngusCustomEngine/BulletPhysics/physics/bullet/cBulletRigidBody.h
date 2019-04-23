@@ -23,7 +23,7 @@ namespace nPhysics
 		}
 
 		btTransform GetBtTransform();
-
+		virtual void GetPosition(glm::vec3& posOut);
 		virtual void GetVelocity(glm::vec3& velocityOut);
 		void GetOrientation(glm::mat4& orientationOut);
 		virtual bool GetHitStatus();

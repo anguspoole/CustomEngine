@@ -69,7 +69,7 @@ void CheckForGlobHits()
 	}
 }
 
-void CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon)
+bool CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon)
 {
 	//gPhysicsWorld->Update
 
@@ -77,23 +77,36 @@ void CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon)
 	{
 		if (enemy->m_EntityPhysics->rigidBody->GetHitStatus())
 		{
-			if (enemy->healthTimer < 0.001f &&
-				(enemy->status != eEntityStatus::TAKING_DAMAGE)
-				&& (player->status == eEntityStatus::ATTACKING))
+			if (enemy->healthTimer < 0.001f)
 			{
-				enemy->healthTimer = 2.0f;
+				if (enemy->status != eEntityStatus::TAKING_DAMAGE && enemy->status != eEntityStatus::DEAD)
+				{
+					if (player->status == eEntityStatus::ATTACKING)
+					{
 
-				cAnimationState::sStateDetails newState;
-				newState.name = "EnemyHit";
-				newState.status = eEntityStatus::TAKING_DAMAGE;
+						float timer = enemy->m_EntityMesh->pSimpleSkinnedMesh->GetDuration("EnemyHit");
+						enemy->healthTimer = timer;
 
-				enemy->health -= 10.0f;
+						cAnimationState::sStateDetails newState;
+						newState.name = "EnemyHit";
+						newState.status = eEntityStatus::TAKING_DAMAGE;
 
-				enemy->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
-				resetHackTime(enemy);
+						enemy->health -= 10.0f;
+
+						enemy->m_EntityMesh->pAniState->vecAnimationQueue.clear();
+						enemy->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+						resetHackTime(enemy);
+						return true;
+					}
+					else
+					{
+						enemy->m_EntityPhysics->rigidBody->SetHitStatus(false);
+					}
+				}
 			}
 		}
 	}
+	return false;
 }
 
 void SpawnGlob(cEntity* obj, std::vector<cEntity*>& vec_pObjectsToDraw, GLuint program)

@@ -216,8 +216,6 @@ void main()
 			}
 		}
 
-		gPhysicsWorld->Update(deltaTime);
-
 		{
 			glm::mat4 targetTransform;
 			cEntity * userSphere = findObjectByFriendlyName("Player");
@@ -228,6 +226,12 @@ void main()
 
 		aiController->UpdateBehaviours(enemyList, player);
 		CheckForGlobHits();
+
+		cEntity* katana = player->vec_pChildrenEntities[0];
+		if (katana->m_EntityPhysics->rigidBody->GetHitStatus())
+		{
+			katana->m_EntityPhysics->rigidBody->SetHitStatus(false);
+		}
 
 		// Switch to the shader we want
 		::pTheShaderManager->useShaderProgram("BasicUberShader");
@@ -467,6 +471,8 @@ void main()
 		//	<< "Time Remaining: " << std::to_string(timeRemaining);
 
 		//UpdateWindowTitle(window, ssTitle.str());
+
+		gPhysicsWorld->Update(deltaTime);
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

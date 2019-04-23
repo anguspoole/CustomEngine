@@ -164,6 +164,7 @@
     <ClInclude Include="iWreckingBallPhysics.h" />
     <ClInclude Include="physics_interfaces.h" />
     <ClInclude Include="shapes.h" />
+    <ClInclude Include="sModelPoint.h" />
     <ClInclude Include="sRigidBodyDef.h" />
     <ClInclude Include="sSoftBodyDef.h" />
   </ItemGroup>

@@ -698,6 +698,14 @@ void makeCapsule(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, float radius, 
 	obj->m_EntityPhysics->rigidBody = rigidBody0;
 }
 
+void makeConvexHull(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, nPhysics::sModelPoint* point, size_t numPoints)
+{
+	nPhysics::iConvexHullShape* convexShape0 = gPhysicsFactory->CreateConvexHullShape(point, numPoints);
+	nPhysics::iRigidBody* rigidBody0 = gPhysicsFactory->CreateRigidBody(bodyDef0, convexShape0);
+	gPhysicsWorld->AddBody(rigidBody0);
+	obj->m_EntityPhysics->rigidBody = rigidBody0;
+}
+
 void makePointPointConstraint(cEntity * obj, glm::vec3 pivot)
 {
 	nPhysics::iRigidBody* rigidBody0 = obj->m_EntityPhysics->rigidBody;

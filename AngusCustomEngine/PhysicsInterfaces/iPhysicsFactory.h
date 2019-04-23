@@ -11,6 +11,7 @@
 #include "shapes.h"
 #include "iWreckingBallPhysics.h"
 #include "iConstraint.h"
+#include "sModelPoint.h"
 
 namespace nPhysics
 {
@@ -27,6 +28,7 @@ namespace nPhysics
 		virtual iCylinderShape* CreateCylinderShape(const glm::vec3& extents) = 0;
 		virtual iConeShape* CreateConeShape(float radius, float height) = 0;
 		virtual iCapsuleShape* CreateCapsuleShape(float radius, float height) = 0;
+		virtual iConvexHullShape* CreateConvexHullShape(const sModelPoint* point, size_t numPoints) = 0;
 		virtual iSoftBody* CreateSoftBody(const sSoftBodyDef& sbDef) = 0;
 
 		virtual iConstraint* CreatePointPointConstraint(iRigidBody* rb, const glm::vec3& pivot) = 0;

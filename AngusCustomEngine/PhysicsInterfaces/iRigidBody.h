@@ -18,7 +18,7 @@ namespace nPhysics
 		// include these if we need them
 		/*virtual void GetPosition(glm::vec3& positionOut) = 0;
 		virtual void GetOrientation(glm::quat& orientationOut) = 0;*/
-
+		virtual void GetPosition(glm::vec3& posOut) = 0;
 		virtual void GetVelocity(glm::vec3& velocityOut) = 0;
 		virtual void GetOrientation(glm::mat4& orientationOut) = 0;
 		virtual bool GetHitStatus() = 0;

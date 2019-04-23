@@ -26,6 +26,7 @@ namespace nPhysics
 		virtual iCylinderShape* CreateCylinderShape(const glm::vec3& extents);
 		virtual iConeShape* CreateConeShape(float radius, float height);
 		virtual iCapsuleShape* CreateCapsuleShape(float radius, float height);
+		virtual iConvexHullShape* CreateConvexHullShape(const sModelPoint* point, size_t numPoints);
 		virtual iSoftBody* CreateSoftBody(const sSoftBodyDef& sbDef);
 
 		//Contraints

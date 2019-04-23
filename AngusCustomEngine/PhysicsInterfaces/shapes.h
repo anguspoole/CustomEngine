@@ -83,4 +83,15 @@ namespace nPhysics
 		iCapsuleShape(const iCapsuleShape& other) : iShape(other) {}
 		iCapsuleShape& operator=(const iCapsuleShape& other) { return *this; }
 	};
+
+	// CONVEX HULL
+	class iConvexHullShape : public virtual iShape
+	{
+	public:
+		virtual ~iConvexHullShape() {}
+	protected:
+		iConvexHullShape() : iShape(SHAPE_TYPE_CONVEXHULL) {}
+		iConvexHullShape(const iConvexHullShape& other) : iShape(other) {}
+		iConvexHullShape& operator=(const iConvexHullShape& other) { return *this; }
+	};
 }

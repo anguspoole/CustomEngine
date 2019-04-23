@@ -172,4 +172,19 @@ namespace nPhysics
 	{
 		return ((btCapsuleShape*)(this->mBulletShape))->getHalfHeight();
 	}
+
+	//*********************
+	//	CONVEX HULL SHAPE
+	//*********************
+	cBulletConvexHullShape::cBulletConvexHullShape(const sModelPoint* point, size_t numPoints)
+		: iBulletShapeInterface()
+		, iShape(SHAPE_TYPE_CONVEXHULL)
+	{
+		this->mBulletShape = new btConvexHullShape((const btScalar *)&point->vert, numPoints, sizeof(sModelPoint));
+	}
+
+	cBulletConvexHullShape::~cBulletConvexHullShape()
+	{
+		delete this->mBulletShape;
+	}
 }

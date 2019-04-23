@@ -46,11 +46,12 @@ void cEntity::UpdateHealthTimer(float dt)
 		//If this is an enemy, use the enemy animation
 		if (this->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::ENEMY)
 		{
-			if (this->status != eEntityStatus::DEAD && this->m_EntityMesh->pAniState->vecAnimationQueue.size() < 1)
+			if (this->status != eEntityStatus::DEAD)
 			{
 				cAnimationState::sStateDetails newState;
 				newState.name = "EnemyDeath";
 				newState.status = eEntityStatus::DEAD;
+				this->m_EntityMesh->pAniState->vecAnimationQueue.clear();
 				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
 			}
 		}

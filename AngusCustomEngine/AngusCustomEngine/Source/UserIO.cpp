@@ -43,6 +43,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 			//if (player->m_EntityMesh->pAniState->vecAnimationQueue.size() == 0)
 			//{
+			player->m_EntityMesh->pAniState->vecAnimationQueue.clear();
 			player->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
 			//}
 			resetHackTime(player);
@@ -74,6 +75,7 @@ void ProcessAsyncMouse(GLFWwindow* window)
 
 	glm::mat4 transform;
 	player->m_EntityPhysics->rigidBody->GetTransform(transform);
+	//player->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody->GetTransform(transform);
 	glm::vec3 targetPos = glm::vec3(transform[3].x, transform[3].y, transform[3].z);
 
 	//Direction from Camera to Target
@@ -217,7 +219,7 @@ void ProcessAsyncKeys(GLFWwindow* window)
 		//cEntity* userSphere = findObjectByFriendlyName("sphere0");
 		cEntity* userSphere = findObjectByFriendlyName("Player");
 
-		if (player->status == eEntityStatus::IDLE || eEntityStatus::RUNNING)
+		if (player->status == eEntityStatus::IDLE || player->status == eEntityStatus::RUNNING)
 		{
 			glm::mat4 targetTransform;
 			player->m_EntityPhysics->rigidBody->GetTransform(targetTransform);
@@ -235,7 +237,7 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			glm::vec3 vel;
 			player->m_EntityPhysics->rigidBody->GetVelocity(vel);
 
-			cEntity* katana = findObjectByFriendlyName("Katana");
+			cEntity* katana = player->vec_pChildrenEntities[0];
 
 			//eEntityStatus oldStatus = player->status;
 			//player->status = eEntityStatus::IDLE;

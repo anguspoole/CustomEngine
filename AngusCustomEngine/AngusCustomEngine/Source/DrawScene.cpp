@@ -313,7 +313,9 @@ void DrawObject(cEntity* pCurrentEntity,
 
 	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
 	{
-		pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(matTranslation);
+		glm::vec3 pos;
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetPosition(pos);
+		matTranslation = glm::translate(glm::mat4(1.0f), pos);
 	}
 	else if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::SOFT_BODY)
 	{
@@ -345,7 +347,12 @@ void DrawObject(cEntity* pCurrentEntity,
 
 	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
 	{
-		
+		glm::mat4 rigidTrans;
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(rigidTrans);
+
+		glm::mat4 matQrotation(1.0f);
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(matQrotation);
+		matModel = matModel * matQrotation;
 	}
 	else
 	{
@@ -569,7 +576,14 @@ vecFinalTransformation,		// Final bone transforms for mesh
 pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
 vecOffsets);                 // local offset for each bone
 
-		pCurrentEntity->animTime += deltaTime;		// Frame time, but we are going at 60HZ
+		if ((pCurrentEntity->status != eEntityStatus::DEAD))
+		{
+			pCurrentEntity->animTime += deltaTime;		// Frame time, but we are going at 60HZ
+		}
+		else if (pCurrentEntity->animTime + deltaTime < pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
+		{
+			pCurrentEntity->animTime += deltaTime;
+		}
 
 		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
 
@@ -633,7 +647,8 @@ vecOffsets);                 // local offset for each bone
 
 			if (boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
 			{
-				cEntity* pKatana = findObjectByFriendlyName("Katana");
+				//cEntity* pKatana = findObjectByFriendlyName("Katana");
+				cEntity* pKatana = player->vec_pChildrenEntities[0];
 				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;
 				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
@@ -647,17 +662,21 @@ vecOffsets);                 // local offset for each bone
 				glm::decompose(currentTransform, scaleBase, rotBase, transBase, skewBase, perspBase);
 
 				glm::quat qRot = glm::toQuat(currentTransform);
+				//glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
 				glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
 				glm::quat newRotation = glm::toQuat(boneTRot);
-				//pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
 				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTRot);
+				//pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
 
 				glm::vec4 rotatedOffset = (boneRotation * glm::vec4((pKatana->m_EntityPhysics->position), 1.0f));
+				//glm::vec4 rotatedOffset = glm::vec4((pKatana->m_EntityPhysics->position), 1.0f);
 
 				//glm::vec3 newPos = glm::vec3(rotatedOffset);
-				glm::vec3 newPos = glm::vec3(currentTransform[3]) + glm::vec3(rotatedOffset);
+				glm::vec3 currentPos;
+				pCurrentEntity->m_EntityPhysics->rigidBody->GetPosition(currentPos);
+				glm::vec3 newPos = currentPos + glm::vec3(rotatedOffset);
 				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
-				pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
+				//pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
 			}
 		}
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
@@ -710,7 +729,8 @@ vecOffsets);                 // local offset for each bone
 
 	for (unsigned int childEntityIndex = 0; childEntityIndex != pCurrentEntity->vec_pChildrenEntities.size(); childEntityIndex++)
 	{
-		glm::mat4 matWorldParent = matModel;
+		//glm::mat4 matWorldParent = matModel;
+		glm::mat4 matWorldParent = glm::mat4(1.0f);
 		DrawObject(pCurrentEntity->vec_pChildrenEntities[childEntityIndex], matWorldParent, shaderProgramID, RenderPassNumber, fbo);
 	}
 

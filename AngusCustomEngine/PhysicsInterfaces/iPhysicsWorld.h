@@ -28,6 +28,8 @@ namespace nPhysics
 		virtual bool AddConstraint(iConstraint* constraint) = 0;
 		virtual bool RemoveConstraint(iConstraint* constraint) = 0;
 
+		virtual void DisableCollision(iRigidBody* rbA, iRigidBody* rbB) = 0;
+
 		virtual void Update(float dt) = 0;
 
 	protected:
