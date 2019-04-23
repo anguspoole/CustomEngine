@@ -57,8 +57,10 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw);
 void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
 // Enemy skinned mesh model
-void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
+cSimpleAssimpSkinnedMesh* LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID);
+void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
+	GLuint shaderProgramID, cSimpleAssimpSkinnedMesh* enemySkinnedMesh);
 void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel);
 void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos);
 

@@ -54,7 +54,7 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy"
+          "Name": "Enemy0"
         },
         {
           "Type": "Simple",
@@ -72,7 +72,7 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy"
+          "Name": "Enemy1"
         },
         {
           "Type": "Simple",
@@ -90,7 +90,7 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy"
+          "Name": "Enemy2"
         },
         {
           "Type": "Simple",
@@ -108,7 +108,7 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy"
+          "Name": "Enemy3"
         }
       ]
     },

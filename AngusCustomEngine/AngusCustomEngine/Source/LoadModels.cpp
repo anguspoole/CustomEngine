@@ -291,7 +291,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 	return;
 }
 
-void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
+cSimpleAssimpSkinnedMesh* LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
 	GLuint shaderProgramID)
 {
 	//player = new cEntity();
@@ -333,7 +333,12 @@ void LoadEnemyMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntity
 
 	// Copy the mesh information from assimp into our cMesh object, 
 	// then into the sModelDrawInfo thing, and pass to the VAOManager
+	return enemySkinnedMesh;
+}
 
+void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vector<cEntity*> &vec_pObjectsToDraw,
+	GLuint shaderProgramID, cSimpleAssimpSkinnedMesh* enemySkinnedMesh)
+{
 	if (!AssimpSM_to_VAO_Converter(enemySkinnedMesh, shaderProgramID))
 	{
 		std::cout << "Error: Didn't copy the skinned mesh into the VAO format." << std::endl;

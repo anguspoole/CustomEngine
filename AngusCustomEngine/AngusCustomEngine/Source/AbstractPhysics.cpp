@@ -93,6 +93,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 	int coneCount = 0;
 	int softBodyCount = 0;
 
+	cSimpleAssimpSkinnedMesh* enemySkinnedMesh = LoadEnemyMeshModel(config, 0, vec_pObjectsToDraw, shaderProgramID);
+
 	if (numSoftShapes > 0)
 	{
 		addClothNode(vec_pObjectsToDraw);
@@ -136,7 +138,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			}
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Enemy") == 0)
 			{
-				LoadEnemyMeshModel(config, c, vec_pObjectsToDraw, shaderProgramID);
+				CreateAndAssignAnimatedEnemy(config, c, vec_pObjectsToDraw, shaderProgramID, enemySkinnedMesh);
 			}
 			else if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Sphere") == 0)
 			{
