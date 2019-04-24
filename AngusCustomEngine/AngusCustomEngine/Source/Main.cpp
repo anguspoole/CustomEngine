@@ -49,6 +49,12 @@ double deltaTime = 0.0f;
 
 float timeRemaining = 100.0f;
 
+// For the particle emitter examples
+void setUpParticleEmitters(void);							// in LoadModels.cpp
+void updateAndDrawParticles(double deltaTime,				// in DrawObject_call.cpp
+	GLuint shaderProgramID,
+	glm::vec3 cameraEye);
+
 void main()
 {
 	srand(NULL);
@@ -193,6 +199,8 @@ void main()
 	AIController* aiController = new AIController();
 
 	bool testGlob = true;
+
+	setUpParticleEmitters();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -411,6 +419,7 @@ void main()
 
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
+		updateAndDrawParticles(deltaTime, program, currentCamera->eye);
 
 		currentCamera = g_Camera;
 

@@ -42,6 +42,8 @@ cCamera* currentCamera = NULL;
 bool animationComplete = true;
 std::string attackAnimation = "";
 
+std::map<std::string /*name*/, cParticleEmitter* > g_map_pParticleEmitters;
+
 // This is to change the full screen FBO objects when the window changes size
 // See: http://www.glfw.org/docs/latest/window_guide.html#window_size
 void window_size_callback(GLFWwindow* window, int width, int height)
@@ -844,3 +846,212 @@ vecOffsets);                 // local offset for each bone
 
 	return;
 }//void DrawObject(void)
+
+// Draws any particle emitters that are active
+void updateAndDrawParticles(double deltaTime,
+	GLuint shaderProgramID,
+	glm::vec3 cameraEye)
+{
+
+	// These GetUniformLocation() calls should NOT be in the draw call
+	// (you should get these at the start and cache them in the cShaderObject, perhaps)
+	GLint bIsParticleImposter_UniLoc = glGetUniformLocation(shaderProgramID, "bIsParticleImposter");
+	GLint ParticleImposterAlphaOverride_UniLoc = glGetUniformLocation(shaderProgramID, "ParticleImposterAlphaOverride");
+	GLint ParticleImposterBlackThreshold_UniLoc = glGetUniformLocation(shaderProgramID, "ParticleImposterBlackThreshold");
+
+	// Black threshold is where the imposter will discard 
+	// i.e. At or below this value, the imposter isn't draw. 
+	// (range is from 0.0 to 1.0)
+	glUniform1f(ParticleImposterBlackThreshold_UniLoc, 0.25f);
+
+	// STARTOF: Star shaped smoke particle
+	std::map<std::string /*name*/, cParticleEmitter* >::iterator itPE_Smoke01
+		= ::g_map_pParticleEmitters.find("Smoke01");
+
+	if (itPE_Smoke01 != ::g_map_pParticleEmitters.end())
+	{
+
+		cParticleEmitter* pPE_Smoke01 = itPE_Smoke01->second;
+
+		// Update the particle emitter
+		cEntity* pParticleMesh = findObjectByFriendlyName("SmokeObjectStar");
+		glm::mat4 matParticleIndentity = glm::mat4(1.0f);
+		glm::vec3 oldPosition = pParticleMesh->m_EntityPhysics->position;
+		glm::quat oldOrientation = pParticleMesh->m_EntityPhysics->getQOrientation();
+		glm::vec3 oldScale = pParticleMesh->m_EntityPhysics->nonUniformScale;
+
+		pParticleMesh->m_EntityPhysics->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f);
+		pParticleMesh->m_EntityMesh->bIsVisible = true;
+
+
+		// Set up the shader
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_TRUE);
+
+
+		pPE_Smoke01->Update(deltaTime);
+
+		std::vector<sParticle> vecParticlesToDraw;
+		pPE_Smoke01->getAliveParticles(vecParticlesToDraw);
+
+		pPE_Smoke01->sortParticlesBackToFront(vecParticlesToDraw, cameraEye);
+
+		unsigned int numParticles = (unsigned int)vecParticlesToDraw.size();
+		//			std::cout << "Drawing " << numParticles << " particles" << std::end;
+
+		unsigned int count = 0;
+		for (unsigned int index = 0; index != numParticles; index++)
+		{
+			if (vecParticlesToDraw[index].lifeRemaining > 0.0f)
+			{
+				// Draw it
+				pParticleMesh->m_EntityPhysics->position = vecParticlesToDraw[index].position;
+				pParticleMesh->m_EntityPhysics->setUniformScale(vecParticlesToDraw[index].scale);
+				pParticleMesh->m_EntityPhysics->setQOrientation(vecParticlesToDraw[index].qOrientation);
+
+				// This is for the "death" transparency
+				glUniform1f(ParticleImposterAlphaOverride_UniLoc, vecParticlesToDraw[index].transparency);
+
+				DrawObject(pParticleMesh, matParticleIndentity, shaderProgramID, 0, g_pFBOMain);
+				count++;
+			}
+		}
+		//			std::cout << "Drew " << count << " particles" << std::endl;
+		pParticleMesh->m_EntityMesh->bIsVisible = false;
+		pParticleMesh->m_EntityPhysics->position = oldPosition;
+		pParticleMesh->m_EntityPhysics->setQOrientation(oldOrientation);
+		pParticleMesh->m_EntityPhysics->nonUniformScale = oldScale;
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_FALSE);
+		glUniform1f(ParticleImposterAlphaOverride_UniLoc, 1.0f);
+		// ***************************************************************************
+	}
+	// ENDOF: Star shaped smoke particle
+
+
+	// STARTOF: flat 2D smoke particle
+	std::map<std::string /*name*/, cParticleEmitter* >::iterator itPE_Smoke02
+		= ::g_map_pParticleEmitters.find("Smoke02");
+
+	if (itPE_Smoke02 != ::g_map_pParticleEmitters.end())
+	{
+
+		cParticleEmitter* pPE_Smoke02 = itPE_Smoke02->second;
+
+		// Update the particle emitter
+		cEntity* pParticleMesh = findObjectByFriendlyName("SmokeObjectQuad");
+		glm::mat4 matParticleIndentity = glm::mat4(1.0f);
+		glm::vec3 oldPosition = pParticleMesh->m_EntityPhysics->position;
+		glm::quat oldOrientation = pParticleMesh->m_EntityPhysics->getQOrientation();
+		glm::vec3 oldScale = pParticleMesh->m_EntityPhysics->nonUniformScale;
+
+		pParticleMesh->m_EntityPhysics->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f);
+		pParticleMesh->m_EntityMesh->bIsVisible = true;
+
+
+		// Set up the shader
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_TRUE);
+
+
+		pPE_Smoke02->Update(deltaTime);
+
+		std::vector<sParticle> vecParticlesToDraw;
+		pPE_Smoke02->getAliveParticles(vecParticlesToDraw);
+
+		pPE_Smoke02->sortParticlesBackToFront(vecParticlesToDraw, cameraEye);
+
+		unsigned int numParticles = (unsigned int)vecParticlesToDraw.size();
+		//			std::cout << "Drawing " << numParticles << " particles" << std::end;
+
+		unsigned int count = 0;
+		for (unsigned int index = 0; index != numParticles; index++)
+		{
+			if (vecParticlesToDraw[index].lifeRemaining > 0.0f)
+			{
+				// Draw it
+				pParticleMesh->m_EntityPhysics->position = vecParticlesToDraw[index].position;
+				pParticleMesh->m_EntityPhysics->setUniformScale(vecParticlesToDraw[index].scale);
+				pParticleMesh->m_EntityPhysics->setQOrientation(vecParticlesToDraw[index].qOrientation);
+
+				// This is for the "death" transparency
+				glUniform1f(ParticleImposterAlphaOverride_UniLoc, vecParticlesToDraw[index].transparency);
+
+				DrawObject(pParticleMesh, matParticleIndentity, shaderProgramID, 0, g_pFBOMain);
+				count++;
+			}
+		}
+		//			std::cout << "Drew " << count << " particles" << std::endl;
+		pParticleMesh->m_EntityMesh->bIsVisible = false;
+		pParticleMesh->m_EntityPhysics->position = oldPosition;
+		pParticleMesh->m_EntityPhysics->setQOrientation(oldOrientation);
+		pParticleMesh->m_EntityPhysics->nonUniformScale = oldScale;
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_FALSE);
+		glUniform1f(ParticleImposterAlphaOverride_UniLoc, 1.0f);
+		// ***************************************************************************
+	}
+	// ENDOF: Star shaped smoke particle
+
+
+
+
+	// STARTOF: flat 2D plasma explosion
+	std::map<std::string /*name*/, cParticleEmitter* >::iterator itPE_Plasma_01
+		= ::g_map_pParticleEmitters.find("PlasmaExplosion");
+
+	if (itPE_Plasma_01 != ::g_map_pParticleEmitters.end())
+	{
+
+		cParticleEmitter* pPE_Plasma_01 = itPE_Plasma_01->second;
+
+		// Update the particle emitter
+		cEntity* pParticleMesh = findObjectByFriendlyName("PlasmaRingImposterObject");
+		glm::mat4 matParticleIndentity = glm::mat4(1.0f);
+		glm::vec3 oldPosition = pParticleMesh->m_EntityPhysics->position;
+		glm::quat oldOrientation = pParticleMesh->m_EntityPhysics->getQOrientation();
+		glm::vec3 oldScale = pParticleMesh->m_EntityPhysics->nonUniformScale;
+
+		pParticleMesh->m_EntityPhysics->setMeshOrientationEulerAngles(0.0f, 0.0f, 0.0f);
+		pParticleMesh->m_EntityMesh->bIsVisible = true;
+
+
+		// Set up the shader
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_TRUE);
+
+
+		pPE_Plasma_01->Update(deltaTime);
+
+		std::vector<sParticle> vecParticlesToDraw;
+		pPE_Plasma_01->getAliveParticles(vecParticlesToDraw);
+
+		pPE_Plasma_01->sortParticlesBackToFront(vecParticlesToDraw, cameraEye);
+
+		unsigned int numParticles = (unsigned int)vecParticlesToDraw.size();
+		//			std::cout << "Drawing " << numParticles << " particles" << std::end;
+
+		unsigned int count = 0;
+		for (unsigned int index = 0; index != numParticles; index++)
+		{
+			if (vecParticlesToDraw[index].lifeRemaining > 0.0f)
+			{
+				// Draw it
+				pParticleMesh->m_EntityPhysics->position = vecParticlesToDraw[index].position;
+				pParticleMesh->m_EntityPhysics->setUniformScale(vecParticlesToDraw[index].scale);
+				pParticleMesh->m_EntityPhysics->setQOrientation(vecParticlesToDraw[index].qOrientation);
+
+				// This is for the "death" transparency
+				glUniform1f(ParticleImposterAlphaOverride_UniLoc, vecParticlesToDraw[index].transparency);
+
+				DrawObject(pParticleMesh, matParticleIndentity, shaderProgramID, 0, g_pFBOMain);
+				count++;
+			}
+		}
+		//			std::cout << "Drew " << count << " particles" << std::endl;
+		pParticleMesh->m_EntityMesh->bIsVisible = false;
+		pParticleMesh->m_EntityPhysics->position = oldPosition;
+		pParticleMesh->m_EntityPhysics->setQOrientation(oldOrientation);
+		pParticleMesh->m_EntityPhysics->nonUniformScale = oldScale;
+		glUniform1f(bIsParticleImposter_UniLoc, (float)GL_FALSE);
+		glUniform1f(ParticleImposterAlphaOverride_UniLoc, 1.0f);
+		// ***************************************************************************
+	}
+	// ENDOF: flat 2D plasma explosion
+	return;
+}

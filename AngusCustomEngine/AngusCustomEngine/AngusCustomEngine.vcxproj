@@ -173,6 +173,7 @@
     <ClCompile Include="Meshes\cVAOMeshManager.cpp" />
     <ClCompile Include="Meshes\cVAOMeshManager_LoadSkinnedMeshModelIntoVAO.cpp" />
     <ClCompile Include="Meshes\sModelDrawInfo.cpp" />
+    <ClCompile Include="Particles\cParticleEmitter.cpp" />
     <ClCompile Include="Ply\CHRTimer.cpp" />
     <ClCompile Include="Ply\CPlyFile5nt.cpp" />
     <ClCompile Include="Ply\CPlyFile5nt_experimental.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Meshes\cVAOMeshManager.h" />
     <ClInclude Include="Meshes\sModelDrawInfo.h" />
     <ClInclude Include="Meshes\sVertex_xyz_rgba_n_uv2_bt_4Bones.h" />
+    <ClInclude Include="Particles\cParticleEmitter.h" />
     <ClInclude Include="Ply\CHRTimer.h" />
     <ClInclude Include="Ply\CPlyFile5nt.h" />
     <ClInclude Include="Ply\CPlyInfo.h" />

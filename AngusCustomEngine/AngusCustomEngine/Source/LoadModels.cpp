@@ -499,6 +499,11 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(katana, shaderProgramID);
 
 	//Quad for FBOs
+	sModelDrawInfo starParticle;
+	starParticle.meshFileName = "1x1_Star_1_Quad_2_Sided_xyz_n_uv.ply";
+	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(starParticle, shaderProgramID);
+
+	//Quad for FBOs
 	sModelDrawInfo p2SidedQuad;
 	p2SidedQuad.meshFileName = "1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply";
 	pTheVAOMeshManager->LoadModelIntoVAO_ASYNC(p2SidedQuad, shaderProgramID);
@@ -526,6 +531,7 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios2.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter1.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter2.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("Smoke_1.bmp", "assets/textures"), true);
 }
 
 void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgramID, glm::vec3 startPos, glm::vec3 startVel)
@@ -809,4 +815,66 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		//vec_pObjectsToDraw.push_back(pKatana);
 	}
+
+	{	// One of the "star shaped" imposter object
+		cEntity* pSmoke = new cEntity();
+		pSmoke->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 1.0f, 1.0f));
+		pSmoke->m_EntityMesh->setAlphaTransparency(1.0f);
+		pSmoke->m_EntityPhysics->nonUniformScale = glm::vec3(0.05f);
+		//pSmoke->friendlyName = "SmokeObject";
+		pSmoke->friendlyName = "SmokeObjectStar";
+		// ***********************************************************
+		// STAR SHAPED IMPOSTER
+		// ***********************************************************
+//		pSmoke->meshName = "1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply";		// Flat, classic imposter
+		pSmoke->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_Star_1_Quad_2_Sided_xyz_n_uv.ply"));		// Multi-faced imposter
+//		pSmoke->meshName = "Sphere_UV_xyz_n_uv.ply";					// Imposter can be any shape, really
+
+		sTextureInfo smokeTex;
+		smokeTex.name = "Smoke_1.bmp";
+		smokeTex.strength = 1.0f;
+
+		pSmoke->m_EntityMesh->vecTextures.push_back(sTextureInfo(smokeTex));
+		pSmoke->m_EntityPhysics->setUniformScale(1.0f);
+		pSmoke->m_EntityMesh->bIsVisible = false;
+		vec_pObjectsToDraw.push_back(pSmoke);
+	}
+}
+
+void setUpParticleEmitters(void)
+{
+	{	//STARTOF: Star shaped smoke emitter
+		cParticleEmitter* pPE_Smoke_01 = new cParticleEmitter();
+
+		// This takes a while
+		cParticleEmitter::sParticleCreationParams particleParams;
+		particleParams.totalNumberOfParticles = 500;	// Max # of particles ALIVE at ONE TIME
+		particleParams.minLifeTime = 5.0f;
+		particleParams.maxLifeTime = 10.0f;
+		// Will fade to fully transparent in the last 1 second of "life"
+		particleParams.deathTransparencyFadeTimeSeconds = 2.0f;
+
+		//particleParams.position = glm::vec3(10.0f, -10.0f, 0.0f);
+		player->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody->GetPosition(particleParams.position);
+		particleParams.minInitialVelocity = glm::vec3(-0.5, 0.5, -0.5);
+		particleParams.maxInitialVelocity = glm::vec3(0.5, 1.0, 0.5);
+		particleParams.acceleration = glm::vec3(0.0f, 1.0f, 0.0f);
+		particleParams.minNumberNewParticles = 2;
+		particleParams.maxNumberNewParticles = 5;
+		particleParams.minTimeBetweenParticleGenerationSeconds = 0.1f;
+		particleParams.maxTimeBetweenParticleGenerationSeconds = 0.5f;
+		particleParams.minInitialScale = 0.1f;
+		particleParams.maxInitialScale = 0.15f;
+		particleParams.minScaleChange = 0.0f;
+		particleParams.maxScaleChange = 0.1f;	// This is per frame change
+
+		// Degrees per frame
+		particleParams.minOrientationChangeAngleEuler = glm::vec3(-0.25f, -0.25f, -0.25f);
+		particleParams.maxOrientationChangeAngleEuler = glm::vec3(+0.25f, +0.25f, +0.25f);
+
+		pPE_Smoke_01->Init(particleParams);
+
+		::g_map_pParticleEmitters["Smoke01"] = pPE_Smoke_01;
+
+	}//ENDOF: Star shaped smoke emitter
 }
