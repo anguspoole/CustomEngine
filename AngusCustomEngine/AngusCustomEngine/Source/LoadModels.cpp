@@ -531,7 +531,7 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 	{	// This sphere is the tiny little debug sphere
 		cEntity* pGlob = new cEntity();
 		pGlob->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 1.0f, 1.0f));
-		pGlob->m_EntityMesh->setSpecularPower(100.0f);
+		pGlob->m_EntityMesh->setSpecularPower(50.0f);
 		pGlob->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
 		pGlob->friendlyName = "Glob" + std::to_string(globList.size());
@@ -545,6 +545,11 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 		pGlob->m_EntityPhysics->bIsUpdatedByPhysics = true;
 
 		pGlob->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
+
+		sTextureInfo stone;
+		stone.name = "rock.bmp";
+		stone.strength = 1.0f;
+		pGlob->m_EntityMesh->vecTextures.push_back(stone);
 
 		nPhysics::sRigidBodyDef globDef;
 		globDef.Mass = 1.0f;
@@ -579,7 +584,7 @@ void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos
 
 		pGlob->friendlyName = "Splatter" + std::to_string(splatterCount);
 		float scale = 1.0f;
-		pGlob->m_EntityPhysics->position = startPos + glm::vec3(0.0f, 0.001f * splatterCount, 0.0f);
+		pGlob->m_EntityPhysics->position = startPos + glm::vec3(0.0f, 0.01f * splatterCount, 0.0f);
 		pGlob->m_EntityPhysics->nonUniformScale = glm::vec3(scale, 0.01f, scale);
 		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
 		//pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));

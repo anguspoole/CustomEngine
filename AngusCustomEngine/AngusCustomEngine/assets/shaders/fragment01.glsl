@@ -157,7 +157,8 @@ void main()
 		float step = 0.001f;
 		float size = 0.003f;
 
-		float weight[10] = float[] (0.25, 0.2, 0.15, 0.125, 0.1, 0.05, 0.045, 0.04, 0.03, 0.01);
+		float weight[10] = float[] (0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+		//float weight[10] = float[] (0.25, 0.2, 0.15, 0.125, 0.1, 0.05, 0.045, 0.04, 0.03, 0.01);
 			
 		vec2 tex_offset = 1.0 / textureSize(texPass1OutputTexture, 0); // gets size of single texel
 		
@@ -547,6 +548,12 @@ void main()
 		finalOutputColour.rgb += ( amountToAdd * rgbReflect );
 	}
 	
+	float brightness = dot(finalOutputColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+	if(brightness > 1.0)
+		finalOutputBrightColour = vec4(finalOutputColour.rgb, 1.0);
+	else
+		finalOutputBrightColour = vec4(0.0, 0.0, 0.0, 1.0);
+	
 	if(( int(renderPassNumber) == 4))
 	{
 		// Discard anything that's "white enough"
@@ -554,15 +561,10 @@ void main()
 		float pixelBlackAndWhite = (0.3f * tex0Col.r) + (0.59f * tex0Col.g) + (0.11f * tex0Col.b);
 		if(pixelBlackAndWhite > 0.5f)
 		{
+			//finalOutputColour.a = 0.0f;
 			discard;
 		}
 	}
-	
-	float brightness = dot(finalOutputColour.rgb, vec3(0.2126, 0.7152, 0.0722));
-	if(brightness > 1.0)
-		finalOutputBrightColour = vec4(finalOutputColour.rgb, 1.0);
-	else
-		finalOutputBrightColour = vec4(0.0, 0.0, 0.0, 1.0);
 	
 	// Particle imposter (smoke, fire, water, etc.)
 	if ( bIsParticleImposter ) 

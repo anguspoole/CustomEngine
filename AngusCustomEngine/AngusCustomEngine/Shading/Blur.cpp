@@ -38,7 +38,7 @@ void makeBlur(GLuint programID, cFBO* fboA, cFBO* fboB, GLuint program)
 
 		GLint horizontal_LocID = glGetUniformLocation(blurSP->ID, "horizontal");
 		glUniform1f(horizontal_LocID, horizontal);
-		glUniform1f(renderPassNumber_UniLoc, 0.0f);	// Tell shader it's the 2nd pass
+		glUniform1f(renderPassNumber_UniLoc, 3.0f);	// Tell shader it's the 2nd pass
 
 		glm::mat4 matModel = glm::mat4(1.0f);
 		if (i % 2 == 0)

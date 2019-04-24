@@ -308,6 +308,20 @@ void main()
 					g_LightManager->vecLights[0]->param1.z,		// outer angle
 					g_LightManager->vecLights[0]->param1.w);	// TBD
 
+		//glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 2nd pass
+
+		if (paintList.size() > 0)
+		{
+			glUniform1f(renderPassNumber_UniLoc, 4.0f);	// Tell shader it's the 1st pass
+			for (int i = 0; i < paintList.size(); i++)
+			{
+				glm::mat4 matmodel = glm::mat4(1.0f);
+				DrawObject(paintList[i], matmodel, program, 0, NULL);
+			}
+		}
+
+		glUniform1f(renderPassNumber_UniLoc, 1.0f);	// Tell shader it's the 1st pass
+
 		{
 			// ***************************************
 			 // Draw the skybox first 
@@ -391,19 +405,6 @@ void main()
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
 
-		if (testGlob)
-		{
-			LoadPaintGlob(vec_pObjectsToDraw, program, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-			testGlob = false;
-		}
-
-		glUniform1f(renderPassNumber_UniLoc, 4.0f);	// Tell shader it's the 1st pass
-
-		for (int i = 0; i < paintList.size(); i++)
-		{
-			glm::mat4 matmodel = glm::mat4(1.0f);
-			DrawObject(paintList[i], matmodel, program, 4, NULL);
-		}
 		currentCamera = g_Camera;
 
 		//All objects have been drawn - now render scene to quad
