@@ -56,8 +56,8 @@ void cEntity::UpdateHealthTimer(float dt)
 				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
 				glm::vec3 swordPos;
 				this->m_EntityPhysics->rigidBody->GetPosition(swordPos);
-				g_map_pParticleEmitters["Smoke01"]->UpdateParamsPosition(swordPos);
-				g_map_pParticleEmitters["Smoke01"]->Reset(true);
+				g_map_pParticleEmitters["Fire01"]->UpdateParamsPosition(swordPos);
+				g_map_pParticleEmitters["Fire01"]->Reset(true);
 			}
 		}
 		else if (this->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::PLAYER)

@@ -930,7 +930,7 @@ void updateAndDrawParticles(double deltaTime,
 
 	// STARTOF: flat 2D smoke particle
 	std::map<std::string /*name*/, cParticleEmitter* >::iterator itPE_Smoke02
-		= ::g_map_pParticleEmitters.find("Smoke02");
+		= ::g_map_pParticleEmitters.find("Fire01");
 
 	if (itPE_Smoke02 != ::g_map_pParticleEmitters.end())
 	{
@@ -938,7 +938,7 @@ void updateAndDrawParticles(double deltaTime,
 		cParticleEmitter* pPE_Smoke02 = itPE_Smoke02->second;
 
 		// Update the particle emitter
-		cEntity* pParticleMesh = findObjectByFriendlyName("SmokeObjectQuad");
+		cEntity* pParticleMesh = findObjectByFriendlyName("FireObjectStar");
 		glm::mat4 matParticleIndentity = glm::mat4(1.0f);
 		glm::vec3 oldPosition = pParticleMesh->m_EntityPhysics->position;
 		glm::quat oldOrientation = pParticleMesh->m_EntityPhysics->getQOrientation();
