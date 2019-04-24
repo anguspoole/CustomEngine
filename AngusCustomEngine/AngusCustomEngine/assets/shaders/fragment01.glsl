@@ -12,6 +12,10 @@ in vec4 vertUV_x2;		// Texture coordinates
 in vec4 vertTanXYZ;			// Tangent to the surface
 in vec4 vertBiNormXYZ;		// bi-normal (or bi-tangent) to the surface
 
+in vec4 lightPointTangent; 
+in vec4 lightPointView;
+in vec4 lightPointFrag;
+
 
 uniform vec4 objectDiffuse;		// becomes objectDiffuse in the shader
 uniform vec4 objectSpecular;	// rgb + a, which is the power)
@@ -95,11 +99,15 @@ uniform sampler2D texture07;
 uniform float renderPassNumber;	// 1 = 1st pass, 2nd for offscreen to quad
 uniform sampler2D texPass1OutputTexture;
 uniform sampler2D texPass1ReticleTexture;
+uniform sampler2D normalMap1Texture;
 
 
 // Cube map texture (NOT a sampler3D)
 uniform samplerCube textureSkyBox;
 uniform bool useSkyBoxTexture;
+
+//Normal map
+uniform bool bHasNormalMap;
 
 // 
 uniform bool bAddReflect;		// Add reflection
@@ -111,6 +119,7 @@ uniform vec4 texBlendWeights[2];	// x is 0, y is 1, z is 2
 
 uniform float wholeObjectAlphaTransparency;
 
+//Blur horizontal or vertical
 uniform bool horizontal;
 
 void main()
@@ -157,8 +166,8 @@ void main()
 		float step = 0.001f;
 		float size = 0.003f;
 
-		float weight[10] = float[] (0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-		//float weight[10] = float[] (0.25, 0.2, 0.15, 0.125, 0.1, 0.05, 0.045, 0.04, 0.03, 0.01);
+		//float weight[10] = float[] (0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+		float weight[10] = float[] (0.25, 0.2, 0.15, 0.125, 0.1, 0.05, 0.045, 0.04, 0.03, 0.01);
 			
 		vec2 tex_offset = 1.0 / textureSize(texPass1OutputTexture, 0); // gets size of single texel
 		
@@ -231,8 +240,8 @@ void main()
 	
 	if(renderPassNumber == 5)
 	{
-		const float gamma = 2.2;
-		float exposure = 0.2;
+		const float gamma = 1.0;
+		float exposure = 100.0f;
 		vec3 hdrColor = texture(texPass1OutputTexture, vertUV_x2.st).rgb;      
 		vec3 bloomColor = texture(texPass1ReticleTexture, vertUV_x2.st).rgb;
 		hdrColor += bloomColor; // additive blending
@@ -363,6 +372,12 @@ void main()
 		
 		finalOutputNormal.rgb = vertNormal.xyz;
 		finalOutputNormal.a = 1.0f;
+		
+		if(bHasNormalMap)
+		{
+			vec3 tNorm = texture( normalMap1Texture, vertUV_x2.st).rgb;
+			finalOutputNormal.rgb = normalize(tNorm * 2.0 - 1.0).rgb;
+		}
 
 		return;
 	}
@@ -374,6 +389,12 @@ void main()
 
 	vec3 norm = normalize(vertNormal.xyz);
 	
+	if(bHasNormalMap)
+	{
+		vec3 tNorm = texture( normalMap1Texture, vertUV_x2.st).rgb;
+		norm.rgb = normalize(tNorm * 2.0 - 1.0).rgb;
+	}
+	
 	vec4 finalObjectColour = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 	
 	for ( int index = 0; index < NUMBEROFLIGHTS; index++ )
@@ -383,6 +404,17 @@ void main()
 		if ( theLights[index].param2.x == 0.0f )
 		{	// it's off
 			continue;
+		}
+		
+		vec3 LightDirection;
+		//if normal map
+		if(bHasNormalMap)
+		{
+			LightDirection = normalize(lightPointTangent - lightPointFrag).rgb;
+		}
+		else
+		{
+			LightDirection = theLights[index].direction.rgb;
 		}
 		
 		// Cast to an int (note with c'tor)
@@ -401,7 +433,7 @@ void main()
 			vec3 lightContrib = theLights[index].diffuse.rgb;
 			
 			// Get the dot product of the light and normalize
-			float dotProduct = dot( -theLights[index].direction.xyz,  
+			float dotProduct = dot( LightDirection.xyz,  
 									   normalize(norm.xyz) );	// -1 to 1
 
 			dotProduct = max( 0.0f, dotProduct );		// 0 to 1
@@ -445,7 +477,8 @@ void main()
 
 		// Get eye or view vector
 		// The location of the vertex in the world to your eye
-		vec3 eyeVector = normalize(eyeLocation.xyz - vertPosWorld.xyz);
+		//vec3 eyeVector = normalize(eyeLocation.xyz - vertPosWorld.xyz);
+		vec3 eyeVector = normalize(lightPointView.xyz - lightPointFrag.xyz);
 
 		// To simplify, we are NOT using the light specular value, just the object’s.
 		float objectSpecularPower = objectSpecular.w; 
@@ -476,7 +509,8 @@ void main()
 			vertexToLight = normalize(vertexToLight);
 
 			float currentLightRayAngle
-					= dot( vertexToLight.xyz, theLights[index].direction.xyz );
+					//= dot( vertexToLight.xyz, theLights[index].direction.xyz );
+					= dot( vertexToLight.xyz, LightDirection.xyz );
 					
 			currentLightRayAngle = max(0.0f, currentLightRayAngle);
 

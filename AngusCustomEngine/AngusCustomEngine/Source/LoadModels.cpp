@@ -521,6 +521,8 @@ void LoadTextures_ASYNC()
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("kachujin.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metal_halomap.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metallplates.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metalplateColor.bmp", "assets/textures"), true);
+	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("metalplateNormal.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("heraklios2.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter1.bmp", "assets/textures"), true);
 	::g_TheTextureManager->Create2DTextureFromBMPFile_ASYNC(cBasicTextureManager::s2DTextureLoadParams("splatter2.bmp", "assets/textures"), true);

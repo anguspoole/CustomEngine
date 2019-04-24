@@ -55,6 +55,7 @@ public:
 
 	bool bIsWireFrame;
 	bool bIsVisible;
+	bool bHasNormalMap = false;
 
 	// If there's only 1, then we AREN'T using LOD
 	std::vector<sLODInfo> vecLODMeshs;

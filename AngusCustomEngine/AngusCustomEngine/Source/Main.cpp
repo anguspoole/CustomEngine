@@ -247,14 +247,21 @@ void main()
 			katana->m_EntityPhysics->rigidBody->SetHitStatus(false);
 		}
 
+		currentCamera = player_Camera;
+
+		mainLight->position;
+		glm::vec3 playerPos;
+		player->m_EntityPhysics->rigidBody->GetPosition(playerPos);
+		mainLight->position = glm::vec4(playerPos, 1.0f);
+		mainLight->position.y += 100.0f;
+		mainLight->position.z += 100.0f;
+
 		// Switch to the shader we want
 		//::pTheShaderManager->useShaderProgram("BasicUberShader");
 
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);		// Points to the "regular" frame buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, ::g_pFBOMain->ID);
 		::g_pFBOMain->clearBuffers(true, true);
-
-		currentCamera = player_Camera;
 													// Get the size of the actual (screen) frame buffer
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 		float ratio = windowWidth / (float)windowHeight;

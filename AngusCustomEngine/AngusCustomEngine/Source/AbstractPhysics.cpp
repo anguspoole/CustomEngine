@@ -195,6 +195,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				testObj1->m_EntityMesh->setSpecularPower(100.0f);
 				testObj1->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 				testObj1->m_EntityMesh->bIsWireFrame = false;
+				testObj1->m_EntityMesh->bHasNormalMap = true;
 				testObj1->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 
 				//sBox* pBox = new sBox();
@@ -222,7 +223,7 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				//testObj1->shapeType = cEntity::BOX;
 
 				sTextureInfo stone;
-				stone.name = "metal_halomap.bmp";
+				stone.name = "metalplateColor.bmp";
 				stone.strength = 0.7f;
 				testObj1->m_EntityMesh->vecTextures.push_back(stone);
 
@@ -230,6 +231,11 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				plate.name = "metallplates.bmp";
 				plate.strength = 0.3f;
 				testObj1->m_EntityMesh->vecTextures.push_back(plate);
+
+				sTextureInfo plateN;
+				plateN.name = "metalplateNormal.bmp";
+				plateN.strength = 0.0f;
+				testObj1->m_EntityMesh->vecTextures.push_back(plateN);
 
 				vec_pObjectsToDraw.push_back(testObj1);
 

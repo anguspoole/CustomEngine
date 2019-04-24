@@ -34,6 +34,7 @@ GLint texBW_1_UniLoc = -1;
 GLint texPass1OutputTexture_UniLoc = -1;
 //Texture sampler for reticle texture
 GLint texPass1ReticleTexture_UniLoc = -1;
+GLint normalMap1Texture_UniLoc = -1;
 
 
 cCamera* currentCamera = NULL;
@@ -160,6 +161,7 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 
 		texPass1OutputTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1OutputTexture");
 		texPass1ReticleTexture_UniLoc = glGetUniformLocation(shaderProgramID, "texPass1ReticleTexture");
+		normalMap1Texture_UniLoc = glGetUniformLocation(shaderProgramID, "normalMap1Texture");
 
 	}//if(!HACK_bTextureUniformLocationsLoaded )
 
@@ -182,7 +184,7 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 
 		// Connect the specific texture to THIS texture unit
 //		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
-		if(RenderPassNumber == 1)
+		if (RenderPassNumber == 1)
 			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_1_ID);
 		else
 			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
@@ -277,8 +279,8 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 	// Set all the blend weights (strengths) to zero
 	float blendWeights[8] = { 0 };
 
-
-	for (int texBindIndex = 0; texBindIndex != pCurrentEntity->m_EntityMesh->vecTextures.size(); texBindIndex++)
+	int texBindIndex = 0;
+	for (texBindIndex = 0; texBindIndex != pCurrentEntity->m_EntityMesh->vecTextures.size(); texBindIndex++)
 	{
 		//int actualTexBindIndex = texBindIndex;
 
@@ -308,7 +310,14 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 			glUniform1i(tex01_UniLoc, texBindIndex);
 			break;
 		case 2:
-			glUniform1i(tex02_UniLoc, texBindIndex);
+			if (pCurrentEntity->m_EntityMesh->bHasNormalMap)
+			{
+				glUniform1i(normalMap1Texture_UniLoc, texBindIndex);
+			}
+			else
+			{
+				glUniform1i(tex02_UniLoc, texBindIndex);
+			}
 			break;
 		case 3:
 			glUniform1i(tex03_UniLoc, texBindIndex);
@@ -453,7 +462,7 @@ void DrawObject(cEntity* pCurrentEntity,
 	// And now scale
 
 	glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
-	glm::vec3(pCurrentEntity->m_EntityPhysics->nonUniformScale.x, pCurrentEntity->m_EntityPhysics->nonUniformScale.y, pCurrentEntity->m_EntityPhysics->nonUniformScale.z));
+		glm::vec3(pCurrentEntity->m_EntityPhysics->nonUniformScale.x, pCurrentEntity->m_EntityPhysics->nonUniformScale.y, pCurrentEntity->m_EntityPhysics->nonUniformScale.z));
 	matModel = matModel * matScale;
 
 	//************************************
@@ -484,6 +493,7 @@ void DrawObject(cEntity* pCurrentEntity,
 	GLint matProj_location = glGetUniformLocation(shaderProgramID, "matProj");
 
 	GLint bDontUseLighting_UniLoc = glGetUniformLocation(shaderProgramID, "bDontUseLighting");
+	GLint bHasNormalMap_UniLoc = glGetUniformLocation(shaderProgramID, "bHasNormalMap");
 
 	glUniformMatrix4fv(matModel_location, 1, GL_FALSE, glm::value_ptr(matModel));
 	glUniformMatrix4fv(matModelInvTrans_location, 1, GL_FALSE, glm::value_ptr(matModelInvTrans));
@@ -542,6 +552,15 @@ void DrawObject(cEntity* pCurrentEntity,
 	else
 	{
 		glUniform1f(bDontUseLighting_UniLoc, (float)GL_FALSE);
+	}
+
+	if (pCurrentEntity->m_EntityMesh->bHasNormalMap)
+	{
+		glUniform1f(bHasNormalMap_UniLoc, (float)GL_TRUE);
+	}
+	else
+	{
+		glUniform1f(bHasNormalMap_UniLoc, (float)GL_FALSE);
 	}
 
 	if (pCurrentEntity->m_EntityMesh->bIsWireFrame)

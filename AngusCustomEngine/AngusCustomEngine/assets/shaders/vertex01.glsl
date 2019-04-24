@@ -27,10 +27,40 @@ out vec4 vertUV_x2;		// To the next shader stage
 out vec4 vertTanXYZ;	// Tangent to the surface
 out vec4 vertBiNormXYZ;	// bi-normal (or bi-tangent) to the surface
 
+out vec4 lightPointTangent; 
+out vec4 lightPointView;
+out vec4 lightPointFrag;
+
+uniform vec3 eyeLocation;		// This is in "world space"
+
+struct sLight
+{
+	vec4 position;			
+	vec4 diffuse;	
+	vec4 specular;	// rgb = highlight colour, w = power
+	vec4 atten;		// x = constant, y = linear, z = quadratic, w = DistanceCutOff
+	vec4 direction;	// Spot, directional lights
+	vec4 param1;	// x = lightType, y = inner angle, z = outer angle, w = TBD
+	                // 0 = pointlight
+					// 1 = spot light
+					// 2 = directional light
+	vec4 param2;	// x = 0 for off, 1 for on
+};
+
+const int POINT_LIGHT_TYPE = 0;
+const int SPOT_LIGHT_TYPE = 1;
+const int DIRECTIONAL_LIGHT_TYPE = 2;
+
+const int NUMBEROFLIGHTS = 10;
+uniform sLight theLights[NUMBEROFLIGHTS];  	// 80 uniforms
+
 
 // Note, we're in the VERTEX shader now, baby!
 uniform sampler2D texHeightMap;
+uniform sampler2D normalMap1Texture;
 uniform bool bUseHeightMap;			// "turn on" the vertex displacement
+//Normal map
+uniform bool bHasNormalMap;
 uniform float heightMapRatio;		// Increase the range of the displacement
 
 // For skinned mesh
@@ -134,6 +164,38 @@ void main()
 		// Leaving ONLY rotation... 
 		vertNormal = matModelInvTrans * vec4(normalize(vNormal.xyz),1.0f);
 	
+		for ( int index = 0; index < NUMBEROFLIGHTS; index++ )
+		{	
+			// ********************************************************
+			// is light "on"
+			if ( theLights[index].param2.x == 0.0f )
+			{	// it's off
+				continue;
+			}
+
+
+			if(bHasNormalMap)
+			{
+				mat3 normalMatrix = mat3(matModel);
+				vec3 tan = normalize(normalMatrix * vTanXYZ.xyz);
+				vec3 norm = normalize(normalMatrix * vBiNormXYZ.xyz);
+				tan = normalize(tan - dot(tan, norm) * norm);
+				vec3 bitan = cross(norm, tan);
+
+
+				mat3 matTBN = transpose(mat3(tan, bitan, norm));    
+				lightPointTangent.xyz = matTBN * theLights[index].position.xyz;
+				lightPointView.xyz  = matTBN * eyeLocation.xyz;
+				lightPointFrag.xyz  = matTBN * (vertPosWorld).xyz;			
+			}
+			else
+			{
+				lightPointTangent.xyz =  theLights[index].position.xyz;
+				lightPointView.xyz  = eyeLocation.xyz;
+				lightPointFrag.xyz  = vertPosWorld.xyz;			
+			}
+		}
+
 	}//if ( bIsASkinnedMesh )
 	
 	color2 = color;

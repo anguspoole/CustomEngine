@@ -360,6 +360,69 @@ DWORD WINAPI m_LoadModelFromFile_Ply5nLoader_ASYNC(PVOID pvParam)
 		drawInfo.pMeshData->pIndices[index + 1] = curElement.vertex_index_2;
 		drawInfo.pMeshData->pIndices[index + 2] = curElement.vertex_index_3;
 
+		//vertex co-ordinates
+		glm::vec3 pos0 = glm::vec3(drawInfo.pMeshData->pVertices[curElement.vertex_index_1].x,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_1].y,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_1].z);
+		glm::vec3 pos1 = glm::vec3(drawInfo.pMeshData->pVertices[curElement.vertex_index_2].x,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_2].y,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_2].z);
+		glm::vec3 pos2 = glm::vec3(drawInfo.pMeshData->pVertices[curElement.vertex_index_3].x,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_3].y,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_3].z);
+
+
+		glm::vec2 tex0 = glm::vec2(drawInfo.pMeshData->pVertices[curElement.vertex_index_1].u0,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_1].v0);
+		glm::vec2 tex1 = glm::vec2(drawInfo.pMeshData->pVertices[curElement.vertex_index_2].u0,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_2].v0);
+		glm::vec2 tex2 = glm::vec2(drawInfo.pMeshData->pVertices[curElement.vertex_index_3].u0,
+			drawInfo.pMeshData->pVertices[curElement.vertex_index_3].v0);
+
+		// Edges
+		glm::vec3 edge0 = pos1 - pos0;
+		glm::vec3 edge1 = pos2 - pos0;
+		glm::vec2 dTex0 = tex1 - tex0;
+		glm::vec2 dTex1 = tex2 - tex0;
+
+		float f = 1.0f / (dTex0.x * dTex1.y - dTex0.y * dTex1.x);
+
+		glm::vec3 tangent;
+		tangent.x = f * (dTex1.y * edge0.x - dTex0.y * edge1.x);
+		tangent.y = f * (dTex1.y * edge0.y - dTex0.y * edge1.y);
+		tangent.z = f * (dTex1.y * edge0.z - dTex0.y * edge1.z);
+		tangent = glm::normalize(tangent);
+
+		glm::vec3 bitangent;
+		bitangent.x = f * (-dTex1.x * edge0.x + dTex0.x * edge1.x);
+		bitangent.y = f * (-dTex1.x * edge0.y + dTex0.x * edge1.y);
+		bitangent.z = f * (-dTex1.x * edge0.z + dTex0.x * edge1.z);
+		bitangent = glm::normalize(bitangent);
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].tx = tangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].ty = tangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].tz = tangent.z;
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].bx = bitangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].by = bitangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_1].bz = bitangent.z;
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].tx = tangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].ty = tangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].tz = tangent.z;
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].bx = bitangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].by = bitangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_2].bz = bitangent.z;
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].tx = tangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].ty = tangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].tz = tangent.z;
+
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].bx = bitangent.x;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].by = bitangent.y;
+		drawInfo.pMeshData->pVertices[curElement.vertex_index_3].bz = bitangent.z;
+
 	}//for ( unsigned int index...
 
 	plyLoader.calcualteExtents();
@@ -794,21 +857,21 @@ bool cVAOMeshManager::m_LoadMeshInfo_Into_VAO(
 		(void*)offsetof(sVertex_xyz_rgba_n_uv2_bt_4Bones, u0));
 
 	// Add the other 4 things we now have in the Skinned Mesh vertex layout
-	//glEnableVertexAttribArray(vpos_vTanXYZ_Location);
-	//glVertexAttribPointer(vpos_vTanXYZ_Location  ,		// vTanXYZ
-				//		   4,					// vec4 
-				//		   GL_FLOAT, 
-				//		   GL_FALSE,
-	//                       sizeof(sVertex_xyz_rgba_n_uv2_bt_4Bones),	// size in bytes //sizeof(float) * 9,		// was 6 
-				//		   (void*) offsetof( sVertex_xyz_rgba_n_uv2_bt_4Bones, tx ) );
+	glEnableVertexAttribArray(vpos_vTanXYZ_Location);
+	glVertexAttribPointer(vpos_vTanXYZ_Location,		// vTanXYZ
+		4,					// vec4 
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(sVertex_xyz_rgba_n_uv2_bt_4Bones),	// size in bytes //sizeof(float) * 9,		// was 6 
+		(void*)offsetof(sVertex_xyz_rgba_n_uv2_bt_4Bones, tx));
 
-	//glEnableVertexAttribArray(vpos_vBiNormXYZ_Location );
-	//glVertexAttribPointer(vpos_vBiNormXYZ_Location   ,		// vBiNormXYZ
-				//		   4,								// vec4 
-				//		   GL_FLOAT, 
-				//		   GL_FALSE,
-	//                       sizeof(sVertex_xyz_rgba_n_uv2_bt_4Bones),	// size in bytes //sizeof(float) * 9,		// was 6 
-				//		   (void*) offsetof( sVertex_xyz_rgba_n_uv2_bt_4Bones, bx ) );
+	glEnableVertexAttribArray(vpos_vBiNormXYZ_Location);
+	glVertexAttribPointer(vpos_vBiNormXYZ_Location,		// vBiNormXYZ
+		4,								// vec4 
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(sVertex_xyz_rgba_n_uv2_bt_4Bones),	// size in bytes //sizeof(float) * 9,		// was 6 
+		(void*)offsetof(sVertex_xyz_rgba_n_uv2_bt_4Bones, bx));
 
 	glEnableVertexAttribArray(vpos_vBoneID_Location);
 	glVertexAttribPointer(vpos_vBoneID_Location,		// vBoneID
