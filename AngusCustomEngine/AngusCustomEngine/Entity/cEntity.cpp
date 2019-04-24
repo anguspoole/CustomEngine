@@ -1,4 +1,5 @@
 #include "cEntity.h"
+#include "../Global/globalParticle.h"
 #include <iostream>
 
 
@@ -53,6 +54,10 @@ void cEntity::UpdateHealthTimer(float dt)
 				newState.status = eEntityStatus::DEAD;
 				this->m_EntityMesh->pAniState->vecAnimationQueue.clear();
 				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+				glm::vec3 swordPos;
+				this->m_EntityPhysics->rigidBody->GetPosition(swordPos);
+				g_map_pParticleEmitters["Smoke01"]->UpdateParamsPosition(swordPos);
+				g_map_pParticleEmitters["Smoke01"]->Reset(true);
 			}
 		}
 		else if (this->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::PLAYER)
@@ -64,6 +69,10 @@ void cEntity::UpdateHealthTimer(float dt)
 				newState.status = eEntityStatus::DEAD;
 				this->m_EntityMesh->pAniState->vecAnimationQueue.clear();
 				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+				glm::vec3 swordPos;
+				this->m_EntityPhysics->rigidBody->GetPosition(swordPos);
+				g_map_pParticleEmitters["Smoke01"]->UpdateParamsPosition(swordPos);
+				g_map_pParticleEmitters["Smoke01"]->Reset(true);
 			}
 		}
 	}

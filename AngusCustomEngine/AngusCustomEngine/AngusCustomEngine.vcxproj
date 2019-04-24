@@ -203,6 +203,7 @@
     <ClInclude Include="Entity\cEntity.h" />
     <ClInclude Include="FrameBuffers\cFBO.h" />
     <ClInclude Include="Global\global.h" />
+    <ClInclude Include="Global\globalParticle.h" />
     <ClInclude Include="Global\gOpenGL.h" />
     <ClInclude Include="Global\mazeGlobals.h" />
     <ClInclude Include="Lighting\cLightHelper.h" />

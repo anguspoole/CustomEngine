@@ -18,6 +18,7 @@
 #include <sModelPoint.h>
 
 #include "gOpenGL.h"
+#include "globalParticle.h"
 
 #include "../Camera/cCamera.h"
 #include "../Meshes/sModelDrawInfo.h"
@@ -46,7 +47,6 @@ extern std::vector<cEntity*> enemyList;
 extern std::vector<cEntity*> globList;
 extern std::vector<cEntity*> paintList;
 
-extern std::map<std::string /*name*/, cParticleEmitter* > g_map_pParticleEmitters;
 //extern std::vector<cEntity*> vec_pObjectsToDraw;
 
 extern float timeRemaining;
