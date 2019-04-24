@@ -11,17 +11,19 @@ public:
 	cFBO() : 
 		ID(0), 
 		colourTexture_0_ID(0),
-		normalTexture_1_ID(0),
-		vertexWorldPos_2_ID(0),
-		vertexSpecular_3_ID(0),
+		colourTexture_1_ID(0),
+		normalTexture_2_ID(0),
+		vertexWorldPos_3_ID(0),
+		vertexSpecular_4_ID(0),
 		depthTexture_ID(0), 
 		width(-1), height(-1) {};
 
 	GLuint ID;						// = 0;
 	GLuint colourTexture_0_ID;		// = 0;
-	GLuint normalTexture_1_ID;	
-	GLuint vertexWorldPos_2_ID;
-	GLuint vertexSpecular_3_ID;
+	GLuint colourTexture_1_ID;		// = 1;
+	GLuint normalTexture_2_ID;	
+	GLuint vertexWorldPos_3_ID;
+	GLuint vertexSpecular_4_ID;
 
 //	GLuint TBDTexture_2_ID;
 //	GLuint TBDTexture_3_ID;

@@ -20,6 +20,7 @@ in vec4 vBoneWeight;
 
 
 out vec4 color;			// exit to fragment
+out vec4 color2;			// exit to fragment
 out vec4 vertPosWorld;	// "World space"
 out vec4 vertNormal;	// "Model space"
 out vec4 vertUV_x2;		// To the next shader stage
@@ -135,7 +136,7 @@ void main()
 	
 	}//if ( bIsASkinnedMesh )
 	
-	
+	color2 = color;
 }
 
 

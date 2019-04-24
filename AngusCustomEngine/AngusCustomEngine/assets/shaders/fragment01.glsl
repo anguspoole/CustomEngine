@@ -3,6 +3,7 @@
 
 // In from a previous stage (vertex shader)
 in vec4 color;			// in from the vertex shader
+in vec4 color2;			// in from the vertex shader
 in vec4 vertPosWorld;
 in vec4 vertNormal;		// "Model space" (only rotation)
 in vec4 vertUV_x2;		// Texture coordinates
@@ -45,8 +46,9 @@ uniform float ParticleImposterAlphaOverride;
 	// Vertex World Location #2
 // Or list them in the order that they will be used
 out vec4 finalOutputColour;			// GL_COLOR_ATTACHMENT0
-out vec4 finalOutputNormal;			// GL_COLOR_ATTACHMENT1
-out vec4 finalOutputVertWorldPos;	// GL_COLOR_ATTACHMENT2
+out vec4 finalOutputBrightColour;	// GL_COLOR_ATTACHMENT1
+out vec4 finalOutputNormal;			// GL_COLOR_ATTACHMENT2
+out vec4 finalOutputVertWorldPos;	// GL_COLOR_ATTACHMENT3
 
 //struct sOutput
 //{
@@ -109,13 +111,13 @@ uniform vec4 texBlendWeights[2];	// x is 0, y is 1, z is 2
 
 uniform float wholeObjectAlphaTransparency;
 
-uniform float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
-
+uniform bool horizontal;
 
 void main()
 {
 	// output black to all layers
 	finalOutputColour = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+	finalOutputBrightColour = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 	finalOutputNormal = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 	finalOutputVertWorldPos = vertPosWorld;
 
@@ -155,8 +157,7 @@ void main()
 		float step = 0.001f;
 		float size = 0.003f;
 
-		//float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
-		float weight[10] = float[] (0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+		float weight[10] = float[] (0.25, 0.2, 0.15, 0.125, 0.1, 0.05, 0.045, 0.04, 0.03, 0.01);
 			
 		vec2 tex_offset = 1.0 / textureSize(texPass1OutputTexture, 0); // gets size of single texel
 		
@@ -227,6 +228,19 @@ void main()
 //		return;	
 	}
 	
+	if(renderPassNumber == 5)
+	{
+		const float gamma = 2.2;
+		float exposure = 0.2;
+		vec3 hdrColor = texture(texPass1OutputTexture, vertUV_x2.st).rgb;      
+		vec3 bloomColor = texture(texPass1ReticleTexture, vertUV_x2.st).rgb;
+		hdrColor += bloomColor; // additive blending
+		// tone mapping
+		vec3 result = vec3(1.0) - exp(-hdrColor * exposure);
+		// also gamma correct while we're at it       
+		result = pow(result, vec3(1.0 / gamma));
+		finalOutputColour = vec4(result, 1.0);
+	}
 	
 	// We are in the 1st (main) pass
 
@@ -543,6 +557,12 @@ void main()
 			discard;
 		}
 	}
+	
+	float brightness = dot(finalOutputColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+	if(brightness > 1.0)
+		finalOutputBrightColour = vec4(finalOutputColour.rgb, 1.0);
+	else
+		finalOutputBrightColour = vec4(0.0, 0.0, 0.0, 1.0);
 	
 	// Particle imposter (smoke, fire, water, etc.)
 	if ( bIsParticleImposter ) 

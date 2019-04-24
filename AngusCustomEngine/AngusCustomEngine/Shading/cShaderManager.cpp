@@ -361,11 +361,58 @@ bool cShaderManager::createProgramFromFile(
 	return true;
 }
 
+bool cShaderManager::createProgramFromFile(std::string friendlyName, cShader & blurShader)
+{
+	std::string errorText = "";
+
+	blurShader.ID = glCreateShader(GL_FRAGMENT_SHADER);
+	blurShader.shaderType = cShader::FRAGMENT_SHADER;
+	if (!this->m_loadSourceFromFile(blurShader))
+	{
+		return false;
+	}//if ( ! this->m_loadSourceFromFile(...
+
+	if (!this->m_compileShaderFromSource(blurShader, errorText))
+	{
+		this->m_lastError = errorText;
+		return false;
+	}//if ( this->m_compileShaderFromSource(...
+
+
+	cShaderProgram curProgram;
+	curProgram.ID = glCreateProgram();
+
+	glAttachShader(curProgram.ID, blurShader.ID);
+	glLinkProgram(curProgram.ID);
+
+	// Was there a link error? 
+	errorText = "";
+	if (this->m_wasThereALinkError(curProgram.ID, errorText))
+	{
+		std::stringstream ssError;
+		ssError << "Shader program link error: ";
+		ssError << errorText;
+		this->m_lastError = ssError.str();
+		return false;
+	}
+
+	// At this point, shaders are compiled and linked into a program
+
+	curProgram.friendlyName = friendlyName;
+
+	// Add the shader to the map
+	this->m_ID_to_Shader[curProgram.ID] = curProgram;
+	// Save to other map, too
+	this->m_name_to_ID[curProgram.friendlyName] = curProgram.ID;
+
+	return true;
+}
+
 bool cShaderManager::createProgramFromFile(
 	std::string friendlyName,
 	cShader &vertexShad,
-	cShader &geomShad,
-	cShader &fragShader)
+	cShader &fragShader,
+	cShader &blurShader)
 {
 	std::string errorText = "";
 
@@ -387,21 +434,6 @@ bool cShaderManager::createProgramFromFile(
 		return false;
 	}//if ( this->m_compileShaderFromSource(...
 
-
-	geomShad.ID = glCreateShader(GL_GEOMETRY_SHADER);
-	geomShad.shaderType = cShader::GEOMETRY_SHADER;
-	if (!this->m_loadSourceFromFile(geomShad))
-	{
-		return false;
-	}//if ( ! this->m_loadSourceFromFile(...
-
-	if (!this->m_compileShaderFromSource(geomShad, errorText))
-	{
-		this->m_lastError = errorText;
-		return false;
-	}//if ( this->m_compileShaderFromSource(...
-
-
 	fragShader.ID = glCreateShader(GL_FRAGMENT_SHADER);
 	fragShader.shaderType = cShader::FRAGMENT_SHADER;
 	if (!this->m_loadSourceFromFile(fragShader))
@@ -415,13 +447,26 @@ bool cShaderManager::createProgramFromFile(
 		return false;
 	}//if ( this->m_compileShaderFromSource(...
 
+	blurShader.ID = glCreateShader(GL_FRAGMENT_SHADER);
+	blurShader.shaderType = cShader::FRAGMENT_SHADER;
+	if (!this->m_loadSourceFromFile(blurShader))
+	{
+		return false;
+	}//if ( ! this->m_loadSourceFromFile(...
+
+	if (!this->m_compileShaderFromSource(blurShader, errorText))
+	{
+		this->m_lastError = errorText;
+		return false;
+	}//if ( this->m_compileShaderFromSource(...
+
 
 	cShaderProgram curProgram;
 	curProgram.ID = glCreateProgram();
 
 	glAttachShader(curProgram.ID, vertexShad.ID);
-	glAttachShader(curProgram.ID, geomShad.ID);
 	glAttachShader(curProgram.ID, fragShader.ID);
+	glAttachShader(curProgram.ID, blurShader.ID);
 	glLinkProgram(curProgram.ID);
 
 	// Was there a link error? 
@@ -504,11 +549,53 @@ bool cShaderManager::createProgramFromSource(
 	return true;
 }
 
+bool cShaderManager::createProgramFromSource(std::string friendlyName, cShader & blurShader)
+{
+	std::string errorText = "";
+
+	blurShader.ID = glCreateShader(GL_FRAGMENT_SHADER);
+	blurShader.shaderType = cShader::FRAGMENT_SHADER;
+	if (!this->m_compileShaderFromSource(blurShader, errorText))
+	{
+		this->m_lastError = errorText;
+		return false;
+	}//if ( this->m_compileShaderFromSource(...
+
+
+	cShaderProgram curProgram;
+	curProgram.ID = glCreateProgram();
+
+	glAttachShader(curProgram.ID, blurShader.ID);
+	glLinkProgram(curProgram.ID);
+
+	// Was there a link error? 
+	errorText = "";
+	if (this->m_wasThereALinkError(curProgram.ID, errorText))
+	{
+		std::stringstream ssError;
+		ssError << "Shader program link error: ";
+		ssError << errorText;
+		this->m_lastError = ssError.str();
+		return false;
+	}
+
+	// At this point, shaders are compiled and linked into a program
+
+	curProgram.friendlyName = friendlyName;
+
+	// Add the shader to the map
+	this->m_ID_to_Shader[curProgram.ID] = curProgram;
+	// Save to other map, too
+	this->m_name_to_ID[curProgram.friendlyName] = curProgram.ID;
+
+	return true;
+}
+
 bool cShaderManager::createProgramFromSource(
 	std::string friendlyName,
 	cShader &vertexShad,
-	cShader &geomShad,
-	cShader &fragShader)
+	cShader &fragShader,
+	cShader &blurShader)
 {
 	std::string errorText = "";
 
@@ -517,14 +604,6 @@ bool cShaderManager::createProgramFromSource(
 	vertexShad.ID = glCreateShader(GL_VERTEX_SHADER);
 	vertexShad.shaderType = cShader::VERTEX_SHADER;
 	if (!this->m_compileShaderFromSource(vertexShad, errorText))
-	{
-		this->m_lastError = errorText;
-		return false;
-	}//if ( this->m_compileShaderFromSource(...
-
-	geomShad.ID = glCreateShader(GL_GEOMETRY_SHADER);
-	geomShad.shaderType = cShader::GEOMETRY_SHADER;
-	if (!this->m_compileShaderFromSource(geomShad, errorText))
 	{
 		this->m_lastError = errorText;
 		return false;
@@ -539,12 +618,21 @@ bool cShaderManager::createProgramFromSource(
 	}//if ( this->m_compileShaderFromSource(...
 
 
+	blurShader.ID = glCreateShader(GL_FRAGMENT_SHADER);
+	blurShader.shaderType = cShader::FRAGMENT_SHADER;
+	if (!this->m_compileShaderFromSource(blurShader, errorText))
+	{
+		this->m_lastError = errorText;
+		return false;
+	}//if ( this->m_compileShaderFromSource(...
+
+
 	cShaderProgram curProgram;
 	curProgram.ID = glCreateProgram();
 
 	glAttachShader(curProgram.ID, vertexShad.ID);
-	glAttachShader(curProgram.ID, geomShad.ID);
 	glAttachShader(curProgram.ID, fragShader.ID);
+	glAttachShader(curProgram.ID, blurShader.ID);
 	glLinkProgram(curProgram.ID);
 
 	// Was there a link error? 

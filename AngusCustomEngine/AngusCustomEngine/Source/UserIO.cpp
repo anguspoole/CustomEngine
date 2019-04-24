@@ -273,7 +273,7 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			{
 				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
 				force.y = vel.y;
-				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
 				newState.name = "Run";
@@ -283,7 +283,7 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			{
 				glm::vec3 force = glm::vec4(0.0f, 0.0f, movespeed, 1.0f);
 				force.y = vel.y;
-				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, 1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 matVelRotation2 = glm::rotate(matVelRotation, -1.5f, glm::vec3(0.0f, 1.0f, 0.0f));
 				player->m_EntityPhysics->rigidBody->SetOrientation(matVelRotation2);
 				player->m_EntityPhysics->rigidBody->SetVelocity(force);
 				newState.name = "Run";

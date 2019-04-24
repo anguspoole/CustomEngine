@@ -63,19 +63,29 @@ public:
 		cShader &fragShader);
 
 	bool createProgramFromFile(std::string friendlyName,
+		cShader &blurShader);
+
+	bool createProgramFromFile(std::string friendlyName,
 		cShader &vertexShad,
-		cShader &geomShad,
-		cShader &fragShader);
+		cShader &fragShader,
+		cShader &blurShader);
 
 	bool createProgramFromSource(std::string friendlyName,
 		cShader &vertexShad,
 		cShader &fragShader);
 
 	bool createProgramFromSource(std::string friendlyName,
+		cShader &blurShader);
+
+	/*bool createProgramFromSource(std::string friendlyName,
 		cShader &vertexShad,
 		cShader &geomShad,
-		cShader &fragShader);
+		cShader &fragShader);*/
 
+	bool createProgramFromSource(std::string friendlyName,
+		cShader &vertexShad,
+		cShader &fragShader,
+		cShader &blurShader);
 
 	void setBasePath(std::string basepath);
 	unsigned int getIDFromFriendlyName(std::string friendlyName);

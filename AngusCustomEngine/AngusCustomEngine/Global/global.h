@@ -26,16 +26,19 @@
 
 #include "../TextureManager/cBasicTextureManager.h"
 #include "../Lighting/cLightManager.h"
+#include "../Shading/cShaderManager.h"
 
 #include "../Entity/cEntity.h"
 #include "../Meshes/AssimpFBX/cAnimationState.h"
 
 extern cCamera* g_Camera;
 extern cCamera* player_Camera;
+extern cCamera* pass_Camera;
 extern cCamera* currentCamera;
 extern cVAOMeshManager* g_VAOMeshManager;
 extern cBasicTextureManager* g_TheTextureManager;
 extern cLightManager* g_LightManager;
+extern cShaderManager* pTheShaderManager;
 
 extern cEntity* player;
 extern std::vector<cEntity*> enemyList;
@@ -103,6 +106,11 @@ extern bool animationComplete; //boolean for if current animation is done
 // The main Frame Buffer Object (off screen rendering)
 // (You can create one of these for each off screen rendered thing, if you'd like)
 extern cFBO* g_pFBOMain;
+//extern cFBO* g_pFBOMid;
+extern cFBO* g_pFBOBlurA;
+extern cFBO* g_pFBOBlurB;
+extern cFBO* g_pFBOFinal;
+
 
 extern double deltaTime;
 extern std::map<std::string, float> mapAnimToDuration;
@@ -114,5 +122,7 @@ void CheckForHits();
 bool CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon);
 void SpawnGlob(cEntity* obj, std::vector<cEntity*>& vec_pObjectsToDraw, GLuint program);
 void CheckForGlobHits();
+
+void makeBlur(GLuint programID, cFBO* fboA, cFBO* fboB, GLuint program);
 
 #endif

@@ -16,9 +16,10 @@ bool cFBO::reset(int width, int height, std::string &error)
 bool cFBO::shutdown(void)
 {
 	glDeleteTextures( 1, &(this->colourTexture_0_ID) );
-	glDeleteTextures( 1, &(this->normalTexture_1_ID) );
-	glDeleteTextures( 1, &(this->vertexWorldPos_2_ID) );
-	glDeleteTextures( 1, &(this->vertexSpecular_3_ID) );
+	glDeleteTextures( 1, &(this->colourTexture_1_ID) );
+	glDeleteTextures( 1, &(this->normalTexture_2_ID) );
+	glDeleteTextures( 1, &(this->vertexWorldPos_3_ID) );
+	glDeleteTextures( 1, &(this->vertexSpecular_4_ID) );
 	glDeleteTextures( 1, &(this->depthTexture_ID) );
 
 	glDeleteFramebuffers( 1, &(this->ID) );
@@ -50,9 +51,22 @@ bool cFBO::init( int width, int height, std::string &error )
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 //***************************************************************
 //************************************************************
+	// Create the colour buffer (texture)
+	glGenTextures(1, &(this->colourTexture_1_ID));		//g_FBO_colourTexture
+	glBindTexture(GL_TEXTURE_2D, this->colourTexture_1_ID);
+
+	//	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8,		// 8 bits per colour
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F,		// 8 bits per colour
+		this->width,				// g_FBO_SizeInPixes
+		this->height);			// g_FBO_SizeInPixes
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//***************************************************************
+//************************************************************
 // Create the NORMAL buffer (texture)
-	glGenTextures(1, &( this->normalTexture_1_ID ));		//g_FBO_colourTexture
-	glBindTexture(GL_TEXTURE_2D, this->normalTexture_1_ID);
+	glGenTextures(1, &( this->normalTexture_2_ID ));		//g_FBO_colourTexture
+	glBindTexture(GL_TEXTURE_2D, this->normalTexture_2_ID);
 
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F,		// 32 bits per "colour"
 				   this->width,				// g_FBO_SizeInPixes
@@ -63,8 +77,8 @@ bool cFBO::init( int width, int height, std::string &error )
 	//***************************************************************
 //************************************************************
 // Create the Vertex World position buffer (texture)
-	glGenTextures(1, &( this->vertexWorldPos_2_ID ));		
-	glBindTexture(GL_TEXTURE_2D, this->vertexWorldPos_2_ID);
+	glGenTextures(1, &( this->vertexWorldPos_3_ID ));		
+	glBindTexture(GL_TEXTURE_2D, this->vertexWorldPos_3_ID);
 
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F,		// 32 bits per "colour"
 				   this->width,				// g_FBO_SizeInPixes
@@ -76,8 +90,8 @@ bool cFBO::init( int width, int height, std::string &error )
 
 //************************************************************
 // Create the Vertex World Specular (texture)
-	glGenTextures(1, &( this->vertexSpecular_3_ID ));		
-	glBindTexture(GL_TEXTURE_2D, this->vertexSpecular_3_ID);
+	glGenTextures(1, &( this->vertexSpecular_4_ID ));		
+	glBindTexture(GL_TEXTURE_2D, this->vertexSpecular_4_ID);
 
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32F,		// 32 bits per "colour"
 //	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8,		// 32 bits per "colour"
@@ -116,16 +130,20 @@ bool cFBO::init( int width, int height, std::string &error )
 						 this->colourTexture_0_ID, 0);
 
 	glFramebufferTexture(GL_FRAMEBUFFER,
-						 GL_COLOR_ATTACHMENT1,			// Normal goes to #1
-						 this->normalTexture_1_ID, 0);
+						GL_COLOR_ATTACHMENT1,			// Second Colour goes to #1
+						this->colourTexture_1_ID, 0);
 
 	glFramebufferTexture(GL_FRAMEBUFFER,
-						 GL_COLOR_ATTACHMENT2,			// Vertex world position #2
-						 this->vertexWorldPos_2_ID, 0);
+						 GL_COLOR_ATTACHMENT2,			// Normal goes to #2
+						 this->normalTexture_2_ID, 0);
 
 	glFramebufferTexture(GL_FRAMEBUFFER,
-						 GL_COLOR_ATTACHMENT3,			// Specular #3
-						 this->vertexSpecular_3_ID, 0);
+						 GL_COLOR_ATTACHMENT3,			// Vertex world position #3
+						 this->vertexWorldPos_3_ID, 0);
+
+	glFramebufferTexture(GL_FRAMEBUFFER,
+						 GL_COLOR_ATTACHMENT4,			// Specular #4
+						 this->vertexSpecular_4_ID, 0);
 
 //	glFramebufferTexture(GL_FRAMEBUFFER,
 //						 GL_DEPTH_ATTACHMENT,
@@ -134,14 +152,15 @@ bool cFBO::init( int width, int height, std::string &error )
 						 GL_DEPTH_STENCIL_ATTACHMENT,
 						 this->depthTexture_ID, 0);
 
-	static const GLenum draw_bufers[] = 
+	static const GLenum draw_buffers[] = 
 	{ 
 		GL_COLOR_ATTACHMENT0, 
 		GL_COLOR_ATTACHMENT1, 
 		GL_COLOR_ATTACHMENT2,
-		GL_COLOR_ATTACHMENT3
+		GL_COLOR_ATTACHMENT3,
+		GL_COLOR_ATTACHMENT4
 	};
-	glDrawBuffers(4, draw_bufers);		// There are 4 outputs now
+	glDrawBuffers(5, draw_buffers);		// There are 4 outputs now
 
 	// ***************************************************************
 
@@ -193,9 +212,10 @@ void cFBO::clearBuffers(bool bClearColour, bool bClearDepth)
 	if ( bClearColour )
 	{
 		glClearBufferfv(GL_COLOR, 0, &zero);		// Colour
-		glClearBufferfv(GL_COLOR, 1, &zero);		// Normal 
-		glClearBufferfv(GL_COLOR, 2, &zero);		// World position
-		glClearBufferfv(GL_COLOR, 3, &zero);		// Specular
+		glClearBufferfv(GL_COLOR, 1, &zero);		// Colour
+		glClearBufferfv(GL_COLOR, 2, &zero);		// Normal 
+		glClearBufferfv(GL_COLOR, 3, &zero);		// World position
+		glClearBufferfv(GL_COLOR, 4, &zero);		// Specular
 	}
 	if ( bClearDepth )
 	{

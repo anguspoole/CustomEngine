@@ -41,6 +41,7 @@ GLFWwindow* InitWindow(int width, int height, const char* title)
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCursorEnterCallback(window, cursor_enter_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetWindowSizeCallback(window, window_size_callback);
 
 
 	glfwMakeContextCurrent(window);

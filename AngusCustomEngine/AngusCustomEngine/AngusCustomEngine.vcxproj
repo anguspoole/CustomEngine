@@ -179,6 +179,7 @@
     <ClCompile Include="Ply\CPlyFile5nt_planarUV.cpp" />
     <ClCompile Include="Ply\CStringHelper.cpp" />
     <ClCompile Include="Ply\CVector3f.cpp" />
+    <ClCompile Include="Shading\Blur.cpp" />
     <ClCompile Include="Shading\cShader.cpp" />
     <ClCompile Include="Shading\cShaderManager.cpp" />
     <ClCompile Include="Source\AbstractPhysics.cpp" />

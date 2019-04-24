@@ -43,16 +43,71 @@ std::string attackAnimation = "";
 
 // This is to change the full screen FBO objects when the window changes size
 // See: http://www.glfw.org/docs/latest/window_guide.html#window_size
-void window_size_callback(GLFWwindow* window, int width, int height, cFBO* fbo)
+void window_size_callback(GLFWwindow* window, int width, int height)
 {
 	// If no FBO has been made, return
-	if (fbo)
+	if (g_pFBOMain)
 	{
-		if ((fbo->width != width) || (fbo->height != height))
+		if ((g_pFBOMain->width != width) || (g_pFBOMain->height != height))
 		{
 			// Window size has changed, so resize the offscreen frame buffer object
 			std::string error;
-			if (!fbo->reset(width, height, error))
+			if (!g_pFBOMain->reset(width, height, error))
+			{
+				std::cout << "In window_size_callback(), the FBO.reset() call returned an error:" << std::endl;
+				std::cout << "\t" << error << std::endl;
+			}
+			else
+			{
+				std::cout << "Offscreen FBO now: " << width << " x " << height << std::endl;
+			}
+		}
+	}
+
+
+	if (g_pFBOBlurA)
+	{
+		if ((g_pFBOBlurA->width != width) || (g_pFBOBlurA->height != height))
+		{
+			// Window size has changed, so resize the offscreen frame buffer object
+			std::string error;
+			if (!g_pFBOBlurA->reset(width, height, error))
+			{
+				std::cout << "In window_size_callback(), the FBO.reset() call returned an error:" << std::endl;
+				std::cout << "\t" << error << std::endl;
+			}
+			else
+			{
+				std::cout << "Offscreen FBO now: " << width << " x " << height << std::endl;
+			}
+		}
+	}
+
+	if (g_pFBOBlurB)
+	{
+		if ((g_pFBOBlurB->width != width) || (g_pFBOBlurB->height != height))
+		{
+			// Window size has changed, so resize the offscreen frame buffer object
+			std::string error;
+			if (!g_pFBOBlurB->reset(width, height, error))
+			{
+				std::cout << "In window_size_callback(), the FBO.reset() call returned an error:" << std::endl;
+				std::cout << "\t" << error << std::endl;
+			}
+			else
+			{
+				std::cout << "Offscreen FBO now: " << width << " x " << height << std::endl;
+			}
+		}
+	}
+
+	if (g_pFBOFinal)
+	{
+		if ((g_pFBOFinal->width != width) || (g_pFBOFinal->height != height))
+		{
+			// Window size has changed, so resize the offscreen frame buffer object
+			std::string error;
+			if (!g_pFBOFinal->reset(width, height, error))
 			{
 				std::cout << "In window_size_callback(), the FBO.reset() call returned an error:" << std::endl;
 				std::cout << "\t" << error << std::endl;
@@ -127,7 +182,10 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 
 		// Connect the specific texture to THIS texture unit
 //		glBindTexture( GL_TEXTURE_2D, g_FBO_colourTexture );
-		glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+		if(RenderPassNumber == 1)
+			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_1_ID);
+		else
+			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
 		// Now pick to read from the normal (output from the 1st pass):
 //		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->normalTexture_1_ID );
 //		glBindTexture( GL_TEXTURE_2D, ::g_pFBOMain->depthTexture_ID );
@@ -158,23 +216,49 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 
 				glBindTexture(GL_TEXTURE_2D, texID);
 
-				glUniform1i(texPass1OutputTexture_UniLoc, 0);
+				if (RenderPassNumber == 1)
+					glUniform1i(texPass1OutputTexture_UniLoc, 1);
+				else
+					glUniform1i(texPass1OutputTexture_UniLoc, 0);
 			}
 			else
 			{
-				glActiveTexture(GL_TEXTURE0 + 0);
-
-				glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+				if (RenderPassNumber == 1)
+				{
+					glActiveTexture(GL_TEXTURE0 + 0);
+					glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_1_ID);
+				}
+				else
+				{
+					glActiveTexture(GL_TEXTURE0 + 0);
+					glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+				}
 
 				glUniform1i(texPass1ReticleTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
 			}
 		}
 		else
 		{
-			glActiveTexture(GL_TEXTURE0 + 0);
 
-			glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+			if (RenderPassNumber == 1)
+			{
+				glActiveTexture(GL_TEXTURE0 + 0);
+				glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_1_ID);
+			}
+			else if (RenderPassNumber != 5)
+			{
+				glActiveTexture(GL_TEXTURE0 + 0);
+				glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+			}
 
+			if (RenderPassNumber == 5)
+			{
+				glActiveTexture(GL_TEXTURE0 + 0);
+				glBindTexture(GL_TEXTURE_2D, g_pFBOMain->colourTexture_0_ID);
+
+				glActiveTexture(GL_TEXTURE0 + FBO_Texture_Unit_Michael_Picked);
+				glBindTexture(GL_TEXTURE_2D, fbo->colourTexture_0_ID);
+			}
 			glUniform1i(texPass1ReticleTexture_UniLoc, FBO_Texture_Unit_Michael_Picked);
 		}
 
@@ -733,6 +817,11 @@ vecOffsets);                 // local offset for each bone
 		glm::mat4 matWorldParent = glm::mat4(1.0f);
 		DrawObject(pCurrentEntity->vec_pChildrenEntities[childEntityIndex], matWorldParent, shaderProgramID, RenderPassNumber, fbo);
 	}
+
+	/*if (fbo != NULL)
+	{
+		makeBlur(shaderProgramID, fbo);
+	}*/
 
 	return;
 }//void DrawObject(void)

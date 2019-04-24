@@ -567,6 +567,8 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 	}
 }
 
+int splatterCount = 1;
+
 void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos)
 {
 	{	// This sphere is the tiny little debug sphere
@@ -575,9 +577,9 @@ void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos
 		pGlob->m_EntityMesh->setSpecularPower(40.0f);
 		pGlob->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
-		pGlob->friendlyName = "Glob" + std::to_string(globList.size());
+		pGlob->friendlyName = "Splatter" + std::to_string(splatterCount);
 		float scale = 1.0f;
-		pGlob->m_EntityPhysics->position = startPos;
+		pGlob->m_EntityPhysics->position = startPos + glm::vec3(0.0f, 0.001f * splatterCount, 0.0f);
 		pGlob->m_EntityPhysics->nonUniformScale = glm::vec3(scale, 0.01f, scale);
 		pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("simpleplane0.ply"));
 		//pGlob->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
@@ -607,6 +609,7 @@ void LoadPaintCube(std::vector<cEntity*> &vec_pObjectsToDraw, glm::vec3 startPos
 		}
 
 		vec_pObjectsToDraw.push_back(pGlob);
+		splatterCount++;
 	}
 }
 
@@ -679,7 +682,61 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		p2SidedQuad->m_EntityMesh->setSpecularPower(100.0f);
 		p2SidedQuad->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
-		p2SidedQuad->friendlyName = "2SidedQuad";
+		p2SidedQuad->friendlyName = "2SidedQuadBase";
+		p2SidedQuad->m_EntityPhysics->setUniformScale(10.0f);
+		p2SidedQuad->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
+		p2SidedQuad->m_EntityMesh->bIsWireFrame = false;
+		//pDebugSphere->m_EntityMesh->bDontLight = false;
+		p2SidedQuad->m_EntityMesh->bIsVisible = false;
+		p2SidedQuad->m_EntityMesh->bUseVertexColour = false;
+
+		vec_pObjectsToDraw.push_back(p2SidedQuad);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* p2SidedQuad = new cEntity();
+		p2SidedQuad->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		p2SidedQuad->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
+		p2SidedQuad->m_EntityMesh->setSpecularPower(100.0f);
+		p2SidedQuad->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		p2SidedQuad->friendlyName = "2SidedQuadFinal";
+		p2SidedQuad->m_EntityPhysics->setUniformScale(10.0f);
+		p2SidedQuad->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
+		p2SidedQuad->m_EntityMesh->bIsWireFrame = false;
+		//pDebugSphere->m_EntityMesh->bDontLight = false;
+		p2SidedQuad->m_EntityMesh->bIsVisible = false;
+		p2SidedQuad->m_EntityMesh->bUseVertexColour = false;
+
+		vec_pObjectsToDraw.push_back(p2SidedQuad);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* p2SidedQuad = new cEntity();
+		p2SidedQuad->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		p2SidedQuad->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
+		p2SidedQuad->m_EntityMesh->setSpecularPower(100.0f);
+		p2SidedQuad->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		p2SidedQuad->friendlyName = "2SidedQuadBloomA";
+		p2SidedQuad->m_EntityPhysics->setUniformScale(10.0f);
+		p2SidedQuad->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
+		p2SidedQuad->m_EntityMesh->bIsWireFrame = false;
+		//pDebugSphere->m_EntityMesh->bDontLight = false;
+		p2SidedQuad->m_EntityMesh->bIsVisible = false;
+		p2SidedQuad->m_EntityMesh->bUseVertexColour = false;
+
+		vec_pObjectsToDraw.push_back(p2SidedQuad);
+	}
+
+	{	// This sphere is the tiny little debug sphere
+		cEntity* p2SidedQuad = new cEntity();
+		p2SidedQuad->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		p2SidedQuad->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 0.0f));
+		p2SidedQuad->m_EntityMesh->setSpecularPower(100.0f);
+		p2SidedQuad->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
+
+		p2SidedQuad->friendlyName = "2SidedQuadBloomB";
 		p2SidedQuad->m_EntityPhysics->setUniformScale(10.0f);
 		p2SidedQuad->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("1x1_2Tri_Quad_2_Sided_xyz_n_uv.ply"));
 		p2SidedQuad->m_EntityMesh->bIsWireFrame = false;
@@ -693,7 +750,7 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 	{	// This sphere is the tiny little debug sphere
 		cEntity* pKatana = new cEntity();
 		pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(1.0f, 0.0f, 0.0f));
-		pKatana->m_EntityMesh->setSpecularPower(0.3f);
+		pKatana->m_EntityMesh->setSpecularPower(0.1f);
 		pKatana->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
 		pKatana->friendlyName = "Katana";
