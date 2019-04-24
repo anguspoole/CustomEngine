@@ -48,10 +48,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 			//}
 			resetHackTime(player);
 		}
-		glm::vec3 swordPos;
-		player->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody->GetPosition(swordPos);
-		g_map_pParticleEmitters["Smoke01"]->UpdateParamsPosition(swordPos);
-		g_map_pParticleEmitters["Smoke01"]->Reset(true);
+		//glm::vec3 swordPos;
+		//player->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody->GetPosition(swordPos);
+		//g_map_pParticleEmitters["Smoke01"]->UpdateParamsPosition(swordPos);
+		//g_map_pParticleEmitters["Smoke01"]->Reset(true);
 	}
 	return;
 }

@@ -19,6 +19,7 @@ void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* p
 
 	for (int i = 0; i < aiEntities.size(); i++)
 	{
+		CheckForPlayerHit(player, aiEntities[i]->vec_pChildrenEntities[0], aiEntities[i]);
 		if (CheckForHits(aiEntities[i], player, katana))
 		{
 			continue;

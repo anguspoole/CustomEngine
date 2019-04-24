@@ -109,6 +109,46 @@ bool CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon)
 	return false;
 }
 
+bool CheckForPlayerHit(cEntity* player, cEntity* weapon, cEntity* enemy)
+{
+	//gPhysicsWorld->Update
+
+	if (weapon->m_EntityPhysics->rigidBody->GetHitStatus())
+	{
+		if (player->m_EntityPhysics->rigidBody->GetHitStatus())
+		{
+			if (player->healthTimer < 0.001f)
+			{
+				if (player->status != eEntityStatus::TAKING_DAMAGE && player->status != eEntityStatus::DEAD)
+				{
+					if (enemy->status == eEntityStatus::ATTACKING)
+					{
+
+						float timer = player->m_EntityMesh->pSimpleSkinnedMesh->GetDuration("Hit");
+						player->healthTimer = timer * 2.0f;
+
+						cAnimationState::sStateDetails newState;
+						newState.name = "Hit";
+						newState.status = eEntityStatus::TAKING_DAMAGE;
+
+						player->health -= 10.0f;
+
+						player->m_EntityMesh->pAniState->vecAnimationQueue.clear();
+						player->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+						resetHackTime(player);
+						return true;
+					}
+					else
+					{
+						player->m_EntityPhysics->rigidBody->SetHitStatus(false);
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void SpawnGlob(cEntity* obj, std::vector<cEntity*>& vec_pObjectsToDraw, GLuint program)
 {
 	glm::mat4 transform;

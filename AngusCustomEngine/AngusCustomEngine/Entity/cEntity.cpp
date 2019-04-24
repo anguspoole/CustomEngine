@@ -55,5 +55,16 @@ void cEntity::UpdateHealthTimer(float dt)
 				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
 			}
 		}
+		else if (this->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::PLAYER)
+		{
+			if (this->status != eEntityStatus::DEAD)
+			{
+				cAnimationState::sStateDetails newState;
+				newState.name = "Death";
+				newState.status = eEntityStatus::DEAD;
+				this->m_EntityMesh->pAniState->vecAnimationQueue.clear();
+				this->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+			}
+		}
 	}
 }

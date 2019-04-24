@@ -200,6 +200,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Walk", "assets/modelsFBX/kachujin_Walking(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Run", "assets/modelsFBX/kachujin_Running(2013).FBX");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Stab-Attack", "assets/modelsFBX/kachujin_StabbingM(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Hit", "assets/modelsFBX/kachujin_Hit(2013).fbx");
+	::g_pRPGSkinnedMesh->LoadMeshAnimation("Death", "assets/modelsFBX/kachujin_Death(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Backflip", "assets/modelsFBX/kachujin_Backflip(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Frontflip", "assets/modelsFBX/kachujin_Running_Forward_Flip(2013).fbx");
 	::g_pRPGSkinnedMesh->LoadMeshAnimation("Strafe-R", "assets/modelsFBX/kachujin_Left_Strafe(2013).FBX");
@@ -247,6 +249,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			pTestSM->m_EntityMesh->setSpecularColour(glm::vec3(0.2f, 0.2f, 0.2f));
 			pTestSM->m_EntityMesh->bUseVertexColour = false;
 			pTestSM->friendlyName = "Player";
+			pTestSM->health = 50.0f;
 			//pTestSM->m_EntityPhysics->position = glm::vec3(5.0f, 0.0f, 5.0f);
 			pTestSM->m_EntityPhysics->position = config.RigidBodyDefs[c].Position;
 			float scale = (0.05f);
@@ -281,7 +284,8 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
+			//makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYER);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
@@ -449,7 +453,8 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-			glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * weaponScale);
+			//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * weaponScale);
+			glm::vec3 extents = glm::vec3(1.0f, 1.0f, 7.0f);
 
 			//makeCapsule(pKatana, katanaDef, 1.0f * weaponScale, 4.0f * weaponScale);
 			makeCylinder(pKatana, katanaDef, extents);
@@ -463,6 +468,11 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			pTestSM->vec_pChildrenEntities.push_back(pKatana);
 
 			gPhysicsWorld->DisableCollision(pTestSM->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
+
+			for (int i = 0; i < enemyList.size(); i++)
+			{
+				gPhysicsWorld->DisableCollision(enemyList[i]->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
+			}
 
 			//vec_pObjectsToDraw.push_back(pKatana);
 		}
@@ -630,6 +640,14 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 
 		//player->vec_pChildrenEntities.push_back(pGlob);
 		globList.push_back(pGlob);
+
+		gPhysicsWorld->DisableCollision(pGlob->m_EntityPhysics->rigidBody, player->m_EntityPhysics->rigidBody);
+		gPhysicsWorld->DisableCollision(pGlob->m_EntityPhysics->rigidBody, player->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody);
+		for (int i = 0; i < enemyList.size(); i++)
+		{
+			gPhysicsWorld->DisableCollision(pGlob->m_EntityPhysics->rigidBody, enemyList[i]->m_EntityPhysics->rigidBody);
+			gPhysicsWorld->DisableCollision(pGlob->m_EntityPhysics->rigidBody, enemyList[i]->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody);
+		}
 
 		vec_pObjectsToDraw.push_back(pGlob);
 	}
@@ -853,7 +871,8 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
+		//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
+		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 13.0f);
 
 		//makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
 		makeCylinder(pKatana, katanaDef, extents);

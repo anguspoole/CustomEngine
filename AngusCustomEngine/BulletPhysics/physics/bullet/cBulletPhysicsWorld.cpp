@@ -40,6 +40,18 @@ namespace nPhysics
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
 		}
+		else if (body0->GetEntityType() == eEntityType::PLAYER && body1->GetEntityType() == eEntityType::ENEMYWEAPON)
+		{
+			//std::cout << "hit1" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
+		else if (body1->GetEntityType() == eEntityType::PLAYER && body0->GetEntityType() == eEntityType::ENEMYWEAPON)
+		{
+			//std::cout << "hit0" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
 		else if (body0->GetEntityType() == eEntityType::PAINTGLOB && body1->GetEntityType() == eEntityType::ENVIRONMENT)
 		{
 			body0->SetHitStatus(true);
