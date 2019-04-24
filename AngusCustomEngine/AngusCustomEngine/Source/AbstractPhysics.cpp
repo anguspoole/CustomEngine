@@ -479,7 +479,6 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 			if (std::strcmp(config.RigidShapeTypes[c].c_str(), "Box") == 0)
 			{
 				cEntity * testObj = new cEntity();
-				testObj->m_EntityPhysics->setUniformScale(config.RigidBodyDefs[c].Mass);
 				testObj->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("cube_flat_shaded_xyz_n_uv.ply"));
 				//testObj->friendlyName = "box" + std::to_string(boxCount);
 				testObj->friendlyName = config.RigidBodyDefs[c].Name;
@@ -497,6 +496,10 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				testObj->m_EntityMesh->setSpecularPower(100.0f);
 				testObj->m_EntityMesh->setSpecularColour(glm::vec3(1.000f, 0.766f, 0.336f));
 
+				glm::vec3 rotationValues = config.RigidBodyDefs[c].Orientation;
+				glm::quat qRotation = glm::quat(glm::vec3(rotationValues.x, rotationValues.y, rotationValues.z));
+				glm::mat4 rotation = glm::toMat4(qRotation);
+
 				sTextureInfo stone;
 				stone.name = "rock.bmp";
 				stone.strength = 1.0f;
@@ -506,7 +509,8 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 
 				vec_pObjectsToDraw.push_back(testObj);
 				//sphereList.push_back(testObj);
-				glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Mass);
+				glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Extents);
+				testObj->m_EntityPhysics->nonUniformScale = extents;
 				makeBox(testObj, config.RigidBodyDefs[c], extents);
 
 				//if (boxCount == 0)

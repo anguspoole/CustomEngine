@@ -14,6 +14,7 @@
 
 #include "../Global/global.h"
 #include "../Global/gOpenGL.h"
+#include "../Global/mazeGlobals.h"
 #include "../Shading/cShaderManager.h"
 #include "../Lighting/cLightHelper.h"
 #include "../AI/AIController.h"
@@ -48,6 +49,10 @@ cFBO* g_pFBOFinal;
 double deltaTime = 0.0f;
 
 float timeRemaining = 100.0f;
+
+int mazeWidth = 30;
+int mazeHeight = 30;
+cMazeMaker* maze;
 
 // For the particle emitter examples
 void setUpParticleEmitters(void);							// in LoadModels.cpp

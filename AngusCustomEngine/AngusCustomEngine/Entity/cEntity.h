@@ -32,6 +32,9 @@ public:
 
 	bool spray = true;
 
+	int mazeX = 0;
+	int mazeZ = 0;
+
 	void Update(double deltaTime);
 	void UpdateHealthTimer(float dt);
 

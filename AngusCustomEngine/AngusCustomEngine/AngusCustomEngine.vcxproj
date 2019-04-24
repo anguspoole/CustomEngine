@@ -165,6 +165,7 @@
     <ClCompile Include="Lighting\cLightManager.cpp" />
     <ClCompile Include="load\jsoncpp.cpp" />
     <ClCompile Include="load\nLoad.cpp" />
+    <ClCompile Include="Maze\cMazeMaker.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAnimationState.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic.cpp" />
     <ClCompile Include="Meshes\AssimpFBX\cAssimpBasic_Imp.cpp" />
@@ -203,12 +204,14 @@
     <ClInclude Include="FrameBuffers\cFBO.h" />
     <ClInclude Include="Global\global.h" />
     <ClInclude Include="Global\gOpenGL.h" />
+    <ClInclude Include="Global\mazeGlobals.h" />
     <ClInclude Include="Lighting\cLightHelper.h" />
     <ClInclude Include="Lighting\cLightManager.h" />
     <ClInclude Include="load\json\json-forwards.h" />
     <ClInclude Include="load\json\json.h" />
     <ClInclude Include="load\nLoad.h" />
     <ClInclude Include="load\sConfig.h" />
+    <ClInclude Include="Maze\cMazeMaker.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAnimationState.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic.h" />
     <ClInclude Include="Meshes\AssimpFBX\cAssimpBasic_Imp.h" />

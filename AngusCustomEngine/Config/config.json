@@ -413,39 +413,65 @@
           "Name": "plane4"
         }
       ]
-    } //,
-    //{
-    //  "Boxes": [
-    //    {
-    //      "Type": "Simple",
-    //      "Shape": "Box",
-    //      "Mass": 2.0,
-    //      "Position.x": 3.0,
-    //      "Position.y": 10.0,
-    //      "Position.z": 4.5,
-    //      "Velocity.x": 0.0,
-    //      "Velocity.y": 0.0,
-    //      "Velocity.z": 0.0,
-    //      "Orientation.x": 0.0,
-    //      "Orientation.y": 0.0,
-    //      "Orientation.z": 0.0
-    //    },
-    //    {
-    //      "Type": "Simple",
-    //      "Shape": "Box",
-    //      "Mass": 1.0,
-    //      "Position.x": -7.0,
-    //      "Position.y": 6.0,
-    //      "Position.z": -5.5,
-    //      "Velocity.x": 0.0,
-    //      "Velocity.y": 0.0,
-    //      "Velocity.z": 0.0,
-    //      "Orientation.x": 0.0,
-    //      "Orientation.y": 0.0,
-    //      "Orientation.z": 0.0
-    //    }
-    //  ]
-    //},
+    },
+    {
+      "Boxes": [
+        {
+          "Type": "Simple",
+          "Shape": "Box",
+          "Mass": 0.0,
+          "Position.x": 27.0,
+          "Position.y": 0.0,
+          "Position.z": 14.5,
+          "Velocity.x": 0.0,
+          "Velocity.y": 0.0,
+          "Velocity.z": 0.0,
+          "Orientation.x": 0.0,
+          "Orientation.y": 0.0,
+          "Orientation.z": 0.0,
+          "Extents.x": 10.0,
+          "Extents.y": 30.0,
+          "Extents.z": 10.0,
+          "Name": "box0"
+        },
+        {
+          "Type": "Simple",
+          "Shape": "Box",
+          "Mass": 0.0,
+          "Position.x": -7.0,
+          "Position.y": 6.0,
+          "Position.z": -15.5,
+          "Velocity.x": 0.0,
+          "Velocity.y": 0.0,
+          "Velocity.z": 0.0,
+          "Orientation.x": 0.0,
+          "Orientation.y": 0.0,
+          "Orientation.z": 0.0,
+          "Extents.x": 5.0,
+          "Extents.y": 20.0,
+          "Extents.z": 5.0,
+          "Name": "box1"
+        },
+        {
+          "Type": "Simple",
+          "Shape": "Box",
+          "Mass": 0.0,
+          "Position.x": -27.0,
+          "Position.y": 6.0,
+          "Position.z": 10.0,
+          "Velocity.x": 0.0,
+          "Velocity.y": 0.0,
+          "Velocity.z": 0.0,
+          "Orientation.x": 0.0,
+          "Orientation.y": 0.0,
+          "Orientation.z": 0.0,
+          "Extents.x": 4.0,
+          "Extents.y": 15.0,
+          "Extents.z": 4.0,
+          "Name": "box2"
+        }
+      ]
+    }//,
     //{
     //  "Cylinders": [
     //    {

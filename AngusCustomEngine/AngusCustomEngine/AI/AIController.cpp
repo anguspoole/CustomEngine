@@ -58,7 +58,7 @@ void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* p
 					float runSpeed = 10.0f;
 
 					glm::vec3 run = glm::vec3(0.0f, vel.y, runSpeed);
-					//aiEntities[i]->m_EntityPhysics->rigidBody->SetVelocity(run);
+					aiEntities[i]->m_EntityPhysics->rigidBody->SetVelocity(run);
 				}
 				if (glm::distance(playerPos, aiPos) < 15.0f)
 				{
