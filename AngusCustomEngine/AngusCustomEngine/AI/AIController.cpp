@@ -59,6 +59,18 @@ void AIController::UpdateBehaviours(std::vector<cEntity*> aiEntities, cEntity* p
 					glm::vec3 run = glm::vec3(0.0f, vel.y, runSpeed);
 					//aiEntities[i]->m_EntityPhysics->rigidBody->SetVelocity(run);
 				}
+				if (glm::distance(playerPos, aiPos) < 15.0f)
+				{
+					glm::mat4 newLook = glm::inverse(glm::lookAt(playerPos, aiPos, glm::vec3(0.0f, 1.0f, 0.0f)));
+					//glm::quat newOrient = glm::toQuat(newLook);
+					aiEntities[i]->m_EntityPhysics->rigidBody->SetOrientation(newLook);
+
+					cAnimationState::sStateDetails newState;
+					newState.name = "EnemyAttack";
+					newState.status = eEntityStatus::ATTACKING;
+					aiEntities[i]->m_EntityMesh->pAniState->vecAnimationQueue.clear();
+					aiEntities[i]->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+				}
 			}
 		}
 	}

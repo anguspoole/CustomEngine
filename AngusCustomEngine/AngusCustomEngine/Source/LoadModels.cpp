@@ -410,6 +410,61 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 
 			vec_pObjectsToDraw.push_back(pTestSM);
 			enemyList.push_back(pTestSM);
+		
+			// This sphere is the tiny little debug sphere
+			cEntity* pKatana = new cEntity();
+			pKatana->m_EntityMesh->setDiffuseColour(glm::vec3(0.0f, 0.0f, 1.0f));
+			pKatana->m_EntityMesh->setSpecularPower(0.1f);
+			pKatana->m_EntityMesh->setSpecularColour(glm::vec3(0.766f, 0.336f, 1.000f));
+
+			pKatana->friendlyName = "EnemyKatana" + std::to_string(enemyList.size() - 1);
+			float weaponScale = 0.03f;
+			pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 50.0f);
+			pKatana->m_EntityPhysics->setUniformScale(weaponScale);
+			pKatana->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("katana.ply"));
+			pKatana->m_EntityMesh->bIsWireFrame = false;
+			pKatana->m_EntityMesh->bIsVisible = true;
+			pKatana->m_EntityMesh->bUseVertexColour = false;
+			pKatana->m_EntityPhysics->bIsUpdatedByPhysics = true;
+
+			sTextureInfo stone;
+			stone.name = "rock.bmp";
+			stone.strength = 1.0f;
+			pKatana->m_EntityMesh->vecTextures.push_back(stone);
+
+			pKatana->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
+
+			sModelDrawInfo modelInfo;
+			modelInfo.meshFileName = "katana.ply";
+			g_VAOMeshManager->FindDrawInfoByModelName(modelInfo);
+			nPhysics::sModelPoint* modelPoints = new nPhysics::sModelPoint[modelInfo.numberOfVertices]();
+			for (size_t i = 0; i < modelInfo.numberOfVertices; i++)
+			{
+				modelPoints[i].vert = glm::vec4(modelInfo.pMeshData->pVertices->x, modelInfo.pMeshData->pVertices->y,
+					modelInfo.pMeshData->pVertices->z, modelInfo.pMeshData->pVertices->w);
+			}
+
+			nPhysics::sRigidBodyDef katanaDef;
+			katanaDef.Mass = 5.0f;
+			katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+			//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
+			katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+			glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * weaponScale);
+
+			//makeCapsule(pKatana, katanaDef, 1.0f * weaponScale, 4.0f * weaponScale);
+			makeCylinder(pKatana, katanaDef, extents);
+			//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
+			//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+			//makeFixedConstraint(pKatana, player);
+
+			pKatana->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENEMYWEAPON);
+			pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
+
+			pTestSM->vec_pChildrenEntities.push_back(pKatana);
+
+			gPhysicsWorld->DisableCollision(pTestSM->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
+
+			//vec_pObjectsToDraw.push_back(pKatana);
 		}
 	}//if ( ! AssimpSM_to_VAO_Converter(
 	return;

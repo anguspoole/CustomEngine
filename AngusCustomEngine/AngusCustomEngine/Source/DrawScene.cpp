@@ -750,10 +750,11 @@ vecOffsets);                 // local offset for each bone
 				}
 			}//if ( boneIndex == 0 )
 
-			if (boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
+			if ((boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
+				|| (boneIndex == 35 && pCurrentEntity->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::ENEMY))
 			{
 				//cEntity* pKatana = findObjectByFriendlyName("Katana");
-				cEntity* pKatana = player->vec_pChildrenEntities[0];
+				cEntity* pKatana = pCurrentEntity->vec_pChildrenEntities[0];
 				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
 				glm::mat4 currentTransform;
 				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
