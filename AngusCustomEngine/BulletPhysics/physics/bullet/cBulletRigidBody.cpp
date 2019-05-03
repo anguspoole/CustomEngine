@@ -265,13 +265,17 @@ namespace nPhysics
 	btTransform cBulletRigidBody::GetBtTransform()
 	{
 		btTransform transform;
-		mMotionState->getWorldTransform(transform);
+		transform = this->mBody->getWorldTransform();
+		//mMotionState->getWorldTransform(transform);
 		return transform;
 	}
 
 	void cBulletRigidBody::GetPosition(glm::vec3 & posOut)
 	{
-		btVector3 pos = this->mBody->getCenterOfMassPosition();
+		btTransform transform;
+		transform = this->mBody->getWorldTransform();
+		//btVector3 pos = this->mBody->getCenterOfMassPosition();
+		btVector3 pos = transform.getOrigin();
 		posOut = nConvert::ToSimple(pos);
 	}
 
@@ -280,17 +284,17 @@ namespace nPhysics
 		btVector3 newForce = nConvert::ToBullet(force);
 		mBody->applyCentralForce(newForce);
 
-		btTransform transform;
-		mMotionState->getWorldTransform(transform);
-		glm::mat4 transformOut;
-		nConvert::ToSimple(transform, transformOut);
+		//btTransform transform;
+		//mMotionState->getWorldTransform(transform);
+		//glm::mat4 transformOut;
+		//nConvert::ToSimple(transform, transformOut);
 		//std::cout << "v: " << transformOut[3].x << "~~~" << transformOut[3].y << "~~~" << transformOut[3].z << std::endl;
 	}
 
 	void cBulletRigidBody::GetVelocity(glm::vec3& velocityOut)
 	{
-		btTransform transform;
-		mMotionState->getWorldTransform(transform);
+		//btTransform transform;
+		//mMotionState->getWorldTransform(transform);
 
 		//btVector3 vel = mBody->getVelocityInLocalPoint(mBody->getCenterOfMassPosition());
 		btVector3 vel = mBody->getLinearVelocity();
@@ -300,7 +304,9 @@ namespace nPhysics
 
 	void cBulletRigidBody::GetOrientation(glm::mat4& orientationOut)
 	{
-		btQuaternion btQuat = this->mBody->getOrientation();
+		//btQuaternion btQuat = this->mBody->getOrientation();
+		btTransform trans = this->mBody->getWorldTransform();
+		btQuaternion btQuat = trans.getRotation();
 		glm::quat glmQuat(btQuat.getW(), btQuat.getX(), btQuat.getY(), btQuat.getZ());
 		orientationOut = glm::mat4(glmQuat);
 	}
@@ -339,15 +345,15 @@ namespace nPhysics
 	{
 		this->mBody->activate(true);
 		btTransform transform;
-		mMotionState->getWorldTransform(transform);
-		//transform = this->mBody->getWorldTransform();
+		//mMotionState->getWorldTransform(transform);
+		transform = this->mBody->getWorldTransform();
 		//transform = this->mBody->getCenterOfMassTransform();
 
 		btVector3 btPos = nConvert::ToBullet(p);
 		//this->mBody->translate(btPos);
 		transform.setOrigin(btPos);
 
-		mMotionState->setWorldTransform(transform);
+		//mMotionState->setWorldTransform(transform);
 		//this->mBody->setCenterOfMassTransform(transform);
 		this->mBody->setWorldTransform(transform);
 	}
@@ -386,8 +392,9 @@ namespace nPhysics
 		btTransform btT = this->mBody->getWorldTransform();
 		btT.setRotation(btQ);
 		//this->mBody->setCenterOfMassTransform(btT);
-		this->mMotionState->setWorldTransform(btT);
+		//this->mMotionState->setWorldTransform(btT);
 		this->mBody->setWorldTransform(btT);
+		//this->mMotionState->setWorldTransform(btT);
 	}
 
 	void cBulletRigidBody::SetMass(float m)

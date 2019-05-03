@@ -181,6 +181,12 @@ namespace nPhysics
 		, iShape(SHAPE_TYPE_CONVEXHULL)
 	{
 		this->mBulletShape = new btConvexHullShape((const btScalar *)&point->vert, numPoints, sizeof(sModelPoint));
+		/*for (int i = 0; i < numPoints; i++)
+		{
+			glm::vec3 vert = point[i].vert;
+			btVector3 v = nConvert::ToBullet(vert);
+			((btConvexHullShape*)this->mBulletShape)->addPoint(v);
+		}*/
 	}
 
 	cBulletConvexHullShape::~cBulletConvexHullShape()

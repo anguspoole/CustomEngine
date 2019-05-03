@@ -441,6 +441,7 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			sModelDrawInfo modelInfo;
 			modelInfo.meshFileName = "katana.ply";
 			g_VAOMeshManager->FindDrawInfoByModelName(modelInfo);
+
 			nPhysics::sModelPoint* modelPoints = new nPhysics::sModelPoint[modelInfo.numberOfVertices]();
 			for (size_t i = 0; i < modelInfo.numberOfVertices; i++)
 			{
@@ -458,6 +459,7 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 
 			//makeCapsule(pKatana, katanaDef, 1.0f * weaponScale, 4.0f * weaponScale);
 			makeCylinder(pKatana, katanaDef, extents);
+
 			//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
 			//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 			//makeFixedConstraint(pKatana, player);
@@ -871,14 +873,14 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-		//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
-		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 13.0f);
+		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
+		//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 13.0f);
 
 		//makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
 		makeCylinder(pKatana, katanaDef, extents);
 		//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		//makeFixedConstraint(pKatana, player);
+		makeFixedConstraint(pKatana, player);
 
 		pKatana->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYERWEAPON);
 		pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
