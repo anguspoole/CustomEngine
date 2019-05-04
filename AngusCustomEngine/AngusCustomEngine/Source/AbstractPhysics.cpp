@@ -528,6 +528,9 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 				//sphereList.push_back(testObj);
 				glm::vec3 extents = glm::vec3(config.RigidBodyDefs[c].Extents);
 				testObj->m_EntityPhysics->nonUniformScale = extents;
+
+				int colGroup = eCollisionGroup::COL_ENVIRONMENT;
+				int colMask = (eCollisionGroup::COL_PLAYER | eCollisionGroup::COL_ENEMY);
 				makeBox(testObj, config.RigidBodyDefs[c], extents);
 
 				//if (boxCount == 0)
