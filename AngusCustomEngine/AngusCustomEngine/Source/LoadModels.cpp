@@ -2,6 +2,7 @@
 #include "../Global/global.h"
 
 #include "../Meshes/AssimpFBX/cAnimationState.h"
+#include <eCollisionGroup.h>
 
 extern cSimpleAssimpSkinnedMesh* g_pRPGSkinnedMesh = NULL;
 
@@ -285,7 +286,11 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
 			//makeCapsule(pTestSM, config.RigidBodyDefs[c], 1.0f * 10.0f * scale, 2.26989f * 10.0f * scale);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale);
+
+			int colGroup = eCollisionGroup::COL_PLAYER;
+			int colMask = (eCollisionGroup::COL_ENVIRONMENT | eCollisionGroup::COL_ENEMY | eCollisionGroup::COL_ENEMYWEAPON);
+
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYER);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
@@ -407,7 +412,11 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			pTestSM->m_EntityPhysics->physObjType = cEntityPhysics::ePhysicsObjType::RIGID_BODY;
 			//glm::vec3 extents = glm::vec3(1.92339, 2.26989, 0.28641) * scale;
 			//makeBox(pTestSM, config.RigidBodyDefs[c], extents);
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale);
+
+			int colGroup = eCollisionGroup::COL_ENEMY;
+			int colMask = (eCollisionGroup::COL_ENVIRONMENT | eCollisionGroup::COL_PLAYER | eCollisionGroup::COL_PLAYERWEAPON);
+
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENEMY);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
@@ -454,11 +463,14 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
-			//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * weaponScale);
-			glm::vec3 extents = glm::vec3(1.0f, 1.0f, 7.0f);
+			glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * weaponScale);
+			//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 7.0f);
 
 			//makeCapsule(pKatana, katanaDef, 1.0f * weaponScale, 4.0f * weaponScale);
-			makeCylinder(pKatana, katanaDef, extents);
+			colGroup = eCollisionGroup::COL_ENEMYWEAPON;
+			colMask = (eCollisionGroup::COL_PLAYER);
+
+			makeCylinder(pKatana, katanaDef, extents, colGroup, colMask);
 
 			//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
 			//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -633,7 +645,10 @@ void LoadPaintGlob(std::vector<cEntity*> &vec_pObjectsToDraw, GLuint shaderProgr
 		globDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
 		globDef.Velocity = startVel;
 
-		makeSphere(pGlob, globDef);
+		int colGroup = eCollisionGroup::COL_PAINTGLOB;
+		int colMask = (eCollisionGroup::COL_ENVIRONMENT);
+
+		makeSphere(pGlob, globDef, colGroup, colMask);
 		//makePointPointConstraint(pGlob, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		//makeFixedConstraint(pGlob, player);
 
@@ -875,6 +890,9 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
 		//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 13.0f);
+
+		int colGroup = eCollisionGroup::COL_PLAYERWEAPON;
+		int colMask = (eCollisionGroup::COL_ENEMY);
 
 		//makeCapsule(pKatana, katanaDef, 1.0f * scale, 4.0f * scale);
 		makeCylinder(pKatana, katanaDef, extents);

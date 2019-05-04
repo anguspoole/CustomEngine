@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="eBodyType.h" />
+    <ClInclude Include="eCollisionGroup.h" />
     <ClInclude Include="eConstraintType.h" />
     <ClInclude Include="eEntityType.h" />
     <ClInclude Include="eShapeType.h" />

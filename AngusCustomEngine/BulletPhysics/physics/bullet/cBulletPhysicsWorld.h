@@ -19,6 +19,7 @@ namespace nPhysics
 
 		//Rigidbodies
 		virtual bool AddBody(iRigidBody* body);
+		virtual bool AddBody(iRigidBody* body, int group, int mask);
 		virtual bool RemoveBody(iRigidBody* body);
 
 		//Softbodies

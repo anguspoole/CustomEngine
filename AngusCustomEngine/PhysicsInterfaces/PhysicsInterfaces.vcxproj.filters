@@ -81,5 +81,8 @@
     <ClInclude Include="sModelPoint.h">
       <Filter>physics\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="eCollisionGroup.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

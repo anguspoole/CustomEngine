@@ -20,6 +20,7 @@ namespace nPhysics
 		virtual void SetGravity(const glm::vec3 gravity) = 0;
 
 		virtual bool AddBody(iRigidBody* body) = 0;
+		virtual bool AddBody(iRigidBody* body, int group, int mask) = 0;
 		virtual bool RemoveBody(iRigidBody* body) = 0;
 
 		virtual bool AddBody(iSoftBody* body) = 0;

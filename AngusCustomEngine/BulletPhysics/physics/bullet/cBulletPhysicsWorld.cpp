@@ -160,6 +160,22 @@ namespace nPhysics
 		return false;
 	}
 
+	bool nPhysics::cBulletPhysicsWorld::AddBody(iRigidBody * body, int group, int mask)
+	{
+		//check type
+		// if type is BODY_TYPE_RIGID_BODY
+		{
+			cBulletRigidBody* bulletBody = dynamic_cast<cBulletRigidBody*>(body);
+			if (!bulletBody)
+			{
+				return false;
+			}
+			mDynamicsWorld->addRigidBody(bulletBody->GetBulletBody(), group, mask);
+			return true;
+		}
+		return false;
+	}
+
 	bool nPhysics::cBulletPhysicsWorld::RemoveBody(iRigidBody * body)
 	{
 		cBulletRigidBody* bulletBody = dynamic_cast<cBulletRigidBody*>(body);
