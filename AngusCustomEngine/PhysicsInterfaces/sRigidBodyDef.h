@@ -14,6 +14,9 @@ namespace nPhysics
 			, Orientation(0.0f, 0.0f, 0.0f)
 			, Extents(1.0f, 1.0f, 1.0f)
 			, Name("")
+			, Model("")
+			, Diffuse(0.0f, 0.0f, 0.0f)
+			, Specular(0.0, 0.0f, 0.0f)
 		{
 
 		}
@@ -24,5 +27,8 @@ namespace nPhysics
 		glm::vec3 Extents; // Extents for scaling
 		float Mass;
 		std::string Name;
+		std::string Model;
+		glm::vec3 Diffuse; // Diffuse Color
+		glm::vec3 Specular; // Specular Color
 	};
 }

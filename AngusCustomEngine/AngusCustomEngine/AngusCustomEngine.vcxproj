@@ -186,6 +186,7 @@
     <ClCompile Include="Shading\cShaderManager.cpp" />
     <ClCompile Include="Source\AbstractPhysics.cpp" />
     <ClCompile Include="Source\DrawScene.cpp" />
+    <ClCompile Include="Source\EntityCreation.cpp" />
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\LoadModels.cpp" />
     <ClCompile Include="Source\Main.cpp" />

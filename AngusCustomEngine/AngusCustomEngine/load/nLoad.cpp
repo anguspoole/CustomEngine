@@ -419,7 +419,69 @@ namespace nLoad
 								std::cout << "No valid string for Name - incorrect format" << std::endl;
 								return false;
 							}
-
+							if (jsonBodyDef["Model"].isString())
+							{
+								def.Model = jsonBodyDef["Model"].asString();
+							}
+							else
+							{
+								std::cout << "No valid string for Model - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Diffuse.r"].isNumeric())
+							{
+								def.Diffuse.r = jsonBodyDef["Diffuse.r"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Diffuse.r - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Diffuse.g"].isNumeric())
+							{
+								def.Diffuse.g = jsonBodyDef["Diffuse.g"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Diffuse.g - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Diffuse.b"].isNumeric())
+							{
+								def.Diffuse.b = jsonBodyDef["Diffuse.b"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Diffuse.b - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Specular.r"].isNumeric())
+							{
+								def.Specular.r = jsonBodyDef["Specular.r"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Specular.r - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Specular.g"].isNumeric())
+							{
+								def.Specular.g = jsonBodyDef["Specular.g"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Specular.g - incorrect format" << std::endl;
+								return false;
+							}
+							if (jsonBodyDef["Specular.b"].isNumeric())
+							{
+								def.Specular.b = jsonBodyDef["Specular.b"].asFloat();
+							}
+							else
+							{
+								std::cout << "No valid number for Specular.b - incorrect format" << std::endl;
+								return false;
+							}
 
 							configOut.RigidBodyDefs.push_back(def);
 						}

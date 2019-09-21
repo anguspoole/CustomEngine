@@ -32,7 +32,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Player"
+          "Name": "Player",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         }
       ]
     },
@@ -54,7 +61,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy0"
+          "Name": "Enemy0",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         },
         {
           "Type": "Simple",
@@ -72,7 +86,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy1"
+          "Name": "Enemy1",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         },
         {
           "Type": "Simple",
@@ -90,7 +111,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy2"
+          "Name": "Enemy2",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         },
         {
           "Type": "Simple",
@@ -108,7 +136,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "Enemy3"
+          "Name": "Enemy3",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         }
       ]
     },
@@ -130,7 +165,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "sphere0"
+          "Name": "sphere0",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         },
         {
           "Type": "Simple",
@@ -148,7 +190,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "sphere1"
+          "Name": "sphere1",
+          "Model": "Sphere_320_faces_xyz_n_GARBAGE_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         }//,
         //{
         //  "Type": "Simple",
@@ -338,7 +387,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "plane0"
+          "Name": "plane0",
+          "Model": "simpleplane0.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         },
         {
           "Type": "Simple",
@@ -356,7 +412,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "plane1"
+          "Name": "plane1",
+          "Model": "simpleplane1.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         },
         {
           "Type": "Simple",
@@ -374,7 +437,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "plane2"
+          "Name": "plane2",
+          "Model": "simpleplane2.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         },
         {
           "Type": "Simple",
@@ -392,7 +462,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "plane3"
+          "Name": "plane3",
+          "Model": "simpleplane3.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         },
         {
           "Type": "Simple",
@@ -410,7 +487,14 @@
           "Extents.x": 1.0,
           "Extents.y": 1.0,
           "Extents.z": 1.0,
-          "Name": "plane4"
+          "Name": "plane4",
+          "Model": "simpleplane4.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 1.0,
+          "Specular.g": 0.766,
+          "Specular.b": 0.336
         }
       ]
     },
@@ -432,7 +516,14 @@
           "Extents.x": 10.0,
           "Extents.y": 30.0,
           "Extents.z": 10.0,
-          "Name": "box0"
+          "Name": "box0",
+          "Model": "cube_flat_shaded_xyz_n_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         },
         {
           "Type": "Simple",
@@ -450,7 +541,14 @@
           "Extents.x": 5.0,
           "Extents.y": 20.0,
           "Extents.z": 5.0,
-          "Name": "box1"
+          "Name": "box1",
+          "Model": "cube_flat_shaded_xyz_n_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         },
         {
           "Type": "Simple",
@@ -468,10 +566,17 @@
           "Extents.x": 4.0,
           "Extents.y": 15.0,
           "Extents.z": 4.0,
-          "Name": "box2"
+          "Name": "box2",
+          "Model": "cube_flat_shaded_xyz_n_uv.ply",
+          "Diffuse.r": 0.0,
+          "Diffuse.g": 0.0,
+          "Diffuse.b": 0.0,
+          "Specular.r": 0.0,
+          "Specular.g": 0.0,
+          "Specular.b": 0.0
         }
       ]
-    }//,
+    } //,
     //{
     //  "Cylinders": [
     //    {
@@ -486,7 +591,18 @@
     //      "Velocity.z": 0.0,
     //      "Orientation.x": 0.0,
     //      "Orientation.y": 0.0,
-    //      "Orientation.z": 0.0
+    //      "Orientation.z": 0.0,
+    //      "Extents.x": 4.0,
+    //      "Extents.y": 15.0,
+    //      "Extents.z": 4.0,
+    //      "Name": "cylinder0",
+    //      "Model": "cylinderUV.ply",
+    //      "Diffuse.r": 0.0,
+    //      "Diffuse.g": 0.0,
+    //      "Diffuse.b": 0.0,
+    //      "Specular.r": 0.0,
+    //      "Specular.g": 0.0,
+    //      "Specular.b": 0.0
     //    }
     //  ]
     //}//,
