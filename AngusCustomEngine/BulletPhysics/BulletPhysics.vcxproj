@@ -40,10 +40,11 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -72,19 +73,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AngusCustomEngine\include;$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AngusCustomEngine\include;$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AngusCustomEngine\include;$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SourcePath)lib/x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)AngusCustomEngine\include;$(SolutionDir)PhysicsInterfaces;$(SolutionDir)GameMath;$(ProjectDir)physics\bullet;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,13 +123,20 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;BULLETPHYSICS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;BULLETPHYSICS_EXPORTS;_WINDOWS;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -136,7 +145,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;BULLETPHYSICS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;GLFW_INCLUDE_NONE;BULLETPHYSICS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -304,6 +313,7 @@
     <ClCompile Include="physics\bullet\bullet_shapes.cpp" />
     <ClCompile Include="physics\bullet\cBtConstraint.cpp" />
     <ClCompile Include="physics\bullet\cBtFactory.cpp" />
+    <ClCompile Include="physics\bullet\cBulletDebugDrawer.cpp" />
     <ClCompile Include="physics\bullet\cBulletPhysicsWorld.cpp" />
     <ClCompile Include="physics\bullet\cBulletRigidBody.cpp" />
     <ClCompile Include="physics\bullet\CreateBtFactory.cpp" />
@@ -572,6 +582,7 @@
     <ClInclude Include="physics\bullet\bullet_shapes.h" />
     <ClInclude Include="physics\bullet\cBtConstraint.h" />
     <ClInclude Include="physics\bullet\cBtFactory.h" />
+    <ClInclude Include="physics\bullet\cBulletDebugDrawer.h" />
     <ClInclude Include="physics\bullet\cBulletPhysicsWorld.h" />
     <ClInclude Include="physics\bullet\cBulletRigidBody.h" />
     <ClInclude Include="physics\bullet\CreateBtFactory.h" />

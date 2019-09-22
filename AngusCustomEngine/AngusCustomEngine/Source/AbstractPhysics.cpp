@@ -6,10 +6,11 @@
 #include <../load/sConfig.h>
 #include <eShapeType.h>
 #include <eCollisionGroup.h>
+#include <cBtFactory.h>
 
 typedef nPhysics::iPhysicsFactory*(*f_CreateFactory)();
 
-HINSTANCE hGetProckDll = 0;
+//HINSTANCE hGetProckDll = 0;
 
 nPhysics::iPhysicsFactory* gPhysicsFactory = NULL;
 nPhysics::iPhysicsWorld* gPhysicsWorld = NULL;
@@ -23,21 +24,23 @@ bool InitPhysicsStuff(const nLoad::sConfig& config)
 		return false;
 	}
 
-	hGetProckDll = LoadLibraryA(config.PhysicsLibrary.c_str());
+	/*hGetProckDll = LoadLibraryA(config.PhysicsLibrary.c_str());
 	if (!hGetProckDll)
 	{
 		std::cout << "Library not found" << std::endl;
 		return false;
-	}
+	}*/
 
-	f_CreateFactory CreateFactory = (f_CreateFactory)GetProcAddress(hGetProckDll, "CreateFactory");
+	/*f_CreateFactory CreateFactory = (f_CreateFactory)GetProcAddress(hGetProckDll, "CreateFactory");
 	if (!CreateFactory)
 	{
 		std::cout << "CreateFactory not found" << std::endl;
 		return false;
-	}
+	}*/
 
-	gPhysicsFactory = CreateFactory();
+	//gPhysicsFactory = CreateFactory();
+	gPhysicsFactory = new nPhysics::cBulletPhysicsFactory();
+
 	return true;
 }
 

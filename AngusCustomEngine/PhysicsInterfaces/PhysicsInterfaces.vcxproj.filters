@@ -84,5 +84,8 @@
     <ClInclude Include="eCollisionGroup.h">
       <Filter>physics\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="iDebugDrawer.h">
+      <Filter>physics\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
