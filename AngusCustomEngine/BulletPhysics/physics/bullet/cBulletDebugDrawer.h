@@ -22,7 +22,7 @@ namespace nPhysics
 
 		virtual void drawContactPoint(const btVector3 &, const btVector3 &, btScalar, int, const btVector3 &) { }
 		virtual void reportErrorWarning(const char *) { }
-		virtual void draw3DText(const btVector3 &, const char *) { }
+		virtual void draw3dText(const btVector3 &, const char *) { }
 		virtual void setDebugMode(int mode) { debugMode = mode; }
 		virtual int getDebugMode(void) const { return debugMode; }
 

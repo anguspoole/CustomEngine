@@ -356,17 +356,22 @@ void DrawScene_Simple(std::vector<cEntity*> vec_pEntities,
 	GLuint shaderProgramID,
 	unsigned int passNumber, cFBO* fbo)
 {
-	for (unsigned int objIndex = 0;
-		objIndex != (unsigned int)vec_pEntities.size();
-		objIndex++)
+	//bool debugging = false;
+
+	//if (!debugging)
 	{
-		cEntity* pCurrentEntity = vec_pEntities[objIndex];
+		for (unsigned int objIndex = 0;
+			objIndex != (unsigned int)vec_pEntities.size();
+			objIndex++)
+		{
+			cEntity* pCurrentEntity = vec_pEntities[objIndex];
 
-		glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
+			glm::mat4x4 matModel = glm::mat4(1.0f);			// mat4x4 m, p, mvp;
 
-		DrawObject(pCurrentEntity, matModel, shaderProgramID, passNumber, fbo);
+			DrawObject(pCurrentEntity, matModel, shaderProgramID, passNumber, fbo);
 
-	}//for ( unsigned int objIndex = 0; 
+		}//for ( unsigned int objIndex = 0; 
+	}
 
 	return;
 }
@@ -408,9 +413,21 @@ void DrawObject(cEntity* pCurrentEntity,
 
 	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
 	{
-		glm::vec3 pos;
-		pCurrentEntity->m_EntityPhysics->rigidBody->GetPosition(pos);
-		matTranslation = glm::translate(glm::mat4(1.0f), pos);
+		//glm::vec3 pos;
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetPosition(pCurrentEntity->m_EntityPhysics->position);
+
+		if (pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh)
+		{
+			nPhysics::iShape* rbShape = pCurrentEntity->m_EntityPhysics->rigidBody->GetIShape();
+			if (rbShape->GetShapeType() == nPhysics::eShapeType::SHAPE_TYPE_CAPSULE)
+			{
+				nPhysics::iCapsuleShape* capShape = dynamic_cast<nPhysics::iCapsuleShape*>(rbShape);
+				pCurrentEntity->m_EntityPhysics->position.y -= capShape->GetHeight() + capShape->GetRadius();
+			}
+		}
+
+		//pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(matTranslation);
+		matTranslation = glm::translate(glm::mat4(1.0f), pCurrentEntity->m_EntityPhysics->position);
 	}
 	else if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::SOFT_BODY)
 	{
@@ -442,8 +459,8 @@ void DrawObject(cEntity* pCurrentEntity,
 
 	if (pCurrentEntity->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
 	{
-		glm::mat4 rigidTrans;
-		pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(rigidTrans);
+		//glm::mat4 rigidTrans;
+		//pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(rigidTrans);
 
 		glm::mat4 matQrotation(1.0f);
 		pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(matQrotation);

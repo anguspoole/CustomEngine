@@ -1,7 +1,9 @@
 #include <cBulletPhysicsWorld.h>
 #include "cBulletRigidBody.h"
+#include "Debug/cPhysicsDebugDrawer.h"
 #include "nConvert.h"
 #include "cBtConstraint.h"
+#include <game_math.h>
 #include <iostream>
 
 extern ContactAddedCallback gContactAddedCallback;
@@ -296,12 +298,21 @@ namespace nPhysics
 
 	void nPhysics::cBulletPhysicsWorld::SetDebugRenderer(iDebugRenderer* debugRenderer)
 	{
+		cPhysicsDebugDrawer* dd = dynamic_cast<cPhysicsDebugDrawer*>(debugRenderer);
+		if (!dd)
+		{
+			return;
+		}
 
+		this->mDynamicsWorld->setDebugDrawer(dd->getBulletDebugDrawer());
 	}
 	
-	void nPhysics::cBulletPhysicsWorld::DrawDebug()
+	void nPhysics::cBulletPhysicsWorld::DrawDebug(int shaderID)
 	{
+		glm::mat4 matModel = glm::mat4(1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shaderID, "matModel"), 1, GL_FALSE, &matModel[0][0]);
 
+		this->mDynamicsWorld->debugDrawWorld();
 	}
 
 	void nPhysics::cBulletPhysicsWorld::DisableCollision(iRigidBody* rbA, iRigidBody* rbB)
@@ -315,6 +326,7 @@ namespace nPhysics
 	void nPhysics::cBulletPhysicsWorld::Update(float dt)
 	{
 		mDynamicsWorld->stepSimulation(dt, 10);
+		//mDynamicsWorld->stepSimulation(1 / 60.0f, 1, 1 / 60.0f);
 	}
 
 

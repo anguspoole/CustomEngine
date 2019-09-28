@@ -14,7 +14,7 @@ namespace nPhysics
 		virtual ~iPhysicsWorld() {}
 		
 		virtual void SetDebugRenderer(iDebugRenderer* debugRenderer) = 0;
-		virtual void DrawDebug() = 0;
+		virtual void DrawDebug(int shaderID) = 0;
 
 		//virtual void TimeStep(float dt) = 0;
 		virtual void SetGravity(const glm::vec3 gravity) = 0;

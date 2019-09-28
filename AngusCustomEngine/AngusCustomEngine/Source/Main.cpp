@@ -93,6 +93,9 @@ void main()
 		std::cout << pTheShaderManager->getLastError() << std::endl;
 	}
 
+	// If we are here, the shaders comipled and linked OK
+	std::cout << "The shaders comipled and linked OK" << std::endl;
+
 	// Load the uniform location values (some of them, anyway)
 	cShaderManager::cShaderProgram* pSP = ::pTheShaderManager->pGetShaderProgramFromFriendlyName("BasicUberShader");
 	pSP->LoadUniformLocation("texture00");
@@ -163,7 +166,7 @@ void main()
 
 	g_Camera->eye = glm::vec3(0.0f, 0.0f, 0.0f);
 	g_Camera->targetPos = glm::vec3(0.0f, 0.0f, 1.0f);
-	player_Camera->eye = glm::vec3(0.0f, 30.0f, -30.0f);
+	player_Camera->eye = glm::vec3(0.0f, 50.0f, -50.0f);
 	pass_Camera->eye = glm::vec3(0.0f, 30.0f, -30.0f);
 	//g_Camera->eye = glm::vec3(0.0f, 10.0f, -30.0f);
 	pass_Camera->targetPos = glm::vec3(0.0f, -1.0f, 1.0f);
@@ -423,8 +426,27 @@ void main()
 		//player_Camera->m_UpdateAtFromOrientation();
 
 
+
+		bool debugging = true;
+
+		//pTheShaderManager->useShaderProgram("Debug_Shader");
+		// Render the DEBUG Physics
+		
+		//pTheShaderManager->useShaderProgram("BasicUberShader");
+
+		/*if (debugging)
+		{
+			gPhysicsWorld->DrawDebug(program, matView, 0.6f, (int)windowWidth, (int)windowHeight);
+		}*/
+
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
 		updateAndDrawParticles(deltaTime, program, currentCamera->eye);
+
+		if (debugging)
+		{
+			gPhysicsWorld->DrawDebug(program);
+		}
+
 
 		currentCamera = g_Camera;
 
@@ -692,7 +714,7 @@ void main()
 
 		//UpdateWindowTitle(window, ssTitle.str());
 
-		gPhysicsWorld->Update(deltaTime);
+		//gPhysicsWorld->Update(deltaTime);
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

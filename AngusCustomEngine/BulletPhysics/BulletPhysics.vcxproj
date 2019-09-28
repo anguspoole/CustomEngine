@@ -330,6 +330,7 @@
     <ClCompile Include="physics\bullet\LinearMath\TaskScheduler\btTaskScheduler.cpp" />
     <ClCompile Include="physics\bullet\LinearMath\TaskScheduler\btThreadSupportPosix.cpp" />
     <ClCompile Include="physics\bullet\LinearMath\TaskScheduler\btThreadSupportWin32.cpp" />
+    <ClCompile Include="physics\bullet\Debug\cPhysicsDebugDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="physics\bullet\btBulletCollisionCommon.h" />
@@ -618,6 +619,7 @@
     <ClInclude Include="physics\bullet\LinearMath\btVector3.h" />
     <ClInclude Include="physics\bullet\LinearMath\TaskScheduler\btThreadSupportInterface.h" />
     <ClInclude Include="physics\bullet\nConvert.h" />
+    <ClInclude Include="physics\bullet\Debug\cPhysicsDebugDrawer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,8 +14,8 @@ namespace nPhysics
 			int lifeTime,
 			const glm::vec3& colour) = 0;
 		virtual void reportErrorWarning(const char* warningString) = 0;
-		virtual void draw3DText(const glm::vec3& location, const char* textString) = 0;
+		virtual void draw3dText(const glm::vec3& location, const char* textString) = 0;
 		virtual void setDebugMode(int mode) = 0;
-		virtual int	 getDebugMode() const = 0;
+		virtual int getDebugMode() const = 0;
 	};
 }

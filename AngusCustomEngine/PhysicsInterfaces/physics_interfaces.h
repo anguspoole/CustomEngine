@@ -13,3 +13,5 @@
 #include "eBodyType.h"
 #include "eConstraintType.h"
 #include "iConstraint.h"
+#include "iDebugDrawer.h"
+#include "iDebugRenderer.h"

@@ -13,7 +13,7 @@ namespace nPhysics
 		virtual ~cBulletPhysicsWorld();
 
 		virtual void SetDebugRenderer(iDebugRenderer* debugRenderer);
-		virtual void DrawDebug();
+		virtual void DrawDebug(int shaderID);
 
 		virtual void SetGravity(const glm::vec3 gravity);
 

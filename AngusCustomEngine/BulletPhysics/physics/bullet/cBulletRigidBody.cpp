@@ -182,13 +182,13 @@ namespace nPhysics
 			{
 				colShape->calculateLocalInertia(mass, localInertia);
 			}
-			startTransform.setOrigin(nConvert::ToBullet(def.Position));
+			//startTransform.setOrigin(nConvert::ToBullet(def.Position));
 			startTransform.setOrigin(nConvert::ToBullet(def.Position));
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mMotionState, colShape, localInertia);
 			
-			rbInfo.m_restitution = 0.0f;
+			//rbInfo.m_restitution = 0.0f;
 			//rbInfo.m_friction = 0.0f;
 
 			mBody = new btRigidBody(rbInfo);
@@ -243,6 +243,7 @@ namespace nPhysics
 		}
 
 		this->mIsHit = false;
+		this->mIShape = shape;
 	}
 
 	cBulletRigidBody::~cBulletRigidBody()
@@ -274,8 +275,8 @@ namespace nPhysics
 	{
 		btTransform transform;
 		transform = this->mBody->getWorldTransform();
-		//btVector3 pos = this->mBody->getCenterOfMassPosition();
-		btVector3 pos = transform.getOrigin();
+		btVector3 pos = this->mBody->getCenterOfMassPosition();
+		//btVector3 pos = transform.getOrigin();
 		posOut = nConvert::ToSimple(pos);
 	}
 
@@ -336,6 +337,11 @@ namespace nPhysics
 		return this->entityType;
 	}
 
+	iShape * cBulletRigidBody::GetIShape()
+	{
+		return this->mIShape;
+	}
+
 	void cBulletRigidBody::SetTransform(glm::mat4& transformIn)
 	{
 
@@ -343,19 +349,23 @@ namespace nPhysics
 
 	void cBulletRigidBody::SetPosition(glm::vec3 p)
 	{
-		this->mBody->activate(true);
-		btTransform transform;
-		//mMotionState->getWorldTransform(transform);
-		transform = this->mBody->getWorldTransform();
-		//transform = this->mBody->getCenterOfMassTransform();
+		//this->mBody->activate(true);
+		//btTransform transform;
+		////mMotionState->getWorldTransform(transform);
+		//transform = this->mBody->getWorldTransform();
+		////transform = this->mBody->getCenterOfMassTransform();
 
-		btVector3 btPos = nConvert::ToBullet(p);
-		//this->mBody->translate(btPos);
-		transform.setOrigin(btPos);
+		//btVector3 btPos = nConvert::ToBullet(p);
+		////this->mBody->translate(btPos);
+		//transform.setOrigin(btPos);
 
-		//mMotionState->setWorldTransform(transform);
-		//this->mBody->setCenterOfMassTransform(transform);
-		this->mBody->setWorldTransform(transform);
+		////mMotionState->setWorldTransform(transform);
+		////this->mBody->setCenterOfMassTransform(transform);
+		//this->mBody->setWorldTransform(transform);
+
+		btTransform transform = mBody->getCenterOfMassTransform();
+		transform.setOrigin(nConvert::ToBullet(p));
+		mBody->setCenterOfMassTransform(transform);
 	}
 
 	void cBulletRigidBody::SetVelocity(glm::vec3 v)
@@ -388,12 +398,12 @@ namespace nPhysics
 	{
 		glm::quat q = glm::toQuat(o);
 		btQuaternion btQ = nConvert::ToBullet(q);
-		//btTransform btT = this->mBody->getCenterOfMassTransform();
-		btTransform btT = this->mBody->getWorldTransform();
+		btTransform btT = this->mBody->getCenterOfMassTransform();
+		//btTransform btT = this->mBody->getWorldTransform();
 		btT.setRotation(btQ);
-		//this->mBody->setCenterOfMassTransform(btT);
+		this->mBody->setCenterOfMassTransform(btT);
 		//this->mMotionState->setWorldTransform(btT);
-		this->mBody->setWorldTransform(btT);
+		//this->mBody->setWorldTransform(btT);
 		//this->mMotionState->setWorldTransform(btT);
 	}
 

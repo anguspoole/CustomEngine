@@ -31,6 +31,7 @@ namespace nPhysics
 		virtual glm::vec3 GetColPos();
 		virtual glm::vec3 GetColNorm();
 		virtual eEntityType GetEntityType();
+		virtual iShape* GetIShape();
 
 		virtual void SetTransform(glm::mat4& transformIn);
 
@@ -54,7 +55,9 @@ namespace nPhysics
 		btDefaultMotionState* mMotionState;
 		btRigidBody* mBody;
 		btCollisionShape* mShape;
+		iShape* mIShape;
 		bool mIsHit;
+		float mMass;
 		std::string mName;
 		eEntityType entityType = eEntityType::NONE;
 		glm::vec3 colPos;

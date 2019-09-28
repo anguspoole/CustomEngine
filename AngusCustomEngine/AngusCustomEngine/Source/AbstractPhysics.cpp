@@ -7,13 +7,16 @@
 #include <eShapeType.h>
 #include <eCollisionGroup.h>
 #include <cBtFactory.h>
+#include <cBulletDebugDrawer.h>
+#include <Debug/cPhysicsDebugDrawer.h>
 
-typedef nPhysics::iPhysicsFactory*(*f_CreateFactory)();
+//typedef nPhysics::iPhysicsFactory*(*f_CreateFactory)();
 
 //HINSTANCE hGetProckDll = 0;
 
 nPhysics::iPhysicsFactory* gPhysicsFactory = NULL;
 nPhysics::iPhysicsWorld* gPhysicsWorld = NULL;
+nPhysics::iDebugRenderer* gPhysicsDebugDrawer = NULL;
 
 //	InitPhysicsStuff is used to call initial physics stuff (load dll, start factory)
 bool InitPhysicsStuff(const nLoad::sConfig& config)
@@ -49,6 +52,9 @@ bool buildPhysicsWorld()
 {
 	gPhysicsWorld = gPhysicsFactory->CreatePhysicsWorld(); //create the physics world
 	gPhysicsWorld->SetGravity(glm::vec3(0.0f, -9.8f, 0.0f));
+
+	gPhysicsDebugDrawer = new nPhysics::cPhysicsDebugDrawer();
+	gPhysicsWorld->SetDebugRenderer(gPhysicsDebugDrawer);
 	return true;
 }
 

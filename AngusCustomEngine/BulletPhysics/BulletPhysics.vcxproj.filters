@@ -537,6 +537,9 @@
     <ClCompile Include="physics\bullet\cBulletDebugDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="physics\bullet\Debug\cPhysicsDebugDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="physics\bullet\btBulletCollisionCommon.h">
@@ -1395,6 +1398,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="physics\bullet\cBulletDebugDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physics\bullet\Debug\cPhysicsDebugDrawer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

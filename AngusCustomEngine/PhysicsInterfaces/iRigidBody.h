@@ -3,6 +3,7 @@
 #include <game_math.h>
 #include <string>
 #include "eEntityType.h"
+#include "iShape.h"
 
 namespace nPhysics
 {
@@ -26,6 +27,7 @@ namespace nPhysics
 		virtual eEntityType GetEntityType() = 0;
 		virtual glm::vec3 GetColPos() = 0;
 		virtual glm::vec3 GetColNorm() = 0;
+		virtual iShape* GetIShape() = 0;
 
 
 		virtual void SetTransform(glm::mat4& transformIn) = 0;

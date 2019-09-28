@@ -291,6 +291,9 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			int colMask = (eCollisionGroup::COL_ENVIRONMENT | eCollisionGroup::COL_ENEMY | eCollisionGroup::COL_ENEMYWEAPON);
 
 			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
+			//makeCapsule(pTestSM, config.RigidBodyDefs[c], 5.0f * scale, 10.0f * scale, colGroup, colMask);
+
+			pTestSM->m_EntityPhysics->rigidBody->GetPosition(pTestSM->m_EntityPhysics->position);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYER);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);
@@ -501,12 +504,18 @@ void LoadModelsToVAO_ASYNC(cVAOMeshManager* pTheVAOMeshManager, GLuint shaderPro
 	std::string errorString;
 	cBasicTextureManager::sCubeMapTextureLoadParams cubeLoadParams;
 	cubeLoadParams.cubeMapName = "CityCubeMap";
-	cubeLoadParams.posX_fileName = "SpaceBox_right1_posX.bmp";
-	cubeLoadParams.negX_fileName = "SpaceBox_left2_negX.bmp";
-	cubeLoadParams.posY_fileName = "SpaceBox_top3_posY.bmp";
-	cubeLoadParams.negY_fileName = "SpaceBox_bottom4_negY.bmp";
-	cubeLoadParams.posZ_fileName = "SpaceBox_front5_posZ.bmp";
-	cubeLoadParams.negZ_fileName = "SpaceBox_back6_negZ.bmp";
+	//cubeLoadParams.posX_fileName = "SpaceBox_right1_posX.bmp";
+	cubeLoadParams.posX_fileName = "TropicalSunnyDayRight2048.bmp";
+	//cubeLoadParams.negX_fileName = "SpaceBox_left2_negX.bmp";
+	cubeLoadParams.negX_fileName = "TropicalSunnyDayLeft2048.bmp";
+	//cubeLoadParams.posY_fileName = "SpaceBox_top3_posY.bmp";
+	cubeLoadParams.posY_fileName = "TropicalSunnyDayUp2048.bmp";
+	//cubeLoadParams.negY_fileName = "SpaceBox_bottom4_negY.bmp";
+	cubeLoadParams.negY_fileName = "TropicalSunnyDayDown2048.bmp";
+	//cubeLoadParams.posZ_fileName = "SpaceBox_front5_posZ.bmp";
+	cubeLoadParams.posZ_fileName = "TropicalSunnyDayFront2048.bmp";
+	//cubeLoadParams.negZ_fileName = "SpaceBox_back6_negZ.bmp";
+	cubeLoadParams.negZ_fileName = "TropicalSunnyDayBack2048.bmp";
 	cubeLoadParams.basePath = "assets/textures/cubemaps";
 	cubeLoadParams.bIsSeamless = true;
 	if (::g_TheTextureManager->CreateCubeTextureFromBMPFiles(cubeLoadParams, errorString))
