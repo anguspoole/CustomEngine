@@ -221,7 +221,6 @@ namespace nPhysics
 				colShape->calculateLocalInertia(mass, localInertia);
 			}
 			startTransform.setOrigin(nConvert::ToBullet(def.Position));
-			startTransform.setOrigin(nConvert::ToBullet(def.Position));
 			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 			mMotionState = new btDefaultMotionState(startTransform);
 			btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, mMotionState, colShape, localInertia);

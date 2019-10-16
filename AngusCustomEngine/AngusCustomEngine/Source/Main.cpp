@@ -60,6 +60,8 @@ void updateAndDrawParticles(double deltaTime,				// in DrawObject_call.cpp
 	GLuint shaderProgramID,
 	glm::vec3 cameraEye);
 
+bool debugging = true;
+
 void main()
 {
 	srand(NULL);
@@ -235,6 +237,10 @@ void main()
 			deltaTime = MAX_DELTA_TIME;
 		}
 
+		// The physics update loop
+		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
+		gPhysicsWorld->Update(deltaTime);
+
 		for (int i = 0; i < enemyList.size(); i++)
 		{
 			if (enemyList[i]->status == eEntityStatus::DEAD && enemyList[i]->spray)// && enemyList[i]->healthTimer > 1.8f)
@@ -397,13 +403,6 @@ void main()
 						// ***************************************
 		}
 
-		// update the "last time"
-		lastTime = currentTime;
-
-		// The physics update loop
-		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
-		gPhysicsWorld->Update(deltaTime);
-
 		for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
 		{
 			vec_pObjectsToDraw[i]->Update(deltaTime);
@@ -425,19 +424,15 @@ void main()
 		//player_Camera->setMeshOrientationQ(q);
 		//player_Camera->m_UpdateAtFromOrientation();
 
-
-
-		bool debugging = true;
-
 		//pTheShaderManager->useShaderProgram("Debug_Shader");
 		// Render the DEBUG Physics
 		
 		//pTheShaderManager->useShaderProgram("BasicUberShader");
 
-		/*if (debugging)
+		if (debugging)
 		{
-			gPhysicsWorld->DrawDebug(program, matView, 0.6f, (int)windowWidth, (int)windowHeight);
-		}*/
+			gPhysicsWorld->DrawDebug(program);
+		}
 
 		DrawScene_Simple(vec_pObjectsToDraw, program, 1, NULL);
 		updateAndDrawParticles(deltaTime, program, currentCamera->eye);
@@ -715,6 +710,9 @@ void main()
 		//UpdateWindowTitle(window, ssTitle.str());
 
 		//gPhysicsWorld->Update(deltaTime);
+
+		// update the "last time"
+		lastTime = currentTime;
 
 		glfwSwapBuffers(window);		// Shows what we drew
 

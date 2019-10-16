@@ -16,11 +16,22 @@ cEntity::~cEntity()
 	delete this->m_EntityMesh;
 }
 
+void cEntity::UpdateHitStatus(bool status)
+{
+	if (this->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
+	{
+		if (this->healthTimer < 0.001f)
+		{
+			this->m_EntityPhysics->rigidBody->SetHitStatus(status);
+		}
+	}
+}
+
 void cEntity::Update(double deltaTime)
 {
 	this->m_EntityPhysics->Update(deltaTime);
 	UpdateHealthTimer(deltaTime);
-
+	UpdateHitStatus(false);
 }
 
 void cEntity::UpdateHealthTimer(float dt)
@@ -31,11 +42,13 @@ void cEntity::UpdateHealthTimer(float dt)
 	}
 	else if (this->healthTimer <= 0 && this->status == eEntityStatus::TAKING_DAMAGE)
 	{
-			//kill or idle?
-		if (this->friendlyName == "Enemy0")
-		{
-			//std::cout << this->status << std::endl;
-		}
+		this->status = eEntityStatus::IDLE;
+		this->m_EntityPhysics->rigidBody->SetHitStatus(false);
+		//kill or idle?
+		//if (this->friendlyName == "Enemy0")
+		//{
+		//	//std::cout << this->status << std::endl;
+		//}
 	}
 
 	//kill this entity if they are low enough
@@ -76,4 +89,9 @@ void cEntity::UpdateHealthTimer(float dt)
 			}
 		}
 	}
+}
+
+void cEntity::Equip(int boneID, cEntity * eqEntity)
+{
+	this->boneObjectMap.insert(std::pair<int, cEntity*>(boneID, eqEntity));
 }

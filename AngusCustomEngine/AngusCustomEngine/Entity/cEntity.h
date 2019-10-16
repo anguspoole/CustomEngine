@@ -5,6 +5,7 @@
 #include "EntityPhysics/cEntityPhysics.h"
 #include "eEntityStatus.h"
 #include "../Meshes/AssimpFBX/cAnimationState.h"
+#include <map>
 
 class cEntity
 {
@@ -25,6 +26,8 @@ public:
 	// Child objects inside this one
 	std::vector< cEntity* > vec_pChildrenEntities;
 
+	std::map<int, cEntity*> boneObjectMap;
+
 	float animTime = 0.0f;
 
 	float health = 30.0f;
@@ -37,6 +40,10 @@ public:
 
 	void Update(double deltaTime);
 	void UpdateHealthTimer(float dt);
+	void UpdateHitStatus(bool status);
+
+	void Equip(int boneID, cEntity* eqEntity);
+	//void Unequip(int boneID);
 
 private:
 

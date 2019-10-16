@@ -6,6 +6,7 @@ cEntityPhysics::cEntityPhysics()
 {
 	this->bIsUpdatedByPhysics = false;	// physics ignores by default
 	this->position = glm::vec3(0.0f);
+	this->offset = glm::vec3(0.0f);
 	this->velocity = glm::vec3(0.0f);
 	this->accel = glm::vec3(0.0f);
 	this->setMeshOrientationEulerAngles(glm::vec3(0.0f, 0.0f, 0.0f));

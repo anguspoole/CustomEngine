@@ -484,3 +484,12 @@ void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &
 		}
 	}
 }
+
+void removeRB(cEntity* entity)
+{
+	if ((entity->m_EntityPhysics->physObjType == entity->m_EntityPhysics->RIGID_BODY)
+		&& (entity->m_EntityPhysics->rigidBody != NULL))
+	{
+		gPhysicsWorld->RemoveBody(entity->m_EntityPhysics->rigidBody);
+	}
+}

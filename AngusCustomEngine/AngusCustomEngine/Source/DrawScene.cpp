@@ -350,7 +350,136 @@ void BindTextures(cEntity* pCurrentEntity, GLuint shaderProgramID,
 	return;
 }
 
+void CalculateBonesAndAnimation(cEntity* pCurrentEntity, unsigned int numBonesUsed_UniLoc, unsigned int bones_UniLoc)
+{
+	// Also pass up the bone information...
+	std::vector< glm::mat4x4 > vecFinalTransformation;	// Replaced by	theMesh.vecFinalTransformation
+	std::vector< glm::mat4x4 > vecOffsets;
 
+	//		cAnimationState* pAniState = pCurrentMesh->pAniState->;
+			// Are there any animations in the queue?
+	//		if ( pCurrentMesh->pAniState->vecAnimationQueue.empty() )
+
+	//float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
+	if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
+	{
+		pCurrentEntity->animTime = 0.0f;
+	}
+	if (pCurrentEntity->animTime < 0.01f)
+	{
+		if (pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.size() > 0)
+		{
+			//get name of next animation
+			pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].name;
+			//erase from queue
+			pCurrentEntity->status = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].status;
+			pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.erase(pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.begin());
+			pCurrentEntity->animTime = 0.00f;
+		}
+		else //queue is empty
+		{
+			if (pCurrentEntity->status == eEntityStatus::DEAD)
+			{
+				//pCurrentEntity->animTime = customDuration - 0.001f; //set the animation time to right before the end
+			}
+			else
+			{
+				//set to idle
+				pCurrentEntity->status = eEntityStatus::IDLE;
+				pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->defaultAnimation.name;
+			}
+		}
+		animationComplete = true;
+	}
+
+	pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
+		//0.0f,	// curFrameTime,
+		pCurrentEntity->animTime,	// curFrameTime,	
+		pCurrentEntity->m_EntityMesh->currentAnimation, // animationToPlay,
+		vecFinalTransformation,		// Final bone transforms for mesh
+		pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
+		vecOffsets);                 // local offset for each bone
+
+	if ((pCurrentEntity->status != eEntityStatus::DEAD))
+	{
+		pCurrentEntity->animTime += deltaTime;		// Frame time, but we are going at 60HZ
+	}
+	else if (pCurrentEntity->animTime + deltaTime < pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
+	{
+		pCurrentEntity->animTime += deltaTime;
+	}
+
+	unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
+
+	glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
+
+	glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
+
+	//		std::cout << "bones_UniLoc: " << bones_UniLoc << std::endl;	std::cout.flush();
+	glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
+		(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
+
+	// Update the extents of the skinned mesh from the bones...
+	//	sMeshDrawInfo.minXYZ_from_SM_Bones(glm::vec3(0.0f)), 
+	//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
+	for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
+	{
+		glm::mat4 boneLocal = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
+		float scale = pCurrentEntity->m_EntityPhysics->nonUniformScale.x;
+		glm::mat4 boneScale = boneLocal * scale;
+		glm::mat4 boneRotation;
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(boneRotation);
+
+		boneRotation = boneRotation * boneScale;
+
+		glm::vec4 boneBallLocation = boneRotation * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+		// Update the extents of the mesh
+		if (boneIndex == 0)
+		{
+			// For the 0th bone, just assume this is the extent
+			pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+			pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
+		}
+		else
+		{	// It's NOT the 0th bone, so compare with current max and min
+			if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
+			if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
+			if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
+
+			if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
+			if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
+			{
+				pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
+			}
+			if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
+			{
+				pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
+			}
+		}//if ( boneIndex == 0 )
+	}
+
+	std::map<int, cEntity*>::iterator equipIT;
+
+	for (equipIT = pCurrentEntity->boneObjectMap.begin(); equipIT != pCurrentEntity->boneObjectMap.end(); equipIT++)
+	{
+		int boneID = equipIT->first;
+		cEntity* equipment = equipIT->second;
+		glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneID];
+
+		glm::mat4 boneRotation;
+		pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(boneRotation);
+
+		equipment->m_EntityPhysics->rigidBody->SetOrientation(boneRotation * boneT);
+
+		glm::vec3 offset = boneRotation * boneT * glm::vec4(equipment->m_EntityPhysics->offset, 1.0f);
+		glm::vec3 newPos = offset * pCurrentEntity->m_EntityPhysics->nonUniformScale.x 
+			+ pCurrentEntity->m_EntityPhysics->position;
+		equipment->m_EntityPhysics->rigidBody->SetPosition(newPos);
+
+	}
+
+}
 
 void DrawScene_Simple(std::vector<cEntity*> vec_pEntities,
 	GLuint shaderProgramID,
@@ -642,173 +771,21 @@ void DrawObject(cEntity* pCurrentEntity,
 	}
 	else
 	{
-		// It ++IS++ skinned mesh
-		modelInfo.meshFileName = pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->fileName;
-
-		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
-
-		// Also pass up the bone information...
-		std::vector< glm::mat4x4 > vecFinalTransformation;	// Replaced by	theMesh.vecFinalTransformation
-		std::vector< glm::mat4x4 > vecOffsets;
-
-		//		cAnimationState* pAniState = pCurrentMesh->pAniState->;
-				// Are there any animations in the queue?
-		//		if ( pCurrentMesh->pAniState->vecAnimationQueue.empty() )
-
-		//float customDuration = mapAnimToDuration[pCurrentEntity->m_EntityMesh->currentAnimation];
-		if (pCurrentEntity->animTime > pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
-		{
-			pCurrentEntity->animTime = 0.0f;
-		}
-		if (pCurrentEntity->animTime < 0.01f)
-		{
-			if (pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.size() > 0)
-			{
-				//get name of next animation
-				pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].name;
-				//erase from queue
-				pCurrentEntity->status = pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue[0].status;
-				pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.erase(pCurrentEntity->m_EntityMesh->pAniState->vecAnimationQueue.begin());
-				pCurrentEntity->animTime = 0.00f;
-			}
-			else //queue is empty
-			{
-				if (pCurrentEntity->status == eEntityStatus::DEAD)
-				{
-					//pCurrentEntity->animTime = customDuration - 0.001f; //set the animation time to right before the end
-				}
-				else
-				{
-					//set to idle
-					pCurrentEntity->status = eEntityStatus::IDLE;
-					pCurrentEntity->m_EntityMesh->currentAnimation = pCurrentEntity->m_EntityMesh->pAniState->defaultAnimation.name;
-				}
-			}
-			animationComplete = true;
-		}
-
-		pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->BoneTransform(
-			//0.0f,	// curFrameTime,
-			pCurrentEntity->animTime,	// curFrameTime,
-//										"assets/modelsFBX/RPG-Character_Unarmed-Walk(FBX2013).FBX",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Roll-Backward(FBX2013).fbx",		// animationToPlay,		//**NEW**
-//										"assets/modelsFBX/RPG-Character_Unarmed-Idle(FBX2013).fbx",		// animationToPlay,		//**NEW**
-pCurrentEntity->m_EntityMesh->currentAnimation,
-vecFinalTransformation,		// Final bone transforms for mesh
-pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation,  // final location of bones
-vecOffsets);                 // local offset for each bone
-
-		if ((pCurrentEntity->status != eEntityStatus::DEAD))
-		{
-			pCurrentEntity->animTime += deltaTime;		// Frame time, but we are going at 60HZ
-		}
-		else if (pCurrentEntity->animTime + deltaTime < pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->GetDuration(pCurrentEntity->m_EntityMesh->currentAnimation))
-		{
-			pCurrentEntity->animTime += deltaTime;
-		}
-
-		unsigned int numberOfBonesUsed = static_cast<unsigned int>(vecFinalTransformation.size());
-
 		GLint numBonesUsed_UniLoc = glGetUniformLocation(shaderProgramID, "numBonesUsed");
-		glUniform1i(numBonesUsed_UniLoc, numberOfBonesUsed);
-
-		//		const unsigned int TOTALNUMBEROFBONESTOPASSINTOTHESHADERASIDENTIYMATRIXVALUES = 99;
-		//		for ( unsigned int index = 0; index != numberOfBonesUsed; index++ )
-		//		{
-		//			vecFinalTransformation.push_back( glm::mat4(1.0f) );
-		//		}
-
-		glm::mat4x4* pBoneMatrixArray = &(vecFinalTransformation[0]);
 
 		// UniformLoc_bonesArray is the getUniformLoc of "bones[0]" from
 		//	uniform mat4 bones[MAXNUMBEROFBONES] 
 		// in the shader
 		GLint bones_UniLoc = glGetUniformLocation(shaderProgramID, "bones");
-		//		std::cout << "bones_UniLoc: " << bones_UniLoc << std::endl;	std::cout.flush();
-		glUniformMatrix4fv(bones_UniLoc, numberOfBonesUsed, GL_FALSE,
-			(const GLfloat*)glm::value_ptr(*pBoneMatrixArray));
 
-		// Update the extents of the skinned mesh from the bones...
-		//	sMeshDrawInfo.minXYZ_from_SM_Bones(glm::vec3(0.0f)), 
-		//  sMeshDrawInfo.maxXYZ_from_SM_Bones(glm::vec3(0.0f))
-		for (unsigned int boneIndex = 0; boneIndex != numberOfBonesUsed; boneIndex++)
-		{
-			glm::mat4 boneLocal = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
-			float scale = pCurrentEntity->m_EntityPhysics->nonUniformScale.x;
-			glm::mat4 boneScale = boneLocal * scale;
-			glm::mat4 boneRotation;
-			pCurrentEntity->m_EntityPhysics->rigidBody->GetOrientation(boneRotation);
+		CalculateBonesAndAnimation(pCurrentEntity, numBonesUsed_UniLoc, bones_UniLoc);
 
-			boneRotation = boneRotation * boneScale;
+		// It ++IS++ skinned mesh
+		modelInfo.meshFileName = pCurrentEntity->m_EntityMesh->pSimpleSkinnedMesh->fileName;
 
-			glm::vec4 boneBallLocation = boneRotation * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		glUniform1f(bIsASkinnedMesh_LocID, (float)GL_TRUE);
 
-			// Update the extents of the mesh
-			if (boneIndex == 0)
-			{
-				// For the 0th bone, just assume this is the extent
-				pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-				pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones = glm::vec3(boneBallLocation);
-			}
-			else
-			{	// It's NOT the 0th bone, so compare with current max and min
-				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x < boneBallLocation.x) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.x = boneBallLocation.x; }
-				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y < boneBallLocation.y) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.y = boneBallLocation.y; }
-				if (pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z < boneBallLocation.z) { pCurrentEntity->m_EntityMesh->minXYZ_from_SM_Bones.z = boneBallLocation.z; }
-
-				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x > boneBallLocation.x) { pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.x = boneBallLocation.x; }
-				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y > boneBallLocation.y)
-				{
-					pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.y = boneBallLocation.y;
-				}
-				if (pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z > boneBallLocation.z)
-				{
-					pCurrentEntity->m_EntityMesh->maxXYZ_from_SM_Bones.z = boneBallLocation.z;
-				}
-			}//if ( boneIndex == 0 )
-
-			if ((boneIndex == 25 && pCurrentEntity->friendlyName == "Player")
-				|| (boneIndex == 35 && pCurrentEntity->m_EntityPhysics->rigidBody->GetEntityType() == eEntityType::ENEMY))
-			{
-				//cEntity* pKatana = findObjectByFriendlyName("Katana");
-				cEntity* pKatana = pCurrentEntity->vec_pChildrenEntities[0];
-				glm::mat4 boneT = pCurrentEntity->m_EntityMesh->vecObjectBoneTransformation[boneIndex];
-				glm::mat4 currentTransform;
-				pCurrentEntity->m_EntityPhysics->rigidBody->GetTransform(currentTransform);
-
-				glm::vec3 scale, scaleBase;
-				glm::quat rotation, rotBase;
-				glm::vec3 translation, transBase;
-				glm::vec3 skew, skewBase;
-				glm::vec4 perspective, perspBase;
-				glm::decompose(boneT, scale, rotation, translation, skew, perspective);
-				glm::decompose(currentTransform, scaleBase, rotBase, transBase, skewBase, perspBase);
-
-				glm::quat qRot = glm::toQuat(currentTransform);
-				//glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
-				glm::mat4 boneTRot = glm::toMat4(rotBase) * glm::toMat4(rotation);
-				glm::quat newRotation = glm::toQuat(boneTRot);
-				pKatana->m_EntityPhysics->rigidBody->SetOrientation(boneTRot);
-				//pKatana->m_EntityPhysics->setQOrientation(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
-
-				glm::vec4 rotatedOffset = (boneRotation * glm::vec4((pKatana->m_EntityPhysics->position), 1.0f));
-				//glm::vec4 rotatedOffset = glm::vec4((pKatana->m_EntityPhysics->position), 1.0f);
-
-				//glm::vec3 newPos = glm::vec3(rotatedOffset);
-				glm::vec3 currentPos;
-				pCurrentEntity->m_EntityPhysics->rigidBody->GetPosition(currentPos);
-				glm::vec3 newPos = currentPos + glm::vec3(rotatedOffset);
-				pKatana->m_EntityPhysics->rigidBody->SetPosition(newPos);
-				//pKatana->m_EntityPhysics->rigidBody->SetVelocity(glm::vec3(0.0f));
-			}
-		}
 	}//if ( pCurrentMesh->pSimpleSkinnedMesh == NULL )
-//  ___ _   _                  _ __  __        _    
-// / __| |_(_)_ _  _ _  ___ __| |  \/  |___ __| |_  
-// \__ \ / / | ' \| ' \/ -_) _` | |\/| / -_|_-< ' \ 
-// |___/_\_\_|_||_|_||_\___\__,_|_|  |_\___/__/_||_|
-//                                                  
-// *****************************************************************
 
 	//if ( pCurrentMesh->bIsALightVolume )
 	//{

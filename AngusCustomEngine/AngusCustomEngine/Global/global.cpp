@@ -46,6 +46,7 @@ void CheckForHits()
 			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
 			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
 			globList[i]->m_EntityMesh->bIsVisible = false;
+			gPhysicsWorld->RemoveBody(globList[i]->m_EntityPhysics->rigidBody);
 			timeRemaining += 10.0f;
 		}
 	}
@@ -64,6 +65,7 @@ void CheckForGlobHits()
 			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
 			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
 			globList[i]->m_EntityMesh->bIsVisible = false;
+			gPhysicsWorld->RemoveBody(globList[i]->m_EntityPhysics->rigidBody);
 			timeRemaining += 10.0f;
 		}
 	}

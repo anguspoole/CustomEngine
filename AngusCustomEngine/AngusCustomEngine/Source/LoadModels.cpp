@@ -435,7 +435,8 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 
 			pKatana->friendlyName = "EnemyKatana" + std::to_string(enemyList.size() - 1);
 			float weaponScale = 0.03f;
-			pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 50.0f);
+			pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+			pKatana->m_EntityPhysics->offset = glm::vec3(0.0f, 0.0f, 50.0f);
 			pKatana->m_EntityPhysics->setUniformScale(weaponScale);
 			pKatana->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("katana.ply"));
 			pKatana->m_EntityMesh->bIsWireFrame = false;
@@ -463,6 +464,7 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 
 			nPhysics::sRigidBodyDef katanaDef;
 			katanaDef.Mass = 5.0f;
+			katanaDef.Mass = 0.0f; //this will keep the object static while equipped
 			katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 			katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -483,6 +485,7 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
 
 			pTestSM->vec_pChildrenEntities.push_back(pKatana);
+			pTestSM->Equip(35, pKatana);
 
 			gPhysicsWorld->DisableCollision(pTestSM->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
 
@@ -490,6 +493,8 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			{
 				gPhysicsWorld->DisableCollision(enemyList[i]->vec_pChildrenEntities[0]->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
 			}
+
+			//removeRB(pKatana);
 
 			//vec_pObjectsToDraw.push_back(pKatana);
 		}
@@ -867,7 +872,8 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 
 		pKatana->friendlyName = "Katana";
 		float scale = 0.03f;
-		pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 50.0f);
+		pKatana->m_EntityPhysics->position = glm::vec3(0.0f, 0.0f, 0.0f);
+		pKatana->m_EntityPhysics->offset = glm::vec3(0.0f, 0.0f, 50.0f);
 		pKatana->m_EntityPhysics->setUniformScale(scale);
 		pKatana->m_EntityMesh->vecLODMeshs.push_back(sLODInfo("katana.ply"));
 		pKatana->m_EntityMesh->bIsWireFrame = false;
@@ -893,10 +899,12 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		}
 
 		nPhysics::sRigidBodyDef katanaDef;
-		katanaDef.Mass = 5.0f;
+		//katanaDef.Mass = 5.0f;
+		katanaDef.Mass = 0.0f; //this will keep the object static while equipped
 		katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		//katanaDef.Position = glm::vec3(0.0f, 0.0f, 0.0f);
 		katanaDef.Orientation = glm::vec3(0.0f, 0.0f, 0.0f);
+		katanaDef.Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 extents = glm::vec3(1.0f, 1.0f, 130.0f * scale);
 		//glm::vec3 extents = glm::vec3(1.0f, 1.0f, 13.0f);
 
@@ -907,14 +915,16 @@ void LoadModelsIntoScene(std::vector<cEntity*> &vec_pObjectsToDraw)
 		makeCylinder(pKatana, katanaDef, extents);
 		//makeConvexHull(pKatana, katanaDef, modelPoints, modelInfo.numberOfVertices);
 		//makePointPointConstraint(pKatana, player, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		makeFixedConstraint(pKatana, player);
+		//makeFixedConstraint(pKatana, player);
 
 		pKatana->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::PLAYERWEAPON);
 		pKatana->m_EntityPhysics->rigidBody->SetName(pKatana->friendlyName);
 
 		player->vec_pChildrenEntities.push_back(pKatana);
+		player->Equip(25, pKatana);
 
 		gPhysicsWorld->DisableCollision(player->m_EntityPhysics->rigidBody, pKatana->m_EntityPhysics->rigidBody);
+		//removeRB(pKatana);
 
 		//vec_pObjectsToDraw.push_back(pKatana);
 	}

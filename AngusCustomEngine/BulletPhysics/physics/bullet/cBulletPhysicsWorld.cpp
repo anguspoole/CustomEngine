@@ -30,34 +30,39 @@ namespace nPhysics
 			return false;
 		}
 
+		if (body0->GetHitStatus() || body1->GetHitStatus())
+		{
+			return false;
+		}
+
 		if (body0->GetEntityType() == eEntityType::PLAYERWEAPON && body1->GetEntityType() == eEntityType::ENEMY)
 		{
 			//std::cout << "hit1" << std::endl;
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
 		}
-		else if (body1->GetEntityType() == eEntityType::PLAYERWEAPON && body0->GetEntityType() == eEntityType::ENEMY)
-		{
-			//std::cout << "hit0" << std::endl;
-			body0->SetHitStatus(true);
-			body1->SetHitStatus(true);
-		}
+		//else if (body1->GetEntityType() == eEntityType::PLAYERWEAPON && body0->GetEntityType() == eEntityType::ENEMY)
+		//{
+		//	//std::cout << "hit0" << std::endl;
+		//	body0->SetHitStatus(true);
+		//	body1->SetHitStatus(true);
+		//}
 		else if (body0->GetEntityType() == eEntityType::PLAYER && body1->GetEntityType() == eEntityType::ENEMYWEAPON)
 		{
 			//std::cout << "hit1" << std::endl;
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
 		}
-		else if (body1->GetEntityType() == eEntityType::PLAYER && body0->GetEntityType() == eEntityType::ENEMYWEAPON)
-		{
-			//std::cout << "hit0" << std::endl;
-			body0->SetHitStatus(true);
-			body1->SetHitStatus(true);
-		}
+		//else if (body1->GetEntityType() == eEntityType::PLAYER && body0->GetEntityType() == eEntityType::ENEMYWEAPON)
+		//{
+		//	//std::cout << "hit0" << std::endl;
+		//	body0->SetHitStatus(true);
+		//	body1->SetHitStatus(true);
+		//}
 		else if (body0->GetEntityType() == eEntityType::PAINTGLOB && body1->GetEntityType() == eEntityType::ENVIRONMENT)
 		{
 			body0->SetHitStatus(true);
-			body1->SetHitStatus(true);
+			//body1->SetHitStatus(true);
 			btVector3 posA = cp.getPositionWorldOnA();
 			btVector3 posB = cp.getPositionWorldOnB();
 			btVector3 normB = cp.m_normalWorldOnB;
@@ -65,7 +70,7 @@ namespace nPhysics
 			body0->SetColPos(nConvert::ToSimple(posB));
 			body0->SetColNorm(nConvert::ToSimple(normB));
 		}
-		else if (body1->GetEntityType() == eEntityType::PAINTGLOB && body0->GetEntityType() == eEntityType::ENVIRONMENT)
+		/*else if (body1->GetEntityType() == eEntityType::PAINTGLOB && body0->GetEntityType() == eEntityType::ENVIRONMENT)
 		{
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
@@ -75,7 +80,7 @@ namespace nPhysics
 
 			body1->SetColPos(nConvert::ToSimple(posB));
 			body1->SetColNorm(nConvert::ToSimple(normB));
-		}
+		}*/
 
 		return true;
 	}

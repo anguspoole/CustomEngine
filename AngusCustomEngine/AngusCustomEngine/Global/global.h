@@ -83,6 +83,9 @@ extern nPhysics::iPhysicsWorld* gPhysicsWorld;
 bool InitPhysicsStuff(const nLoad::sConfig& config);
 bool buildPhysicsWorld();
 void buildPhysicsObjects(const nLoad::sConfig& config, std::vector< cEntity* > &vec_pObjectsToDraw, GLuint shaderProgramID);
+void removeRB(cEntity* entity);
+
+//Physics Constructors
 void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0);
 void makeSphere(cEntity * obj, nPhysics::sRigidBodyDef bodyDef0, int group, int mask);
 void makePlane(cEntity * obj, glm::vec3 n, nPhysics::sRigidBodyDef bodyDef0, float d);

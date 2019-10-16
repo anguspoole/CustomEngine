@@ -29,6 +29,7 @@ public:
 	~cEntityPhysics();
 
 	glm::vec3 position;
+	glm::vec3 offset;
 	glm::vec3 velocity;
 	glm::vec3 accel;
 
