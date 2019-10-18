@@ -290,7 +290,7 @@ void LoadPlayerMeshModel(const nLoad::sConfig& config, int c, std::vector<cEntit
 			int colGroup = eCollisionGroup::COL_PLAYER;
 			int colMask = (eCollisionGroup::COL_ENVIRONMENT | eCollisionGroup::COL_ENEMY | eCollisionGroup::COL_ENEMYWEAPON);
 
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], scale * config.RigidBodyDefs[c].Mass/2, scale * config.RigidBodyDefs[c].Mass * 2.0f, colGroup, colMask);
 			//makeCapsule(pTestSM, config.RigidBodyDefs[c], 5.0f * scale, 10.0f * scale, colGroup, colMask);
 
 			pTestSM->m_EntityPhysics->rigidBody->GetPosition(pTestSM->m_EntityPhysics->position);
@@ -419,7 +419,8 @@ void CreateAndAssignAnimatedEnemy(const nLoad::sConfig& config, int c, std::vect
 			int colGroup = eCollisionGroup::COL_ENEMY;
 			int colMask = (eCollisionGroup::COL_ENVIRONMENT | eCollisionGroup::COL_PLAYER | eCollisionGroup::COL_PLAYERWEAPON);
 
-			makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
+			//makeCapsule(pTestSM, config.RigidBodyDefs[c], 20.0f * scale, 2.0f * 30.0f * scale, colGroup, colMask);
+			makeCapsule(pTestSM, config.RigidBodyDefs[c], scale * config.RigidBodyDefs[c].Mass / 2, scale * config.RigidBodyDefs[c].Mass * 2.0f, colGroup, colMask);
 
 			pTestSM->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::ENEMY);
 			pTestSM->m_EntityPhysics->rigidBody->SetName(pTestSM->friendlyName);

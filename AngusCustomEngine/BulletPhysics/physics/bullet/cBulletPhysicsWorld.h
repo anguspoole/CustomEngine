@@ -3,6 +3,7 @@
 #include "btBulletDynamicsCommon.h"
 #include <iConstraint.h>
 #include <vector>
+#include <cBulletRigidBody.h>
 
 namespace nPhysics
 {
@@ -61,6 +62,8 @@ namespace nPhysics
 		btDiscreteDynamicsWorld* mDynamicsWorld;
 
 		std::vector<std::pair<std::string, std::string>> mNamePairList;
+
+		std::vector<cBulletRigidBody*> mRigidBodyList;
 
 	};
 }

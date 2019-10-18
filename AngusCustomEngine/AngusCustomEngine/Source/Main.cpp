@@ -240,6 +240,7 @@ void main()
 		// The physics update loop
 		//DoPhysicsUpdate( deltaTime, vec_pObjectsToDraw );
 		gPhysicsWorld->Update(deltaTime);
+		aiController->UpdateBehaviours(enemyList, player);
 
 		for (int i = 0; i < enemyList.size(); i++)
 		{
@@ -260,14 +261,13 @@ void main()
 			userSphere->m_EntityPhysics->position = targetPos;
 		}
 
-		aiController->UpdateBehaviours(enemyList, player);
 		CheckForGlobHits();
 
-		cEntity* katana = player->vec_pChildrenEntities[0];
+		/*cEntity* katana = player->vec_pChildrenEntities[0];
 		if (katana->m_EntityPhysics->rigidBody->GetHitStatus())
 		{
 			katana->m_EntityPhysics->rigidBody->SetHitStatus(false);
-		}
+		}*/
 
 		currentCamera = player_Camera;
 
@@ -406,6 +406,10 @@ void main()
 		for (int i = 0; i < vec_pObjectsToDraw.size(); i++)
 		{
 			vec_pObjectsToDraw[i]->Update(deltaTime);
+			for (int j = 0; j < vec_pObjectsToDraw[i]->vec_pChildrenEntities.size(); j++)
+			{
+				vec_pObjectsToDraw[i]->vec_pChildrenEntities[j]->Update(deltaTime);
+			}
 		}
 
 		//CheckForHits();

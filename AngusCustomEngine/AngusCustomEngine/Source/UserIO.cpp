@@ -39,7 +39,8 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		{
 			cAnimationState::sStateDetails newState;
 			newState.name = "Stab-Attack";
-			newState.status = player->status = eEntityStatus::ATTACKING;
+			//newState.status = player->status = eEntityStatus::ATTACKING;
+			newState.status = eEntityStatus::ATTACKING;
 
 			//if (player->m_EntityMesh->pAniState->vecAnimationQueue.size() == 0)
 			//{
@@ -323,6 +324,16 @@ void ProcessAsyncKeys(GLFWwindow* window)
 			q = glm::inverse(glm::lookAt(targetPos - player_Camera->eye, targetDir, player_Camera->getUpVector()));
 			player_Camera->setMeshOrientationQ(q);
 			player_Camera->m_UpdateAtFromOrientation();
+		}
+		else if (player->status == eEntityStatus::TAKING_DAMAGE)
+		{
+			if (player->m_EntityMesh->pAniState->vecAnimationQueue.size() == 0)
+			{
+				cAnimationState::sStateDetails newState;
+				newState.name = "Idle";
+				newState.status = eEntityStatus::IDLE;
+				player->m_EntityMesh->pAniState->vecAnimationQueue.push_back(newState);
+			}
 		}
 
 		//if (glfwGetKey(window, GLFW_KEY_I)) { pTheShip->adjMeshOrientationEulerAngles(glm::vec3(95.0f, 0.0f, 0.0f), true); }

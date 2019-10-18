@@ -18,7 +18,8 @@ void CheckForHits()
 					(enemyList[i]->status != eEntityStatus::TAKING_DAMAGE)
 					&& player->status == eEntityStatus::ATTACKING)
 				{
-					enemyList[i]->healthTimer = 2.0f;
+					float timer = enemyList[i]->m_EntityMesh->pSimpleSkinnedMesh->GetDuration("EnemyHit");
+					enemyList[i]->healthTimer = timer;
 
 					cAnimationState::sStateDetails newState;
 					newState.name = "EnemyHit";
@@ -35,21 +36,21 @@ void CheckForHits()
 		}
 	}
 
-	for (int i = 0; i < globList.size(); i++)
-	{
-		if (globList[i]->m_EntityPhysics->rigidBody->GetHitStatus())
-		{
-			//std::cout << "Glob hit!" << std::endl;
-			glm::vec3 startPos = globList[i]->m_EntityPhysics->rigidBody->GetColPos();
-			startPos.y += 0.01f;
-			LoadPaintCube(paintList, startPos);
-			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
-			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
-			globList[i]->m_EntityMesh->bIsVisible = false;
-			gPhysicsWorld->RemoveBody(globList[i]->m_EntityPhysics->rigidBody);
-			timeRemaining += 10.0f;
-		}
-	}
+	//for (int i = 0; i < globList.size(); i++)
+	//{
+	//	if (globList[i]->m_EntityPhysics->rigidBody->GetHitStatus())
+	//	{
+	//		//std::cout << "Glob hit!" << std::endl;
+	//		glm::vec3 startPos = globList[i]->m_EntityPhysics->rigidBody->GetColPos();
+	//		startPos.y += 0.01f;
+	//		LoadPaintCube(paintList, startPos);
+	//		//globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
+	//		globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
+	//		globList[i]->m_EntityMesh->bIsVisible = false;
+	//		gPhysicsWorld->RemoveBody(globList[i]->m_EntityPhysics->rigidBody);
+	//		timeRemaining += 10.0f;
+	//	}
+	//}
 }
 
 void CheckForGlobHits()
@@ -58,11 +59,12 @@ void CheckForGlobHits()
 	{
 		if (globList[i]->m_EntityPhysics->rigidBody->GetHitStatus())
 		{
+			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
 			//std::cout << "Glob hit!" << std::endl;
 			glm::vec3 startPos = globList[i]->m_EntityPhysics->rigidBody->GetColPos();
 			startPos.y += 0.01f;
 			LoadPaintCube(paintList, startPos);
-			globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
+			//globList[i]->m_EntityPhysics->rigidBody->SetHitStatus(false);
 			globList[i]->m_EntityPhysics->rigidBody->SetEntityType(eEntityType::NONE);
 			globList[i]->m_EntityMesh->bIsVisible = false;
 			gPhysicsWorld->RemoveBody(globList[i]->m_EntityPhysics->rigidBody);
@@ -102,7 +104,7 @@ bool CheckForHits(cEntity* enemy, cEntity* player, cEntity* weapon)
 					}
 					else
 					{
-						enemy->m_EntityPhysics->rigidBody->SetHitStatus(false);
+						//enemy->m_EntityPhysics->rigidBody->SetHitStatus(false);
 					}
 				}
 			}
@@ -115,11 +117,11 @@ bool CheckForPlayerHit(cEntity* player, cEntity* weapon, cEntity* enemy)
 {
 	//gPhysicsWorld->Update
 
-	if (weapon->m_EntityPhysics->rigidBody->GetHitStatus())
+	if (weapon->m_EntityPhysics->rigidBody->GetHitStatus()) //if weapon hit
 	{
-		if (player->m_EntityPhysics->rigidBody->GetHitStatus())
+		if (player->m_EntityPhysics->rigidBody->GetHitStatus()) //if player has been hit
 		{
-			if (player->healthTimer < 0.001f)
+			if (player->healthTimer < 0.001f) //if player can take damage again
 			{
 				if (player->status != eEntityStatus::TAKING_DAMAGE && player->status != eEntityStatus::DEAD)
 				{
@@ -127,7 +129,7 @@ bool CheckForPlayerHit(cEntity* player, cEntity* weapon, cEntity* enemy)
 					{
 
 						float timer = player->m_EntityMesh->pSimpleSkinnedMesh->GetDuration("Hit");
-						player->healthTimer = timer * 2.0f;
+						player->healthTimer = timer;
 
 						cAnimationState::sStateDetails newState;
 						newState.name = "Hit";
@@ -142,7 +144,7 @@ bool CheckForPlayerHit(cEntity* player, cEntity* weapon, cEntity* enemy)
 					}
 					else
 					{
-						player->m_EntityPhysics->rigidBody->SetHitStatus(false);
+						//player->m_EntityPhysics->rigidBody->SetHitStatus(false);
 					}
 				}
 			}

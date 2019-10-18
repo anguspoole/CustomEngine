@@ -20,10 +20,20 @@ void cEntity::UpdateHitStatus(bool status)
 {
 	if (this->m_EntityPhysics->physObjType == cEntityPhysics::ePhysicsObjType::RIGID_BODY)
 	{
-		if (this->healthTimer < 0.001f)
-		{
-			this->m_EntityPhysics->rigidBody->SetHitStatus(status);
-		}
+		//this->m_EntityPhysics->rigidBody->SetHitStatus(status);
+		//eEntityType eT = this->m_EntityPhysics->rigidBody->GetEntityType();
+		//if (eT == eEntityType::PLAYER || eT == eEntityType::ENEMY)
+		//{
+		//	if (this->healthTimer < 0.0f)
+		//	{
+		//		this->healthTimer = 0.0f;
+		//		this->m_EntityPhysics->rigidBody->SetHitStatus(status);
+		//	}
+		//}
+		//else if (eT == eEntityType::PLAYERWEAPON || eT == eEntityType::ENEMYWEAPON)
+		//{
+		//	this->m_EntityPhysics->rigidBody->SetHitStatus(status);
+		//}
 	}
 }
 
@@ -31,7 +41,7 @@ void cEntity::Update(double deltaTime)
 {
 	this->m_EntityPhysics->Update(deltaTime);
 	UpdateHealthTimer(deltaTime);
-	UpdateHitStatus(false);
+	//UpdateHitStatus(false); //reset the hit status to false after every update
 }
 
 void cEntity::UpdateHealthTimer(float dt)
@@ -42,8 +52,8 @@ void cEntity::UpdateHealthTimer(float dt)
 	}
 	else if (this->healthTimer <= 0 && this->status == eEntityStatus::TAKING_DAMAGE)
 	{
-		this->status = eEntityStatus::IDLE;
-		this->m_EntityPhysics->rigidBody->SetHitStatus(false);
+		//this->status = eEntityStatus::IDLE;
+		//this->m_EntityPhysics->rigidBody->SetHitStatus(false);
 		//kill or idle?
 		//if (this->friendlyName == "Enemy0")
 		//{

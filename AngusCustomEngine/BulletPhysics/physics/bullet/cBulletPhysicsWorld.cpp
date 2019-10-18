@@ -5,6 +5,7 @@
 #include "cBtConstraint.h"
 #include <game_math.h>
 #include <iostream>
+#include <algorithm>
 
 extern ContactAddedCallback gContactAddedCallback;
 
@@ -41,24 +42,24 @@ namespace nPhysics
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
 		}
-		//else if (body1->GetEntityType() == eEntityType::PLAYERWEAPON && body0->GetEntityType() == eEntityType::ENEMY)
-		//{
-		//	//std::cout << "hit0" << std::endl;
-		//	body0->SetHitStatus(true);
-		//	body1->SetHitStatus(true);
-		//}
+		else if (body1->GetEntityType() == eEntityType::PLAYERWEAPON && body0->GetEntityType() == eEntityType::ENEMY)
+		{
+			//std::cout << "hit0" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
 		else if (body0->GetEntityType() == eEntityType::PLAYER && body1->GetEntityType() == eEntityType::ENEMYWEAPON)
 		{
 			//std::cout << "hit1" << std::endl;
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
 		}
-		//else if (body1->GetEntityType() == eEntityType::PLAYER && body0->GetEntityType() == eEntityType::ENEMYWEAPON)
-		//{
-		//	//std::cout << "hit0" << std::endl;
-		//	body0->SetHitStatus(true);
-		//	body1->SetHitStatus(true);
-		//}
+		else if (body1->GetEntityType() == eEntityType::PLAYER && body0->GetEntityType() == eEntityType::ENEMYWEAPON)
+		{
+			//std::cout << "hit0" << std::endl;
+			body0->SetHitStatus(true);
+			body1->SetHitStatus(true);
+		}
 		else if (body0->GetEntityType() == eEntityType::PAINTGLOB && body1->GetEntityType() == eEntityType::ENVIRONMENT)
 		{
 			body0->SetHitStatus(true);
@@ -70,7 +71,7 @@ namespace nPhysics
 			body0->SetColPos(nConvert::ToSimple(posB));
 			body0->SetColNorm(nConvert::ToSimple(normB));
 		}
-		/*else if (body1->GetEntityType() == eEntityType::PAINTGLOB && body0->GetEntityType() == eEntityType::ENVIRONMENT)
+		else if (body1->GetEntityType() == eEntityType::PAINTGLOB && body0->GetEntityType() == eEntityType::ENVIRONMENT)
 		{
 			body0->SetHitStatus(true);
 			body1->SetHitStatus(true);
@@ -80,7 +81,7 @@ namespace nPhysics
 
 			body1->SetColPos(nConvert::ToSimple(posB));
 			body1->SetColNorm(nConvert::ToSimple(normB));
-		}*/
+		}
 
 		return true;
 	}
@@ -141,6 +142,7 @@ namespace nPhysics
 				return false;
 			}
 			mDynamicsWorld->addRigidBody(bulletBody->GetBulletBody());
+			mRigidBodyList.push_back(bulletBody);
 			return true;
 		}
 		////else if type is BODY_TYPE_COMPOUND
@@ -178,6 +180,7 @@ namespace nPhysics
 				return false;
 			}
 			mDynamicsWorld->addRigidBody(bulletBody->GetBulletBody(), group, mask);
+			mRigidBodyList.push_back(bulletBody);
 			return true;
 		}
 		return false;
@@ -192,6 +195,11 @@ namespace nPhysics
 		}
 		btRigidBody* bulletBtBody = bulletBody->GetBulletBody();
 		mDynamicsWorld->removeRigidBody(bulletBtBody);
+
+		//std::vector<iRigidBody*>::iterator itRBList;
+
+		mRigidBodyList.erase(std::remove(mRigidBodyList.begin(), mRigidBodyList.end(), bulletBody), mRigidBodyList.end());
+
 		return true;
 	}
 
@@ -330,7 +338,12 @@ namespace nPhysics
 
 	void nPhysics::cBulletPhysicsWorld::Update(float dt)
 	{
-		mDynamicsWorld->stepSimulation(dt, 10);
+		for (int i = 0; i < mRigidBodyList.size(); i++)
+		{
+			(dynamic_cast<cBulletRigidBody*>(mRigidBodyList[i]))->SetHitStatus(false); //reset hit status
+		}
+
+		mDynamicsWorld->stepSimulation(dt, 10); //advance simulation
 		//mDynamicsWorld->stepSimulation(1 / 60.0f, 1, 1 / 60.0f);
 	}
 
